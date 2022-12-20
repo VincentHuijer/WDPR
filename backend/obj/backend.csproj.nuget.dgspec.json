@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\School\\WDPR\\backend\\backend.csproj": {}
+    "C:\\Users\\luca_\\Documents\\GitHub\\WDPR\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\School\\WDPR\\backend\\backend.csproj": {
+    "C:\\Users\\luca_\\Documents\\GitHub\\WDPR\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\School\\WDPR\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\luca_\\Documents\\GitHub\\WDPR\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\School\\WDPR\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\siddh\\.nuget\\packages\\",
-        "outputPath": "C:\\School\\WDPR\\backend\\obj\\",
+        "projectPath": "C:\\Users\\luca_\\Documents\\GitHub\\WDPR\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\luca_\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\luca_\\Documents\\GitHub\\WDPR\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\siddh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\luca_\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -38,6 +38,22 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"

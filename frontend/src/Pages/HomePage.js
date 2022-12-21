@@ -4,7 +4,7 @@ import VoorstellingenPreview from "../Components/VoorstellingenPreview";
 
 export default function HomePage(){
     return(
-        <div className="w-full mt-28">
+        <div className="w-full mt-32">
             <Hero />
             <ArticlePreview />
             <VoorstellingenPreview />

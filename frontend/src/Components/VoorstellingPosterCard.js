@@ -6,7 +6,7 @@ export default function VoorstellingPosterCard() {
         <div className="">
             <Link to={"/voorstelling/123"}>
                 <div className="rounded-2xl posterAspect">
-                    <img className="h-80" src="/media/AladinShow.png" />
+                    <img className="h-96" src="/media/AladinShow.png" />
                 </div>
             </Link>
             <p className="font-bold mt-1">SOME SHOW NAME</p>

@@ -11,6 +11,8 @@ import {
 import HomePage from './Pages/HomePage';
 import { NavBar } from './Components/NavBar';
 import Footer from './Components/Footer';
+import OverOns from './Pages/OverOns';
+import Voorstelling from './Pages/Voorstelling';
 
 
 
@@ -24,6 +26,8 @@ root.render(
 
         <Routes>
           <Route exact path='/' element={<HomePage />} />
+          <Route path='/overons' element={<OverOns />} />
+          <Route path='/voorstelling/:showID' element={<Voorstelling />} />
         </Routes>
 
         <Footer />

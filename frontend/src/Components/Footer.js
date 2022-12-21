@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <footer className='w-full bg-black text-white pt-2 pb-8 mt-24' >
+        <footer className='w-full bg-black text-white pt-2 pb-8 mt-24 bottom-0' >
             <div className='w-11/12 flex justify-between items-center m-auto'>
                 <div className="mb-auto mt-2">
                     <p className="font-bold text-xl ">LINKS</p>

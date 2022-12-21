@@ -9,7 +9,8 @@ module.exports = {
         appRed: "#FF0000",
         appLight: "#D1D1D1",
         appInputBlack: "#0B0B0B",
-        appLightBlack: "#262626"
+        appLightBlack: "#262626",
+        appSuperLightWhite: "#EDEDED"
       }
     },
   },

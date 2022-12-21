@@ -16,8 +16,8 @@ export default function VoorstellingenPreview() {
                 <VoorstellingPosterCard />
             </div>
 
-            <div className="w-full flex items-center justify-center mt-6">
-                <Link to="/voorstellingen" className='border-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>BEKIJK ALLE VOORSTELLINGEN</Link>
+            <div className="w-full flex items-center justify-center mt-8">
+                <Link to="/voorstellingen" className='border-2 border-appRed bg-appRed text-white px-14 py-2 rounded-xl font-extrabold'>BEKIJK ALLE VOORSTELLINGEN</Link>
             </div>
         </div>
     )

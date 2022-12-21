@@ -16,8 +16,8 @@ export default function Footer() {
                 <div className="mb-auto mt-0">
                     <p className="font-bold text-xl mt-2">CONTACT</p>
                     <div className="flex flex-col mt-2 text-appLight">
-                        <a>Telnmr: +31 6 123 456 78</a>
-                        <a>E-mail: contact@theaterlaak.com</a>
+                        <a> Telnmr: +31 6 123 456 78</a>
+                        <a href="mailto:info@laaktheater.nl">email: info@laaktheater.nl</a>
                         <a className="w-64">Adres: Ferrandweg 4-T, 2523 XT Den Haag</a>
                     </div>
                 </div>

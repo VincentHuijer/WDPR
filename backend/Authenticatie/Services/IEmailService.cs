@@ -1,5 +1,5 @@
 public interface IEmailService{
 
-    void Send(string email, string content);
+    Task Send(string email, string content);
 
 }

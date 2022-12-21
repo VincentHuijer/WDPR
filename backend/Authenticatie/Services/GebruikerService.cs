@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 public class GebruikerService : IGebruikerService{
-
+//Eventueel tasks omzetten naar actionresults, zie KlantController.
     public async Task<bool> Registreer(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context){
         Klant klant = new Klant(voornaam, achternaam, email, wachtwoord);
         if(context.Klanten.Any(k => k.Email == email)) return false; //Error toevoegen dat duidelijk wordt dat email in gebruik is.

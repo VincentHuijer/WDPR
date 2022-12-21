@@ -10,7 +10,7 @@ export default function VoorstellingenPreview() {
 
             <div className="flex w-full h-fit justify-between">
                 <VoorstellingPosterCard name={"Aladin"} afbeelding={"/media/AladinShow.png"} voorstellingPagelink={"/voorstelling/Aladin"}/>  
-                <VoorstellingPosterCard name={"Marry Poppins"}afbeelding={"/media/SoldaatVanOranje.png"}voorstellingPagelink={"/voorstelling/SoldatVanOranje"}/>
+                <VoorstellingPosterCard name={"Marry Poppins"}afbeelding={"/media/SoldaatVanOranje.png"}voorstellingPagelink={"/voorstelling/SoldaatVanOranje"}/>
                 <VoorstellingPosterCard name ={"Sneeuwwitje"}afbeelding={"/media/Sneeuwwitje.png"}voorstellingPagelink={"/voorstelling/Sneeuwwitje"}/>
                 <VoorstellingPosterCard name ={"American Psycho"}afbeelding={"/media/AmericanPsycho.png"}voorstellingPagelink={"/voorstelling/AmericanPsycho"}/>
                 <VoorstellingPosterCard name={"Johan Cruijff"}afbeelding={"/media/JohanCruiff.png"}voorstellingPagelink={"/voorstelling/JohanCruiff"}/>

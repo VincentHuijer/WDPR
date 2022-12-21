@@ -4,13 +4,9 @@ export default function VoorstellingPosterCard({name, afbeelding, voorstellingPa
     return (
 
         <div className="">
-            <Link to={"/voorstelling/123"}>
+            <Link to={voorstellingPagelink}>
                 <div className="rounded-2xl posterAspect">
-<<<<<<< Updated upstream
-                    <img className="h-96" src="/media/AladinShow.png" />
-=======
                     <img className="h-96" src={afbeelding} />
->>>>>>> Stashed changes
                 </div>
             </Link>
             <p className="font-bold mt-1">{name}</p>

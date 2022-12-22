@@ -10,8 +10,8 @@ export default function Hero() {
 
                 <div className="w-11/12 flex flex-col justify-center items-start m-auto absolute text-white">
                     <p className="font-bold text-6xl">THEATER LAAK</p>
-                    <p className="font-bold text-4xl">Waar dromen werkelijkheid worden</p>
-                    <p className="mt-2 font-semibold">Beleef een van onze vele shows!</p>
+                    <p className="mt-2 font-bold text-3xl">WAAR DROMEN WERKELIJKHEID WORDEN</p>
+                    <p className="mt-0 font-semibold">Beleef een van onze vele shows!</p>
 
                     <Link to="/voorstellingen" className='border-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6'>BEKIJK ALLE VOORSTELLINGEN</Link>
                 </div>

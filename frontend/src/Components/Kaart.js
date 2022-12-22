@@ -1,6 +1,6 @@
 export default function Kaart() {
     return (
-        <div className="w-11/12 flex flex-col gap-4 justify-between m-auto mt-20 h-full">
+        <div id="contact" className="w-11/12 flex flex-col gap-4 justify-between m-auto mt-20 h-full">
             <p className="text-4xl font-extrabold">HOE KUNT U ONS BEREIKEN?</p>
 
             <div className="w-full h-1/3 flex justify-between items-start overflow-hidden">

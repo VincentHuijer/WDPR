@@ -14,6 +14,7 @@ import Footer from './Components/Footer';
 import OverOns from './Pages/OverOns';
 import Voorstelling from './Pages/Voorstelling';
 import WinkelMand from './Pages/WinkelMand';
+import Voorstellingen from './Pages/Voorstellingen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,6 +29,7 @@ root.render(
           <Route path='/overons' element={<OverOns />} />
           <Route path='/voorstelling/:showID' element={<Voorstelling />} />
           <Route path='/winkelmand' element={<WinkelMand />} />
+          <Route path='/voorstellingen' element={<Voorstellingen />} />
         </Routes>
 
         <Footer />

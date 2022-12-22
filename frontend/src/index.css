@@ -21,3 +21,20 @@ body {
 .posterAspect{
   aspect-ratio: 16 / 9;
 }
+
+::-webkit-scrollbar {
+  width: 10px
+}
+
+::-webkit-scrollbar-track {
+  background: #dcdcdc;
+  z-index: 100
+}
+
+::-webkit-scrollbar-thumb {
+  background: #464646;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555
+}

@@ -6,7 +6,7 @@ export default function ArticlePreview({text, overonspagina = false}) {
         <div className="w-11/12 flex justify-between m-auto mt-12 h-full">
             <div className='h-fit pb-1.5 flex flex-col justify-between'>
                 <p className="text-4xl font-extrabold">OVER THEATER LAAK</p>
-                <p className="mt-3 font-semibold text-appLightBlack w-1/4">{text}<br /></p>
+                <p className="mt-3 font-semibold text-appLightBlack w-2/4">{text}<br /></p>
 
                 {!overonspagina && <div className='mt-6'>
                 
@@ -16,7 +16,7 @@ export default function ArticlePreview({text, overonspagina = false}) {
             </div>
 
             <div className='h-64'>
-                <div className='h-full overflow-hidden'>
+                <div className='h-full w-96 overflow-hidden'>
                     <img className='h-full rounded-2xl border-black border-2' src='./media/theaterLaak.jpg' />
                 </div>
             </div>

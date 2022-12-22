@@ -18,7 +18,7 @@ export function NavBar() {
 
                             <Link to="/overons">Over Ons</Link>
                             <Link to="/voorstellingen">Alle Voorstellingen</Link>
-                            <Link to="/contact">Contact Opnemen</Link>
+                            <Link to="/overons#contact">Contact Opnemen</Link>
 
                     </div>
                 </div>

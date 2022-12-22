@@ -1,44 +1,49 @@
 using Microsoft.EntityFrameworkCore;
 public class GebruikerService : IGebruikerService{
-//Eventueel tasks omzetten naar actionresults, zie KlantController.
+
 
     private IEmailService _emailService;
     public GebruikerService(IEmailService emailService){
         _emailService = emailService;
     }
-    public async Task<bool> Registreer(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context){
+    public async Task<string> Registreer(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context){
         Klant klant = new Klant(voornaam, achternaam, email, wachtwoord);
-        if(await CheckDomainIsDisposable(email)) return false; //Error toevoegen dat duidelijk wordt dat email in temp domain staat.
-        if(context.Klanten.Any(k => k.Email == email)) return false; //Error toevoegen dat duidelijk wordt dat email in gebruik is.
+        if(await CheckDomainIsDisposable(email)) return ResponseList.DisposableMailError; 
+        else if(context.Klanten.Any(k => k.Email == email)) return ResponseList.EmailInUseError; 
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
         await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
-        return true;
+        return ResponseList.Succes;
     }
-    public async Task<bool> Login(string email, string wachtwoord, GebruikerContext context, bool isMedewerker){
+    public async Task<string> Login(string email, string wachtwoord, GebruikerContext context, bool isMedewerker){
         if(!isMedewerker){
             Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-            if(klant == null) return false;
-            if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
+            if(klant == null) return ResponseList.UserNotFoundError;
+            else if(klant.VerificatieToken != null) return ResponseList.NotVerifiedError;
+            else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
-                return true;
+                return ResponseList.Succes;
             }
-            if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
+            else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
-                return false;
             }
         }else if(isMedewerker){
             Medewerker? medewerker = await context.Medewerkers.FirstOrDefaultAsync(m => m.Email == email);
-            if(medewerker == null) return false;
-            if(medewerker.Wachtwoord == wachtwoord) return true;
+            if(medewerker == null) return ResponseList.InvalidCredentialsError;
+            else if(medewerker.Wachtwoord == wachtwoord) return ResponseList.Succes;
         }
-        return false;
+        return ResponseList.InvalidCredentialsError;
     }
-    public async Task<bool> Verifieer(string email, string token, GebruikerContext context){
+    public async Task<string> Verifieer(string email, string token, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        if(klant == null) return false;
-        if(klant.VerificatieToken.Token == token && klant.VerificatieToken.VerloopDatum > DateTime.Now) return true;
-        return false;
+        if(klant == null) return ResponseList.UserNotFoundError;
+        else if(klant.VerificatieToken == null) return ResponseList.AlreadyVerifiedError;
+        else if(klant.VerificatieToken.Token == token && klant.VerificatieToken.VerloopDatum > DateTime.Now){
+            klant.VerificatieToken = null;
+            await context.SaveChangesAsync();
+            return ResponseList.Succes;
+        }
+        return ResponseList.ExpiredTokenError;
     }
 
     public async Task<bool> CheckDomainIsDisposable(string email){

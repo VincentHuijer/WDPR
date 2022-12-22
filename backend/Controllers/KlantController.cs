@@ -18,16 +18,23 @@ public class KlantController : ControllerBase
 
     [HttpPost("registreer")]
     public async Task<ActionResult> NieuweKlant([FromBody] Klant klant)
-    {
-        if(await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, _context)) return Ok();
-        return BadRequest("Gebruiker bestaat al of emailadres is al in gebruik.");
+    {   
+        var response = await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, _context);
+        if(response == ResponseList.Succes) return Ok();
+        else if(response == ResponseList.DisposableMailError) return StatusCode(406, ResponseList.DisposableMailError);
+        else if(response == ResponseList.EmailInUseError) return StatusCode(409, ResponseList.EmailInUseError);
+        return StatusCode(500);
     }
 
     [HttpPost("login")]
     public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
-        if(await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context, false)) return Ok(); //Bij foute inlogpoging, poging toevoegen aan klant. Bij 3 pogingen, account geblokkeerd. Reset count bij succesvolle login.
-        return BadRequest("Gebruiker niet gevonden, wachtwoord is fout of emailadres is nog niet geverifieerd."); //Misschien in de service ipv een boolean een actionresult returnen die we hier passen.
+        var response = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context, false);
+        if(response == ResponseList.Succes) return Ok();
+        else if(response == ResponseList.UserNotFoundError) return NotFound(ResponseList.UserNotFoundError);
+        else if(response == ResponseList.NotVerifiedError) return StatusCode(403, ResponseList.NotVerifiedError);
+        else if(response == ResponseList.InvalidCredentialsError) return StatusCode(401, ResponseList.InvalidCredentialsError);
+        return StatusCode(500); 
     }
 
     [HttpPost("verifieer")]
@@ -35,15 +42,12 @@ public class KlantController : ControllerBase
     // Dit nog veranderen in email/token ipv klant. 
     // Hiervoor moeten we token toevoegen aan emailwachtwoord class. Evt een andere manier om dit op te lossen?
     {
-        //Klant klant = await GetKlantByEmailAsync(email);
-        //if(klant1 == null) return NotFound();
-        if(klant.VerificatieToken == null) return BadRequest("Already verified");
-        if(await _service.Verifieer(klant.Email, klant.VerificatieToken.Token, _context)) return Ok();
-        return BadRequest();
-    }
-
-    private async Task<Klant> GetKlantByEmailAsync(string email){
-        return await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        var response = await _service.Verifieer(klant.Email, klant.VerificatieToken.Token, _context);
+        if(response == ResponseList.Succes) return Ok();
+        else if(response == ResponseList.UserNotFoundError) return NotFound(ResponseList.UserNotFoundError);
+        else if(response == ResponseList.AlreadyVerifiedError) return StatusCode(403, ResponseList.AlreadyVerifiedError);
+        else if(response == ResponseList.ExpiredTokenError) return StatusCode(403, ResponseList.ExpiredTokenError);
+        return StatusCode(500);
     }
 
 }
@@ -51,4 +55,15 @@ public class KlantController : ControllerBase
 public class EmailWachtwoord{
     public string Email {set; get;}
     public string Wachtwoord {set; get;}
+}
+
+public class ResponseList{
+    public static string Succes = "Success!";
+    public static string DisposableMailError = "Disposable email used!";
+    public static string EmailInUseError = "Email in use!";
+    public static string InvalidCredentialsError = "Email or password wrong!";
+    public static string ExpiredTokenError = "Token expired!";
+    public static string UserNotFoundError = "User not found!";
+    public static string AlreadyVerifiedError = "User already verified!";
+    public static string NotVerifiedError = "User not verified!";
 }

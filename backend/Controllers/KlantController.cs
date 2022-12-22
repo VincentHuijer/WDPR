@@ -19,22 +19,15 @@ public class KlantController : ControllerBase
     [HttpPost("registreer")]
     public async Task<ActionResult> NieuweKlant([FromBody] Klant klant)
     {   
-        var response = await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, _context);
-        if(response == ResponseList.Succes) return Ok();
-        else if(response == ResponseList.DisposableMailError) return StatusCode(406, ResponseList.DisposableMailError);
-        else if(response == ResponseList.EmailInUseError) return StatusCode(409, ResponseList.EmailInUseError);
-        return StatusCode(500);
+        var response = HandleResponse(await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, _context));
+        return response;
     }
 
     [HttpPost("login")]
     public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
-        var response = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context, false);
-        if(response == ResponseList.Succes) return Ok();
-        else if(response == ResponseList.UserNotFoundError) return NotFound(ResponseList.UserNotFoundError);
-        else if(response == ResponseList.NotVerifiedError) return StatusCode(403, ResponseList.NotVerifiedError);
-        else if(response == ResponseList.InvalidCredentialsError) return StatusCode(401, ResponseList.InvalidCredentialsError);
-        return StatusCode(500); 
+        var response = HandleResponse(await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context, false));
+        return response;
     }
 
     [HttpPost("verifieer")]
@@ -42,11 +35,19 @@ public class KlantController : ControllerBase
     // Dit nog veranderen in email/token ipv klant. 
     // Hiervoor moeten we token toevoegen aan emailwachtwoord class. Evt een andere manier om dit op te lossen?
     {
-        var response = await _service.Verifieer(klant.Email, klant.VerificatieToken.Token, _context);
+        var response = HandleResponse(await _service.Verifieer(klant.Email, klant.VerificatieToken.Token, _context));
+        return response;
+    }
+
+    public ActionResult HandleResponse(string response){
         if(response == ResponseList.Succes) return Ok();
         else if(response == ResponseList.UserNotFoundError) return NotFound(ResponseList.UserNotFoundError);
         else if(response == ResponseList.AlreadyVerifiedError) return StatusCode(403, ResponseList.AlreadyVerifiedError);
         else if(response == ResponseList.ExpiredTokenError) return StatusCode(403, ResponseList.ExpiredTokenError);
+        else if(response == ResponseList.NotVerifiedError) return StatusCode(403, ResponseList.NotVerifiedError);
+        else if(response == ResponseList.InvalidCredentialsError) return StatusCode(401, ResponseList.InvalidCredentialsError);
+        else if(response == ResponseList.DisposableMailError) return StatusCode(406, ResponseList.DisposableMailError);
+        else if(response == ResponseList.EmailInUseError) return StatusCode(409, ResponseList.EmailInUseError);
         return StatusCode(500);
     }
 

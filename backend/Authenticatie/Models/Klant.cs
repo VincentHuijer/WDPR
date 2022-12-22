@@ -19,5 +19,6 @@ public class Klant{
     public bool Artiest {set; get;}
     public List<Rol> Rollen {set; get;}
     public VerificatieToken? VerificatieToken {set; get;}
-
+    public int Inlogpoging {get; set;} // Hier misschien iets mooiers op bedenken. Eventueel een inlogpoging class met info over de login poging erbij? Kan nuttig zijn voor logging en monitoring.
+    //Toevoegen dat als inlogpoging > 3 ==> account geblokkeerd = true;
 }

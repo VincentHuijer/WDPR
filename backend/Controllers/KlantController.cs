@@ -33,13 +33,18 @@ public class KlantController : ControllerBase
     [HttpPost("verifieer")]
     public async Task<ActionResult> VerifieerKlant([FromBody] Klant klant) 
     // Dit nog veranderen in email/token ipv klant. 
-    //Hiervoor moeten we token toevoegen aan emailwachtwoord class en een methode maken die een gebruiker kan opvragen op basis van email. Evt een andere manier om dit op te lossen?
+    // Hiervoor moeten we token toevoegen aan emailwachtwoord class. Evt een andere manier om dit op te lossen?
     {
+        //Klant klant = await GetKlantByEmailAsync(email);
+        //if(klant1 == null) return NotFound();
         if(klant.VerificatieToken == null) return BadRequest("Already verified");
         if(await _service.Verifieer(klant.Email, klant.VerificatieToken.Token, _context)) return Ok();
         return BadRequest();
     }
 
+    private async Task<Klant> GetKlantByEmailAsync(string email){
+        return await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+    }
 
 }
 

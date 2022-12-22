@@ -19,7 +19,14 @@ public class GebruikerService : IGebruikerService{
         if(!isMedewerker){
             Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
             if(klant == null) return false;
-            if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null) return true;
+            if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
+                klant.Inlogpoging = 0;
+                return true;
+            }
+            if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
+                klant.Inlogpoging++;
+                return false;
+            }
         }else if(isMedewerker){
             Medewerker? medewerker = await context.Medewerkers.FirstOrDefaultAsync(m => m.Email == email);
             if(medewerker == null) return false;

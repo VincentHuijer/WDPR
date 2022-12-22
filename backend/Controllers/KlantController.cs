@@ -9,7 +9,7 @@ public class KlantController : ControllerBase
     //WILLEN WE GEBRUIK MAKEN VAN DOTNET IDENTITY? IS DIT WEL NODIG? 
     //WE KUNNEN EIGEN HASHING MAKEN
     private readonly GebruikerContext _context;
-    private IGebruikerService _service = new GebruikerService(); //Is er een andere manier om dit te doen?
+    private IGebruikerService _service = new GebruikerService(new EmailService()); //Is er een andere manier om dit te doen?
 
     public KlantController(GebruikerContext context)
     {

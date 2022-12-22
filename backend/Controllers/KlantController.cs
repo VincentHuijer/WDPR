@@ -26,7 +26,7 @@ public class KlantController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
-        var response = HandleResponse(await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context, false));
+        var response = HandleResponse(await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context));
         return response;
     }
 

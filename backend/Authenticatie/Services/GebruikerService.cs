@@ -15,22 +15,16 @@ public class GebruikerService : IGebruikerService{
         await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
         return ResponseList.Succes;
     }
-    public async Task<string> Login(string email, string wachtwoord, GebruikerContext context, bool isMedewerker){
-        if(!isMedewerker){
-            Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-            if(klant == null) return ResponseList.UserNotFoundError;
-            else if(klant.VerificatieToken != null) return ResponseList.NotVerifiedError;
-            else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
+    public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
+        Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        if(klant == null) return ResponseList.UserNotFoundError;
+        else if(klant.VerificatieToken != null) return ResponseList.NotVerifiedError;
+        else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
                 return ResponseList.Succes;
-            }
-            else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
+        }
+        else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
-            }
-        }else if(isMedewerker){
-            Medewerker? medewerker = await context.Medewerkers.FirstOrDefaultAsync(m => m.Email == email);
-            if(medewerker == null) return ResponseList.InvalidCredentialsError;
-            else if(medewerker.Wachtwoord == wachtwoord) return ResponseList.Succes;
         }
         return ResponseList.InvalidCredentialsError;
     }

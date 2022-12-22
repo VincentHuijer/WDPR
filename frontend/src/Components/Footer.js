@@ -1,3 +1,5 @@
+import copyToClipboard from "./CopyToClickboard"
+
 export default function Footer() {
     return (
         <footer className='w-full bg-black text-white pt-2 pb-8 mt-24 bottom-0' >
@@ -5,18 +7,18 @@ export default function Footer() {
                 <div className="mb-auto mt-2">
                     <p className="font-bold text-xl ">LINKS</p>
                     <div className="flex flex-col mt-2 text-appLight">
-                        <a>Over Ons</a>
-                        <a>Openingstijden & drukte</a>
-                        <a>Alle Voorstellingen</a>
-                        <a>Inloggen</a>
-                        <a>Registreren</a>
+                        <a href="/overons">Over Ons</a>
+                        <a href="/kalender">Openingstijden & drukte</a>
+                        <a href="/voorstellingen">Alle Voorstellingen</a>
+                        <a href="/login">Inloggen</a>
+                        <a href="/register">Registreren</a>
                     </div>
                 </div>
-
                 <div className="mb-auto mt-0">
-                    <p className="font-bold text-xl mt-2">CONTACT</p>
+                    <p className="font-bold text-xl mt-2"> CONTACT</p>
                     <div className="flex flex-col mt-2 text-appLight">
-                        <a> Telnmr: +31 6 123 456 78</a>
+                        {/* <a> Telnmr: +31 6 123 456 78</a> */}
+                        <button className="flex flex-col" type='button' id='btn' onClick={() =>{copyToClipboard("Telnmr: +31 6 123 456 78")}}>Telnmr: +31 6 123 456 78</button> 
                         <a href="mailto:info@laaktheater.nl">email: info@laaktheater.nl</a>
                         <a className="w-64">Adres: Ferrandweg 4-T, 2523 XT Den Haag</a>
                     </div>

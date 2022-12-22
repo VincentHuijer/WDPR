@@ -116,16 +116,12 @@ export default function Voorstelling() {
                     </div>
 
                     <div className="flex flex-wrap gap-12 w-full mt-4">
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
-                        <ArtiestProfile />
+                    <ArtiestProfile name={"Will Smith"} picture = {"/media/WillSmith.png"} role={"Protagonist"}/>
+                    <ArtiestProfile name={"Jessie"} picture = {"/media/Person.png"} role={"antagonist"}/>
+                    <ArtiestProfile name={"Elizabeth"} picture = {"/media/Person.png"} role={"bijfiguur"}/>
+                    <ArtiestProfile name={"Bo"} picture = {"/media/Person.png"} role={"bijfiguur"}/>
+                    <ArtiestProfile name={"Malenia"} picture = {"/media/Person.png"} role={"bijfiguur"}/>
+                    <ArtiestProfile name={"Andrea"} picture = {"/media/Person.png"} role={"bijfiguur"}/>
                     </div>
                 </div>
             </div>

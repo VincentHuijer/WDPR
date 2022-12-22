@@ -7,17 +7,21 @@ import ArtiestProfile from '../Components/ArtiestProfile'
 
 export default function Voorstelling() {
 
+    //1 = VIP
+    //2 = GEHANDICAPT
+    //3 = STANDAARD
+    //4 = GESELECTEERD
+    //5 = GERESERVEERD
+
     const [seats, setSeats] = useState([
         [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 2, 1, 1, 0, 0],
-        [0, 2, 2, 0, 2, 2, 0, 0],
-        [0, 0, 0, 0, 0, 0, 2, 2],
-        [0, 0, 2, 2, 0, 2, 2, 2],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 2, 2, 2, 2],
+        [0, 0, 0, 3, 3, 3, 0, 0],
+        [0, 3, 3, 0, 3, 3, 0, 0],
+        [0, 0, 0, 0, 0, 0, 3, 3],
+        [2, 5, 3, 3, 5, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 2],
+        [1, 1, 5, 5, 5, 1],
     ])
-
-    const [bestelPopup, setbestelPopup] = useState(false)
 
     //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
 
@@ -46,14 +50,14 @@ export default function Voorstelling() {
                             <p className="text-appLightBlack font-bold">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
                         </div>
 
-                        {!bestelPopup && <div onClick={() => setbestelPopup(true)} className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4'>
+                        {/* {!bestelPopup && <div onClick={() => setbestelPopup(true)} className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4'>
                             KAARTJES BESTELLEN
-                        </div>}
+                        </div>} */}
 
 
                         {/* ONLY ENABLE THIS WHEN "KAARTJES BESTELLEN" HAS BEEN CLICKED */}
 
-                        {bestelPopup && <div className="mt-8">
+                        <div className="mt-8">
                             <div>
                                 <p className="text-4xl font-extrabold">KAARTJES BESTELLEN</p>
                             </div>
@@ -77,9 +81,11 @@ export default function Voorstelling() {
                                     </div>
 
                                     <div className="w-96 flex flex-col gap-2">
-                                        <div className="flex w-52 items-center gap-2"><Seat type={0} /><p>= NIET BESCHIKBAAR</p></div>
-                                        <div className="flex w-52 items-center gap-2"><Seat type={2} /><p>= BESCHIKBAAR</p></div>
-                                        <div className="flex w-52 items-center gap-2"><Seat type={1} /><p>= GESELECTEERD</p></div>
+                                        <div className="flex w-52 items-center gap-2"><Seat type={1} /><p className="font-bold">= VIP</p></div>
+                                        <div className="flex w-52 items-center gap-2"><Seat type={2} /><p className="font-bold">= GEHANDICAPT</p></div>
+                                        <div className="flex w-52 items-center gap-2"><Seat type={3} /><p className="font-bold">= STANDAARD</p></div>
+                                        <div className="flex w-52 items-center gap-2"><Seat type={4} /><p className="font-bold">= GESELECTEERD</p></div>
+                                        <div className="flex w-52 items-center gap-2"><Seat type={5} /><p className="font-bold">= GERESERVEERD</p></div>
                                     </div>
                                 </div>
 
@@ -92,7 +98,7 @@ export default function Voorstelling() {
                                 TOEVOEGEN AAN WINKELMAND
                             </div>
 
-                        </div>}
+                        </div>
 
                     </div>
 

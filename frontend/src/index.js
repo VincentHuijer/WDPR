@@ -13,8 +13,7 @@ import { NavBar } from './Components/NavBar';
 import Footer from './Components/Footer';
 import OverOns from './Pages/OverOns';
 import Voorstelling from './Pages/Voorstelling';
-
-
+import WinkelMand from './Pages/WinkelMand';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,6 +27,7 @@ root.render(
           <Route exact path='/' element={<HomePage />} />
           <Route path='/overons' element={<OverOns />} />
           <Route path='/voorstelling/:showID' element={<Voorstelling />} />
+          <Route path='/winkelmand' element={<WinkelMand />} />
         </Routes>
 
         <Footer />

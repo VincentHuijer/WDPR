@@ -8,7 +8,7 @@ import {
 export function NavBar() {
     return (
         <header className='w-full bg-white pt-2 fixed top-0 z-50' >
-            <div className='w-11/12 flex justify-between items-center m-auto'>
+            <div className='w-11/12 flex justify-between items-center m-auto pb-2'>
 
                 <div className='flex items-center gap-4'>
 

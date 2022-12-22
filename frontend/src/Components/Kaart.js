@@ -9,10 +9,10 @@ export default function Kaart() {
                     <p className="font-semibold text-appLightBlack">Email: contact@theaterlaak.com</p>
                     <p className="font-semibold text-appLightBlack">Telnmr: +31 6 12 345 678</p>
                 </div>
+
                 <div className="w-1/2">
                     <img className="h-full w-full" src="/media/Kaart.png" />
                 </div>
-
             </div>
         </div>
     )

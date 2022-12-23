@@ -8,36 +8,36 @@ public class GebruikerService : IGebruikerService{
     }
     public async Task<string> Registreer(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context){
         Klant klant = new Klant(voornaam, achternaam, email, wachtwoord);
-        if(await CheckDomainIsDisposable(email)) return ResponseList.DisposableMailError; 
-        else if(context.Klanten.Any(k => k.Email == email)) return ResponseList.EmailInUseError; 
+        if(await CheckDomainIsDisposable(email)) return "DisposableMailError"; 
+        else if(context.Klanten.Any(k => k.Email == email)) return "EmailInUseError"; 
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
         await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
-        return ResponseList.Succes;
+        return "Success";
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        if(klant == null) return ResponseList.UserNotFoundError;
-        else if(klant.VerificatieToken != null) return ResponseList.NotVerifiedError;
+        if(klant == null) return "UserNotFoundError";
+        else if(klant.VerificatieToken != null) return "NotVerifiedError";
         else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
-                return ResponseList.Succes;
+                return "Success";
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
         }
-        return ResponseList.InvalidCredentialsError;
+        return "InvalidCredentialsError";
     }
     public async Task<string> Verifieer(string email, string token, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        if(klant == null) return ResponseList.UserNotFoundError;
-        else if(klant.VerificatieToken == null) return ResponseList.AlreadyVerifiedError;
+        if(klant == null) return "UserNotFoundError";
+        else if(klant.VerificatieToken == null) return "AlreadyVerifiedError";
         else if(klant.VerificatieToken.Token == token && klant.VerificatieToken.VerloopDatum > DateTime.Now){
             klant.VerificatieToken = null;
             await context.SaveChangesAsync();
-            return ResponseList.Succes;
+            return "Success";
         }
-        return ResponseList.ExpiredTokenError;
+        return "ExpiredTokenError";
     }
 
     public async Task<bool> CheckDomainIsDisposable(string email){

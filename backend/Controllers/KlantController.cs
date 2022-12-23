@@ -39,15 +39,11 @@ public class KlantController : ControllerBase
         return response;
     }
 
-    public ActionResult HandleResponse(string response){
-        if(response == ResponseList.Succes) return Ok();
-        else if(response == ResponseList.UserNotFoundError) return NotFound(ResponseList.UserNotFoundError);
-        else if(response == ResponseList.AlreadyVerifiedError) return StatusCode(403, ResponseList.AlreadyVerifiedError);
-        else if(response == ResponseList.ExpiredTokenError) return StatusCode(403, ResponseList.ExpiredTokenError);
-        else if(response == ResponseList.NotVerifiedError) return StatusCode(403, ResponseList.NotVerifiedError);
-        else if(response == ResponseList.InvalidCredentialsError) return StatusCode(401, ResponseList.InvalidCredentialsError);
-        else if(response == ResponseList.DisposableMailError) return StatusCode(406, ResponseList.DisposableMailError);
-        else if(response == ResponseList.EmailInUseError) return StatusCode(409, ResponseList.EmailInUseError);
+    public ActionResult HandleResponse(string response){ 
+        var responses = ResponseList.Responses;
+        if(responses.ContainsKey(response)){
+            return StatusCode(responses[response].Item1, responses[response].Item2);
+        }
         return StatusCode(500);
     }
 
@@ -59,12 +55,15 @@ public class EmailWachtwoord{
 }
 
 public class ResponseList{
-    public static string Succes = "Success!";
-    public static string DisposableMailError = "Disposable email used!";
-    public static string EmailInUseError = "Email in use!";
-    public static string InvalidCredentialsError = "Email or password wrong!";
-    public static string ExpiredTokenError = "Token expired!";
-    public static string UserNotFoundError = "User not found!";
-    public static string AlreadyVerifiedError = "User already verified!";
-    public static string NotVerifiedError = "User not verified!";
+
+    public static Dictionary<string, Tuple<int, string>> Responses = new Dictionary<string, Tuple<int, string>>(){
+        {"Success", Tuple.Create(200, "Success!")},
+        {"AlreadyVerifiedError", Tuple.Create(403, "User already verified!")},
+        {"UserNotFoundError", Tuple.Create(400, "User not found!")},
+        {"ExpiredTokenError", Tuple.Create(403, "Token expired!")},
+        {"NotVerifiedError", Tuple.Create(403, "User not verified!")},
+        {"InvalidCredentialsError", Tuple.Create(401, "Email or password incorrect!")},
+        {"DisposableMailError", Tuple.Create(406, "Disposable email used!")},
+        {"EmailInUseError", Tuple.Create(409, "Email in use!")}
+    };
 }

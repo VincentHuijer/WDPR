@@ -7,5 +7,7 @@ public class GebruikerContext : DbContext{
 
     public DbSet<Klant> Klanten {set; get;}
     public DbSet<Medewerker> Medewerkers {set; get;}
+    public DbSet<Rol> Rollen {set; get;}
+    public DbSet<VerificatieToken> VerificatieTokens {set; get;}
 
 }

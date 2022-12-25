@@ -15,6 +15,8 @@ import OverOns from './Pages/OverOns';
 import Voorstelling from './Pages/Voorstelling';
 import WinkelMand from './Pages/WinkelMand';
 import Voorstellingen from './Pages/Voorstellingen';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -30,6 +32,8 @@ root.render(
           <Route path='/voorstelling/:showID' element={<Voorstelling />} />
           <Route path='/winkelmand' element={<WinkelMand />} />
           <Route path='/voorstellingen' element={<Voorstellingen />} />
+          <Route path='/login' element ={<Login/>}/>
+          <Route path ='/register' element={<Register/>}/>
         </Routes>
 
         <Footer />

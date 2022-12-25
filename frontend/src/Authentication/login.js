@@ -19,7 +19,7 @@ export const Login = (props) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          placeholder="naam@gmail.com"
+          placeholder=" Uw emailadres"
           id="email"
           name="email"
         />
@@ -28,7 +28,7 @@ export const Login = (props) => {
           value={wachtwoord}
           onChange={(e) => setWachtwoord(e.target.value)}
           type="wachtwoord"
-          placeholder="**"
+          placeholder=" *********"
           id="wachtwoord"
           name="wachtwoord"
         />

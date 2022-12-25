@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import { Login } from "./login";
 import { Register } from "./Register";
 
-function AuthenthicatiePage() {
+function AuthenthicatiePage(Loginpage) {
   const [currentForm, setCurrentForm] = useState('login');
 
   const toggleForm = (formName) => {
     setCurrentForm(formName);
   }
 
-  return (
+  if (Loginpage) return (
     <div className="App">
-      {
-        currentForm === "login" ? <Login onFormSwitch={toggleForm} /> : <Register onFormSwitch={toggleForm} />
+      { 
+      currentForm === "login" ? <Login onFormSwitch={toggleForm} /> : <Register onFormSwitch={toggleForm} />
       }
     </div>
-  );
+  )
+ else{
+  currentForm === "login" ? <Register onFormSwitch={toggleForm} /> : <Login onFormSwitch={toggleForm} />
+
+ }
 }
 
 export default AuthenthicatiePage;

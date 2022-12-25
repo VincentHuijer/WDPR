@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import PasswordChecklist from "react-password-checklist"
 
 export const Register = (props) => {
     const [email, setEmail] = useState('');
-    const [wachtwoord, setWachtwoord] = useState('');
+    const [password, setPassword] = useState("")
+	const [passwordAgain, setPasswordAgain] = useState("");
     const [firstName, setFirstName] = useState('');
     const [LastName, setLastName] = useState('');
     const [geboorteDatum, setGeboortedatum] = useState('');
@@ -26,9 +28,28 @@ export const Register = (props) => {
             <input value={email} onChange={(e) => setEmail(e.target.value)}type="email" placeholder="naam@gmail.com" id="email" name="email" />
             <label htmlFor="email">email</label>
             <input value={geboorteDatum} onChange={(e) => setGeboortedatum(e.target.value)}type="geboortedatum" placeholder="**" id="geboortedatum" name="geboortedatum" />
-            <label htmlFor="wachtwoord">wachtwoord</label>
-            <input value={wachtwoord} onChange={(e) => setWachtwoord(e.target.value)} type="wachtwoord" placeholder="Supergeheimwachtwoord123#" id="wachtwoord" name="wachtwoord" />
+            <label htmlFor="password">Password</label>
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="SupergeheimPassword123#" id="Password" name="password" />
+            <label htmlFor="Password Again"> </label>
+			<input type="password" onChange={e => setPasswordAgain(e.target.value)}></input>
+
+
+
+
             <button type="registreer">Log In</button>
+           <PasswordChecklist
+				rules={["minLength","specialChar","number","capital","match"]}
+				minLength={8}
+				value={password}
+				valueAgain={passwordAgain}
+				messages={{
+					minLength: "Minimaal 8 karakters!",
+					specialChar: "Een special karakter!",
+					number: "Een nummer!",
+					capital: "Een hoofdletter!",
+					match: "niet overeen!",
+				}}
+			/>
         </form>
         <button className="link-btn" onClick={() => props.onFormSwitch('login')}>Al een account? Log hier in.</button>
     </div>

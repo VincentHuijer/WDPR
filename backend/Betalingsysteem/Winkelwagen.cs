@@ -2,6 +2,8 @@ class Winkelwagen {
     public iBestelling bestelling;
     public double korting;
 
-    public betalen IsBetaald(Klantbestelling iBestelling);
-    public betalen IsBetaald(DonateurBestelling iBestelling);
+    public Betaling IsBetaald(Klantbestelling iBestelling){
+        return new Betaling();}
+    public Betaling IsBetaald(DonateurBestelling iBestelling){
+        return new Betaling();}
 }

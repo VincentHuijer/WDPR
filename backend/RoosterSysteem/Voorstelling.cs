@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 public class Voorstelling{
-    public Voorstelling(string titel, string betrokkenPersonen, List<Klant> kaartjeshouders, string omschrijving, Klant acteur, Double prijs)
-    {
-        Titel = titel;
-        BetrokkenPersonen = betrokkenPersonen;
-        Kaartjeshouders = kaartjeshouders;
-        Omschrijving = omschrijving;
-        Acteur = acteur;
-        Prijs = prijs;
-    }
+    // public Voorstelling(string titel, string betrokkenPersonen, List<Klant> kaartjeshouders, string omschrijving, Klant acteur, Double prijs)
+    // {
+    //     Titel = titel;
+    //     BetrokkenPersonen = betrokkenPersonen;
+    //     Kaartjeshouders = kaartjeshouders;
+    //     Omschrijving = omschrijving;
+    //     Acteur = acteur;
+    //     Prijs = prijs;
+    // }
     public string Titel { get; set; }
     public string BetrokkenPersonen { get; set; }
     public List<Klant> Kaartjeshouders { get; set; }
@@ -19,6 +19,6 @@ public class Voorstelling{
 
     public Voorstelling HerhaalOptie(string zaalnummer, DateTime DatumEnTijd)
     {
-        return new Voorstelling(); // voeg logica toe
+        return new Voorstelling(); //voeg logica toe
     }
 }

@@ -1,17 +1,21 @@
-public bestelling bestelling;
-public boolean isBetaald;
-public double korting;
+using System;
+using System.Collections.Generic;
 
 class Betaling
 {
-    public isBetaald betalen(Klantbestelling klantbestelling)
+    public iBestelling bestelling;
+    public bool isBetaald;
+    public double korting;
+    public bool betalen(Klantbestelling klantbestelling)
     {
-        console.log("Klant heeft betaald!");
+        System.Console.WriteLine("Klant heeft betaald!");
+        return isBetaald = true;
     }
 
-    public isBetaald betalen(DonateurBestelling donateurBestelling)
+    public bool betalen(DonateurBestelling donateurBestelling)
     {
-        console.log("Donateur heeft betaald!");
+        System.Console.WriteLine("Donateur heeft betaald!");
+        return isBetaald = true;
     }
 }
 

@@ -16,10 +16,7 @@ function AuthenthicatiePage(Loginpage) {
       }
     </div>
   )
- else{
-  currentForm === "login" ? <Register onFormSwitch={toggleForm} /> : <Login onFormSwitch={toggleForm} />
-
- }
+  currentForm === "register" ? <Register onFormSwitch={toggleForm} />: <Login onFormSwitch={toggleForm} />
 }
 
 export default AuthenthicatiePage;

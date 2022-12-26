@@ -106,7 +106,7 @@ export default function Voorstelling() {
 
                     <div>
                         <div className="flex flex-col gap-8 h-5/6 items-end ">
-                            <img className="border-2 border-black bg-black rounded-2xl" src="/media/AladinShow.png" />
+                            <img className="border-2 border-black bg-black rounded-2xl" src="/media/AladinShow.png" alt="AladinFoto" />
                         </div>
                     </div>
                 </div>

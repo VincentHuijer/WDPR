@@ -16,9 +16,5 @@ public class Voorstelling{
     public string Omschrijving { get; set; }
     public Klant Acteur { get; set; }
     public Double Prijs { get; set; }
-
-    public Voorstelling HerhaalOptie(string zaalnummer, DateTime DatumEnTijd)
-    {
-        return new Voorstelling(); //voeg logica toe
-    }
+    public DateTime DatumEnTijd { get; set; }
 }

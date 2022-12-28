@@ -18,10 +18,14 @@ public class Kalender
         return voorstellingen;
     }
 
-    public void HerhaalOptie(string interval, int repeat, Voorstelling voor)
+    public void HerhaalOptie(string interval, int aantalKeer, Voorstelling voor)
     {
         DateTime current = voor.DatumEnTijd;
-        for(int i = 0; i < repeat; i++)
+        if(aantalKeer == 0)
+        {
+            voorstellingen.Add(voor);
+        }
+        for(int i = 0; i < aantalKeer; i++)
         {
             AddFrequency(current, interval);
             voor.DatumEnTijd = current;
@@ -32,6 +36,8 @@ public class Kalender
     {
         switch (frequency.ToLower())
         {
+            case "once":
+                return current;
             case "weekly":
                 return current.AddDays(7);
             case "monthly":

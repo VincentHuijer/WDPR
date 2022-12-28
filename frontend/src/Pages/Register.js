@@ -7,14 +7,45 @@ export default function Register() {
     const [password, setPassword] = useState("")
     const [passwordAgain, setPasswordAgain] = useState("");
     const [firstName, setFirstName] = useState('');
-    const [LastName, setLastName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [geboorteDatum, setGeboortedatum] = useState('');
     const [geslacht, setGeslacht] = useState('');
 
 
-    const handleSubmit = (e) => {
+    const [errorMessage, setErrorMessage] = useState("")
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(email);
+
+        if (!email || !password || !passwordAgain || !firstName || !lastName) return;
+
+        let loginBody = {
+            "Email": email.toLowerCase(),
+            "Wachtwoord": password,
+            "Voornaam": firstName,
+            "Achternaam": lastName,
+        }
+
+
+        await fetch("https://localhost:7253/api/klant/registreer", {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginBody),
+        }).then(async res => {
+            if (res.status == 200) {
+                window.location.href = "/"
+                return
+            }
+
+            let errorMessage = await res.text()
+            setErrorMessage(errorMessage)
+        });
+
     }
 
     return (
@@ -33,8 +64,8 @@ export default function Register() {
                             </div>
 
                             <div className="flex flex-col pt-3 pl-2 w-1/2">
-                                <label className="font-bold" htmlFor="LastName">Achternaam</label>
-                                <input className="focus:outline-none h-8 rounded-lg px-2" value={LastName} name="name" onChange={(e) => setLastName(e.target.value)} id="LastName" placeholder="Last Name" />
+                                <label className="font-bold" htmlFor="lastName">Achternaam</label>
+                                <input className="focus:outline-none h-8 rounded-lg px-2" value={lastName} name="name" onChange={(e) => setLastName(e.target.value)} id="lastName" placeholder="Last Name" />
                             </div>
                         </div>
 
@@ -90,6 +121,11 @@ export default function Register() {
                                 sitekey="6LeLJKwjAAAAANBwpUkGvUJz357ariQ7vhAglkl3"
                             />
                         </div>
+
+
+                        {errorMessage != "" && <div className="w-10/12 m-auto mt-4">
+                            <p className="font-bold text-appRed">{errorMessage}</p>
+                        </div>}
 
                         <div className="w-10/12 m-auto mt-6 hover:cursor-default">
                             <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button>

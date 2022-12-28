@@ -17,29 +17,34 @@ import WinkelMand from './Pages/WinkelMand';
 import Voorstellingen from './Pages/Voorstellingen';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import AuthHandler from './Authentication/AuthHandler';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <div className='flex flex-col'>
-      <Router>
+    <AuthHandler>
+      <div className='flex flex-col'>
+        <Router>
 
-        <NavBar />
+          <NavBar />
 
-        <Routes>
-          <Route exact path='/' element={<HomePage />} />
-          <Route path='/overons' element={<OverOns />} />
-          <Route path='/voorstelling/:showID' element={<Voorstelling />} />
-          <Route path='/winkelmand' element={<WinkelMand />} />
-          <Route path='/voorstellingen' element={<Voorstellingen />} />
-          <Route path='/login' element ={<Login/>}/>
-          <Route path ='/register' element={<Register/>}/>
-        </Routes>
+          <Routes>
+            <Route exact path='/' element={<HomePage />} />
+            <Route path='/overons' element={<OverOns />} />
+            <Route path='/voorstelling/:showID' element={<Voorstelling />} />
+            <Route path='/winkelmand' element={<WinkelMand />} />
+            <Route path='/voorstellingen' element={<Voorstellingen />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+          </Routes>
 
-        <Footer />
-        
-      </Router>
-    </div>
+          <Footer />
+
+        </Router>
+      </div>
+    </AuthHandler>
 
   </React.StrictMode>
 );

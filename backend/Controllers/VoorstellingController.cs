@@ -26,13 +26,13 @@ public class VoorstellingController : ControllerBase
         return response;
     }
 
-    [HttpPost("AddVoorstelling")]
-    public async void AddVoorstelling([FromBody] string interval, int aantalKeer, Voorstelling voor)
-    {
-        _kalender.HerhaalOptie(interval, aantalKeer, voor);
-        //interval = once, weekly, monthly, yearly
-        //aantalKeer = hoe vaak
-    }
+    // [HttpPost("AddVoorstelling")]
+    // public async void AddVoorstelling([FromBody] string interval, int aantalKeer, Voorstelling voor)
+    // {
+    //     _kalender.HerhaalOptie(interval, aantalKeer, voor);
+    //     //interval = once, weekly, monthly, yearly
+    //     //aantalKeer = hoe vaak
+    // }
 
     [HttpPost("VerwijderVoorstelling")]
     public async void VerwijderVoorstelling([FromBody] Voorstelling voorstelling)

@@ -6,6 +6,7 @@ public class Medewerker{
         Wachtwoord = wachtwoord;
         Rollen = new List<Rol>(){Rol.MedewerkerRol};
     }
+    public int Id {set; get;}
     public string Voornaam {set; get;}
     public string Achternaam {set; get;}
     public string Email {set; get;} // Komt in contactgegevens

@@ -6,7 +6,7 @@ export default function Hero() {
     return (
         <div className="w-full">
             <div className="relative flex items-center justify-center overflow-hidden">
-                <img className="h-full w-full" src="/media/heroImage.png" />
+                <img alt='voorpagina foto' className="h-full w-full" src="/media/heroImage.png" />
 
                 <div className="w-11/12 flex flex-col justify-center items-start m-auto absolute text-white">
                     <p className="font-bold text-6xl">THEATER LAAK</p>

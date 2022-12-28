@@ -2,7 +2,7 @@ export default function WinkelMandItem() {
     return (
         <div className="flex">
             <div className="posterAspect">
-                <img className="h-40" src="/media/AladinShow.png" />
+                <img alt="voorstelling" className="h-40" src="/media/AladinShow.png" />
             </div>
 
             <div className="flex flex-col justify-between ml-4">

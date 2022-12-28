@@ -1,6 +1,6 @@
 import Row from "../Components/Zaal/Row"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Seat from "../Components/Zaal/Seat"
 
 import ArtiestProfile from '../Components/ArtiestProfile'
@@ -13,17 +13,25 @@ export default function Voorstelling() {
     //4 = GESELECTEERD
     //5 = GERESERVEERD
 
-    const [seats, setSeats] = useState([
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 3, 3, 3, 0, 0],
-        [0, 3, 3, 0, 3, 3, 0, 0],
-        [0, 0, 0, 0, 0, 0, 3, 3],
-        [2, 5, 3, 3, 5, 3, 3, 2],
-        [2, 1, 1, 1, 1, 1, 2],
-        [1, 1, 5, 5, 5, 1]
-    ])
-    
-    
+    const [seats, setSeats] = useState([])
+
+
+    useEffect(() => {
+        return () => {
+            setSeats([
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 3, 3, 3, 0, 0],
+                [0, 3, 3, 0, 3, 3, 0, 0],
+                [0, 0, 0, 0, 0, 0, 3, 3],
+                [2, 5, 3, 3, 5, 3, 3, 2],
+                [2, 1, 1, 1, 1, 1, 2],
+                [1, 1, 5, 5, 5, 1]
+            ])
+        }
+    }, [])
+
+
+
 
     //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
 
@@ -118,12 +126,12 @@ export default function Voorstelling() {
                     </div>
 
                     <div className="flex flex-wrap gap-12 w-full mt-4">
-                    <ArtiestProfile name={"Will Smith"} picture = {"/media/WillSmith.png"} role={"Protagonist"}/>
-                    <ArtiestProfile name={"Jessie"} picture = {"/media/Person.png"} role={"Antagonist"}/>
-                    <ArtiestProfile name={"Elizabeth"} picture = {"/media/Person.png"} role={"Bijfiguur"}/>
-                    <ArtiestProfile name={"Bo"} picture = {"/media/Person.png"} role={"Bijfiguur"}/>
-                    <ArtiestProfile name={"Malenia"} picture = {"/media/Person.png"} role={"Bijfiguur"}/>
-                    <ArtiestProfile name={"Andrea"} picture = {"/media/Person.png"} role={"Bijfiguur"}/>
+                        <ArtiestProfile name={"Will Smith"} picture={"/media/WillSmith.png"} role={"Protagonist"} />
+                        <ArtiestProfile name={"Jessie"} picture={"/media/Person.png"} role={"Antagonist"} />
+                        <ArtiestProfile name={"Elizabeth"} picture={"/media/Person.png"} role={"Bijfiguur"} />
+                        <ArtiestProfile name={"Bo"} picture={"/media/Person.png"} role={"Bijfiguur"} />
+                        <ArtiestProfile name={"Malenia"} picture={"/media/Person.png"} role={"Bijfiguur"} />
+                        <ArtiestProfile name={"Andrea"} picture={"/media/Person.png"} role={"Bijfiguur"} />
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ export default function Kaart() {
                 </div>
 
                 <div className="w-1/2">
-                    <img className="h-full w-full" src="/media/Kaart.png" />
+                    <img alt="Google Maps Kaart" className="h-full w-full" src="/media/Kaart.png" />
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ export default function VoorstellingPosterCard({name, afbeelding, voorstellingPa
         <div className="">
             <Link to={voorstellingPagelink}>
                 <div className="rounded-2xl posterAspect">
-                    <img className="h-96 rounded-2xl" src={afbeelding} />
+                    <img alt={name} className="h-96 rounded-2xl" src={afbeelding} />
                 </div>
             </Link>
             <p className="font-bold mt-1">{name.toUpperCase()}</p>

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import VoorstellingPosterCard from "./VoorstellingPosterCard";
 
 export default function VoorstellingenContainer() {

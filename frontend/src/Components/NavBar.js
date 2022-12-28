@@ -1,7 +1,4 @@
 import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
     Link
 } from 'react-router-dom';
 
@@ -12,7 +9,7 @@ export function NavBar() {
 
                 <div className='flex items-center gap-4'>
 
-                        <Link to="/#"><img src='/media/tl-logo.png' /></Link>
+                        <Link to="/#"><img alt='Theater Laak Logo' src='/media/tl-logo.png' /></Link>
 
                     <div className="flex gap-4 font-extrabold">
 

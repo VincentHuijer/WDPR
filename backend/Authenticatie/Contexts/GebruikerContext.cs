@@ -43,6 +43,18 @@ public class GebruikerContext : DbContext{
             .HasForeignKey<Klant>(k => k.TokenId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<AccessToken>()
+            .HasOne(a => a.Klant)
+            .WithOne(k => k.AccessToken)
+            .HasForeignKey<Klant>(k => k.AccessTokenId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<AccessToken>()
+            .HasOne(a => a.Medewerker)
+            .WithOne(m => m.AccessToken)
+            .HasForeignKey<Medewerker>(m => m.AccessTokenId)
+            .OnDelete(DeleteBehavior.SetNull);
+            
         // modelBuilder.Entity<Klant>()
         //     .HasOne(k => k.VerificatieToken)
         //     .WithOne(vt => vt.Klant)
@@ -53,5 +65,5 @@ public class GebruikerContext : DbContext{
     public DbSet<Medewerker> Medewerkers {set; get;}
     public DbSet<Rol> Rollen {set; get;}
     public DbSet<VerificatieToken> VerificatieTokens {set; get;}
-
+    public DbSet<AccessToken> AccessTokens {set; get;}
 }

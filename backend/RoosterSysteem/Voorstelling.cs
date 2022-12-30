@@ -16,5 +16,8 @@ public class Voorstelling{
     public string Omschrijving { get; set; }
     public Klant Acteur { get; set; }
     public Double Prijs { get; set; }
+    public Kalender Kalender { get; set; }
+    public string? KalenderId { get; set; }
+    public Zaal Zaalnummer { get; set; }
     public DateTime DatumEnTijd { get; set; }
 }

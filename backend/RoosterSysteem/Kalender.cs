@@ -8,7 +8,7 @@ public class Kalender
         voorstellingen = Voorstellingen;
     }
 
-    public List<Voorstelling> voorstellingen;
+    public List<Voorstelling> voorstellingen { get; set; }
     public string filterRooster()
     {
         return "geen logica toegevoegd";

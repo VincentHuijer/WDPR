@@ -92,8 +92,8 @@ public class GebruikerContext : DbContext{
 
 
     // roostersysteem
-    public DbSet<Kalender> Kalenders {set; get;}
-    public DbSet<Voorstelling> Voorstellingen {set; get;}
-    public DbSet<Zaal> Zalen {set; get;}
-    public DbSet<Stoel> Stoelen {set; get;}
+    //public DbSet<Kalender> Kalenders {set; get;}
+    //public DbSet<Voorstelling> Voorstellingen {set; get;}
+    //public DbSet<Zaal> Zalen {set; get;}
+    //public DbSet<Stoel> Stoelen {set; get;}
 }

@@ -5,6 +5,8 @@ import Seat from "../Components/Zaal/Seat"
 
 import ArtiestProfile from '../Components/ArtiestProfile'
 
+import { useAccesToken } from "../Authentication/AuthContext"
+
 export default function Voorstelling() {
 
     //1 = VIP
@@ -13,6 +15,7 @@ export default function Voorstelling() {
     //4 = GESELECTEERD
     //5 = GERESERVEERD
 
+    const accesToken = useAccesToken()
     const [seats, setSeats] = useState([])
 
 
@@ -30,8 +33,11 @@ export default function Voorstelling() {
         }
     }, [])
 
-
-
+    function addToCart(){
+        if(accesToken == "none"){
+            window.location.href = "/login"
+        }
+    }
 
     //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
 
@@ -104,7 +110,7 @@ export default function Voorstelling() {
                                 </div>
                             </div>
 
-                            <div className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4'>
+                            <div onClick={() => {addToCart()}} className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4'>
                                 TOEVOEGEN AAN WINKELMAND
                             </div>
 

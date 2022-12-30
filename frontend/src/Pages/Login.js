@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-import { getCookie, setCookie } from "../scripts/Cookies";
-
+import { setCookie } from "../scripts/Cookies";
 
 export default function Login() {
 
@@ -11,6 +9,11 @@ export default function Login() {
     const [rememberMe, setRememberMe] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("")
+
+    function saveAuthCookie(at, remember) {
+        setCookie("remember_me", remember, 7)
+        setCookie("acces_token", at)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,11 +36,7 @@ export default function Login() {
             body: JSON.stringify(loginBody),
         }).then(async res => {
 
-            if (rememberMe) {
-                setCookie("session", Math.random().toString(), 7)
-            } else {
-                setCookie("session", Math.random().toString())
-            }
+            saveAuthCookie(Math.random().toString(), rememberMe)
 
             if (res.status == 200) {
                 window.location.href = "/"

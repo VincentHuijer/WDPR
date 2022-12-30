@@ -7,6 +7,7 @@ function setCookie(name, value, days) {
     }
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
+
 function getCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
@@ -17,12 +18,8 @@ function getCookie(name) {
     }
     return null;
 }
-function eraseCookie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
 
 export {
     setCookie,
     getCookie,
-    eraseCookie,
 }

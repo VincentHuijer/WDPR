@@ -24,4 +24,6 @@ public class Klant{
     //Toevoegen dat als inlogpoging > 3 ==> account geblokkeerd = true;
     public AccessToken? AccessToken {set; get;}
     public string? AccessTokenId {set; get;}
+    public string? TwoFactorAuthSecretKey {set; get;}
+    public bool TwoFactorAuthSetupComplete {set; get;}
 }

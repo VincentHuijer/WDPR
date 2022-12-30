@@ -54,7 +54,7 @@ public class GebruikerContext : DbContext{
             .WithOne(m => m.AccessToken)
             .HasForeignKey<Medewerker>(m => m.AccessTokenId)
             .OnDelete(DeleteBehavior.SetNull);
-            
+
         // modelBuilder.Entity<Klant>()
         //     .HasOne(k => k.VerificatieToken)
         //     .WithOne(vt => vt.Klant)
@@ -63,23 +63,23 @@ public class GebruikerContext : DbContext{
 
 
         // roostersysteem
-        modelBuilder.Entity<Kalender>()
-            .HasMany(k => k.voorstellingen)
-            .WithOne(v => v.Kalender)
-            .HasForeignKey(m => m.KalenderId)
-            .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Kalender>()
+        //     .HasMany(k => k.voorstellingen)
+        //     .WithOne(v => v.Kalender)
+        //     .HasForeignKey(m => m.KalenderId)
+        //     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Voorstelling>()
-            .HasOne(v => v.Zaalnummer)
-            .WithMany(z => z.voorstellingen)
-            .HasForeignKey(z => z.Zaalnummer)
-            .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Voorstelling>()
+        //     .HasOne(v => v.Zaalnummer)
+        //     .WithMany(z => z.voorstellingen)
+        //     .HasForeignKey(z => z.Zaalnummer)
+        //     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Zaal>()
-            .HasMany(z => z.stoelen)
-            .WithOne(s => s.Zaal)
-            .HasForeignKey(z => z.StoelID)
-            .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Zaal>()
+        //     .HasMany(z => z.stoelen)
+        //     .WithOne(s => s.Zaal)
+        //     .HasForeignKey(z => z.StoelID)
+        //     .OnDelete(DeleteBehavior.SetNull);
 
 
 

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Google.Authenticator;
+using System.Security.Cryptography;
 public class GebruikerService : IGebruikerService{
 
 
@@ -28,6 +30,7 @@ public class GebruikerService : IGebruikerService{
         } 
         else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
+                if(!klant.TwoFactorAuthSetupComplete) return "2FA Setup Incomplete";
                 return "Success";
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
@@ -49,6 +52,38 @@ public class GebruikerService : IGebruikerService{
         }
         return "ExpiredTokenError";
     }
+
+    public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){
+        
+        string key = GenerateRandomString(10);
+
+        klant.TwoFactorAuthSecretKey = key;
+        await context.SaveChangesAsync();
+
+        TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+        SetupCode setupInfo = tfa.GenerateSetupCode("System", klant.Email, klant.TwoFactorAuthSecretKey, true, 3);
+
+        string qrUrl = setupInfo.QrCodeSetupImageUrl;
+        string manualEntryCode = setupInfo.ManualEntryKey;
+        var tuple = (QrCodeUrl: qrUrl, ManualEntryCode: manualEntryCode);
+        return tuple;
+    }
+
+    public static string GenerateRandomString(int length){
+        var random = new byte[length];
+        RandomNumberGenerator.Fill(random);
+        string base32String = Convert.ToBase64String(random) //convert to base32string
+                                        .Replace('+', '=')
+                                        .Replace('/', '=')
+                                        .TrimEnd('=');
+        return base32String;
+    }
+    public async Task<string> Use2FA(Klant klant, string key){
+        TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+        bool result = tfa.ValidateTwoFactorPIN(klant.TwoFactorAuthSecretKey, key);
+        if(result) return "Success";
+        return "Invalid2FactorKeyError";
+    }   
 
     public async Task<bool> CheckDomainIsDisposable(string email){
         string domain = email.Split('@')[1];

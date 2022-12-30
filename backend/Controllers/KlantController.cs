@@ -25,10 +25,40 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
+    public async Task<ActionResult<Klant>> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
-        var response = HandleResponse(await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context));
+        var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
+        if(responseString == "2FA Setup Incomplete"){
+            return await GetKlantByEmailAsync(emailWachtwoord.Email); //Als klant is ingelogd, maar heeft nog geen 2fa ingesteld dan returnen we de klant zodat deze meegegeven kan worden aan "Setup2FA()"
+        }
+        var response = HandleResponse(responseString);
         return response;
+    }
+
+    [HttpGet("setup2fa")]
+    public async Task<ActionResult<(string, string)>> Setup2FA([FromBody] Klant klant)
+    {
+        if(!_context.Klanten.Contains(klant)) return BadRequest("Klant bestaat niet!"); // error message weghalen, is voor debugging.
+        return await _service.Setup2FA(klant, _context);
+    }
+
+    [HttpPost("complete2fa")]
+    public async Task<ActionResult> Complete2FA([FromBody] Klant klant)
+    {
+        if(!_context.Klanten.Contains(klant)) return BadRequest();
+        if(klant.TwoFactorAuthSetupComplete){
+            return HandleResponse("AlreadySetup2FA");
+        }else{
+            klant.TwoFactorAuthSetupComplete = true;
+            await _context.SaveChangesAsync();
+            return HandleResponse("Success");
+        }
+    }
+
+    [HttpPost("use2fa")]
+    public async Task<ActionResult> Use2FA([FromBody] Klant klant, string key){ //Nog fixen dat hij deze 2 params accepteert.
+        if(!_context.Klanten.Contains(klant)) return BadRequest();
+        return HandleResponse(await _service.Use2FA(klant, key));
     }
 
     [HttpPost("verifieer")]
@@ -70,6 +100,11 @@ public class KlantController : ControllerBase
         }
         return StatusCode(500);
     }
+    //Wordt geen endpoint, is alleen nodig voor 2fa/login
+    public async Task<Klant> GetKlantByEmailAsync(string email){
+        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        return k;
+    }
 
 }
 
@@ -100,6 +135,8 @@ public class ResponseList{
         {"NotVerifiedError", Tuple.Create(403, "User not verified!")},
         {"InvalidCredentialsError", Tuple.Create(401, "Email or password incorrect!")},
         {"DisposableMailError", Tuple.Create(406, "Disposable email used!")},
-        {"EmailInUseError", Tuple.Create(409, "Email in use!")}
+        {"EmailInUseError", Tuple.Create(409, "Email in use!")},
+        {"AlreadySetup2FA", Tuple.Create(403, "User has already setup their 2FA!")},
+        {"Invalid2FactorKeyError", Tuple.Create(401, "Invalid key used!")}
     };
 }

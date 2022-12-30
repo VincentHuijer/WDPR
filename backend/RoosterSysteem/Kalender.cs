@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class Kalender
 {
-    public Kalender(List<Voorstelling> Voorstellingen)
+    public Kalender(/*List<Voorstelling> Voorstellingen*/)
     {
-        voorstellingen = Voorstellingen;
+        //voorstellingen = Voorstellingen;
     }
 
     public List<Voorstelling> voorstellingen { get; set; }

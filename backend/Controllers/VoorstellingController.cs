@@ -25,7 +25,7 @@ public class VoorstellingController : ControllerBase
     }
 
     [HttpPost("AddVoorstelling")]
-    public async Task<ActionResult> AddVoorstelling([FromQuery] string interval, int aantalKeer, Voorstelling voor)
+    public async Task<ActionResult> AddVoorstelling(Voorstelling voor, [FromQuery] string interval, [FromQuery] int aantalKeer)
     {
         //interval = "once", "weekly","monthly","yearly"
         //aantalKeer = aantal keer dat de afspraak herhaalt wordt
@@ -35,7 +35,8 @@ public class VoorstellingController : ControllerBase
         if(await _context.SaveChangesAsync() > 0)
         {
             return Ok();
-        }        else
+        }
+        else
         {
             return BadRequest();
         }

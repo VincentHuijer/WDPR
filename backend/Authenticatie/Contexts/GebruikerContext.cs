@@ -60,10 +60,40 @@ public class GebruikerContext : DbContext{
         //     .WithOne(vt => vt.Klant)
         //     .OnDelete(DeleteBehavior.Cascade);
         
+
+
+        // roostersysteem
+        modelBuilder.Entity<Kalender>()
+            .HasMany(k => k.voorstellingen)
+            .WithOne(v => v.Kalender)
+            .HasForeignKey(m => m.KalenderId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voorstelling>()
+            .HasOne(v => v.Zaalnummer)
+            .WithMany(z => z.voorstellingen)
+            .HasForeignKey(z => z.Zaalnummer)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Zaal>()
+            .HasMany(z => z.stoelen)
+            .WithOne(s => s.Zaal)
+            .HasForeignKey(z => z.StoelID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+
+
     }
     public DbSet<Klant> Klanten {set; get;}
     public DbSet<Medewerker> Medewerkers {set; get;}
     public DbSet<Rol> Rollen {set; get;}
     public DbSet<VerificatieToken> VerificatieTokens {set; get;}
     public DbSet<AccessToken> AccessTokens {set; get;}
+
+
+    // roostersysteem
+    public DbSet<Kalender> Kalenders {set; get;}
+    public DbSet<Voorstelling> Voorstellingen {set; get;}
+    public DbSet<Zaal> Zalen {set; get;}
+    public DbSet<Stoel> Stoelen {set; get;}
 }

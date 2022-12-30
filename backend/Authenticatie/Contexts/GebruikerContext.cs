@@ -62,7 +62,7 @@ public class GebruikerContext : DbContext{
 
         // roostersysteem
         modelBuilder.Entity<Kalender>()
-            .HasMany(k => k.voorstellingen)
+            .HasMany(k => k.Voorstellingen)
             .WithOne(v => v.Kalender)
             .HasForeignKey(m => m.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);

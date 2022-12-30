@@ -9,16 +9,15 @@ public class Kalender
     //     //voorstellingen = Voorstellingen;
     // }
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public int KalenderId { get; set; }
-    public List<Voorstelling> voorstellingen { get; set; }
+    public List<Voorstelling> Voorstellingen { get; set; }
     public string filterRooster()
     {
         return "geen logica toegevoegd";
     }
     public List<Voorstelling> overzicht()
     {
-        return voorstellingen;
+        return Voorstellingen;
     }
 
     public List<Voorstelling> HerhaalOptie(string interval, int aantalKeer, Voorstelling voor)

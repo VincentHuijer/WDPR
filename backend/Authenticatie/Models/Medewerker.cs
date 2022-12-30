@@ -16,4 +16,6 @@ public class Medewerker{
     public DateTime GeboorteDatum {set; get;}
     public string? Afbeelding {set; get;}
     public List<Rol> Rollen {set; get;}
+    public AccessToken? AccessToken {set; get;}
+    public string? AccessTokenId {set; get;}
 }

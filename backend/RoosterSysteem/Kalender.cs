@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 public class Kalender
 {
-    public Kalender(/*List<Voorstelling> Voorstellingen*/)
-    {
-        //voorstellingen = Voorstellingen;
-    }
-
+    // public Kalender(/*List<Voorstelling> Voorstellingen*/)
+    // {
+    //     //voorstellingen = Voorstellingen;
+    // }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int KalenderId { get; set; }
     public List<Voorstelling> voorstellingen { get; set; }
     public string filterRooster()
     {
@@ -18,23 +21,25 @@ public class Kalender
         return voorstellingen;
     }
 
-    public void HerhaalOptie(string interval, int aantalKeer, Voorstelling voor)
+    public List<Voorstelling> HerhaalOptie(string interval, int aantalKeer, Voorstelling voor)
     {
+        List<Voorstelling> RepeatedVoorstellingen = new List<Voorstelling>();
         DateTime current = voor.DatumEnTijd;
         if(aantalKeer == 0)
         {
-            voorstellingen.Add(voor);
+            RepeatedVoorstellingen.Add(voor);
         }
         for(int i = 0; i < aantalKeer; i++)
         {
-            AddFrequency(current, interval);
+            AddInterval(current, interval);
             voor.DatumEnTijd = current;
-            voorstellingen.Add(voor);
+            RepeatedVoorstellingen.Add(voor);
         }
+        return RepeatedVoorstellingen;
     }
-    public DateTime AddFrequency(DateTime current, string frequency)
+    public DateTime AddInterval(DateTime current, string interval)
     {
-        switch (frequency.ToLower())
+        switch (interval.ToLower())
         {
             case "once":
                 return current;

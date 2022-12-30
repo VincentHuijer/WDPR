@@ -21,7 +21,7 @@ public class VoorstellingController : ControllerBase
     [HttpGet("GetVoorstellingen")]
     public List<Voorstelling> GetVoorstellingen()
     {
-        _kalender = new Kalender(_voorstellingen);
+        //_kalender = new Kalender(_voorstellingen);
         var response = _voorstellingen;
         return response;
     }

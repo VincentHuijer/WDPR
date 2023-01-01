@@ -29,14 +29,14 @@ public class KlantController : ControllerBase
     {
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
         if(responseString == "2FA Setup Incomplete"){
-            return await GetKlantByEmailAsync(emailWachtwoord.Email); //Als klant is ingelogd, maar heeft nog geen 2fa ingesteld dan returnen we de klant zodat deze meegegeven kan worden aan "Setup2FA()"
+            return await GetKlantByEmailAsync(emailWachtwoord.Email); //Als klant is ingelogd, maar heeft nog geen 2fa ingesteld dan returnen we de klant zodat deze meegegeven kan worden aan "Setup2FA()" (evt dit nog aanpassen)
         }
         var response = HandleResponse(responseString);
         return response;
     }
 
     [HttpGet("setup2fa")]
-    public async Task<ActionResult<(string, string)>> Setup2FA([FromBody] Klant klant)
+    public async Task<ActionResult<(string, string)>> Setup2FA([FromBody] Klant klant) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
         if(!_context.Klanten.Contains(klant)) return BadRequest("Klant bestaat niet!"); // error message weghalen, is voor debugging.
         return await _service.Setup2FA(klant, _context);
@@ -100,7 +100,7 @@ public class KlantController : ControllerBase
         }
         return StatusCode(500);
     }
-    //Wordt geen endpoint, is alleen nodig voor 2fa/login
+    //Wordt geen endpoint, is alleen nodig voor 2fa/login, misschien halen we het weg want evt niet nodig.
     public async Task<Klant> GetKlantByEmailAsync(string email){
         Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
         return k;
@@ -126,7 +126,7 @@ public class EmailToken{
 }
 
 public class ResponseList{
-
+        //Custom namen toevoegen aan tuples
     public static Dictionary<string, Tuple<int, string>> Responses = new Dictionary<string, Tuple<int, string>>(){
         {"Success", Tuple.Create(200, "Success!")},
         {"AlreadyVerifiedError", Tuple.Create(403, "User already verified!")},
@@ -137,6 +137,7 @@ public class ResponseList{
         {"DisposableMailError", Tuple.Create(406, "Disposable email used!")},
         {"EmailInUseError", Tuple.Create(409, "Email in use!")},
         {"AlreadySetup2FA", Tuple.Create(403, "User has already setup their 2FA!")},
-        {"Invalid2FactorKeyError", Tuple.Create(401, "Invalid key used!")}
+        {"Invalid2FactorKeyError", Tuple.Create(401, "Invalid key used!")},
+        {"UserBlockedError", Tuple.Create(401, "User has been blocked because of too many login attempts!")}
     };
 }

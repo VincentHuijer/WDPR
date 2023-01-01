@@ -26,4 +26,5 @@ public class Klant{
     public string? AccessTokenId {set; get;}
     public string? TwoFactorAuthSecretKey {set; get;}
     public bool TwoFactorAuthSetupComplete {set; get;}
+    public bool IsBlocked {set; get;}
 }

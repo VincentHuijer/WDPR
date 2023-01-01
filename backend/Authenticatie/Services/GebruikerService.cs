@@ -25,6 +25,7 @@ public class GebruikerService : IGebruikerService{
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
         if(klant == null) return "UserNotFoundError";
+        if(klant.IsBlocked) return "UserBlockedError";
         else if(klant.TokenId != null){
             return "NotVerifiedError";
         } 
@@ -35,6 +36,7 @@ public class GebruikerService : IGebruikerService{
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
+                if(klant.Inlogpoging >= 3) klant.IsBlocked = true;
         }
         return "InvalidCredentialsError";
     }

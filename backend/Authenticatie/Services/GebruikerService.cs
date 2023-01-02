@@ -65,7 +65,7 @@ public class GebruikerService : IGebruikerService{
         await context.SaveChangesAsync();
 
         TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-        SetupCode setupInfo = tfa.GenerateSetupCode("System", klant.Email, klant.TwoFactorAuthSecretKey, true, 3);
+        SetupCode setupInfo = tfa.GenerateSetupCode("System", klant.Email, klant.TwoFactorAuthSecretKey, false, 3);
 
         string qrUrl = setupInfo.QrCodeSetupImageUrl;
         string manualEntryCode = setupInfo.ManualEntryKey;
@@ -76,10 +76,7 @@ public class GebruikerService : IGebruikerService{
     public static string GenerateRandomString(int length){
         var random = new byte[length];
         RandomNumberGenerator.Fill(random);
-        string base32String = Convert.ToBase64String(random) //convert to base32string
-                                        .Replace('+', '=')
-                                        .Replace('/', '=')
-                                        .TrimEnd('=');
+        string base32String = Convert.ToBase64String(random); //convert to base32string
         return base32String;
     }
     public async Task<string> Use2FA(Klant klant, string key){

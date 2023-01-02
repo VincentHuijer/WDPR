@@ -28,7 +28,7 @@ public class KlantController : ControllerBase
     public async Task<ActionResult<KlantInfo>> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
-        if(responseString == "Success!"){
+        if(responseString == "Success"){
             Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
             if(klant == null) return HandleResponse("Error");
             KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false};

@@ -53,25 +53,30 @@ public class KlantController : ControllerBase
     }
 
 
-    [HttpPost("complete2fa")]
-    public async Task<ActionResult> Complete2FA([FromBody] string AccessToken)
-    {
-        Klant klant = await GetKlantByAccessToken(AccessToken);
-        if(klant == null) HandleResponse("UserNotFoundError");
-        if(klant.TwoFactorAuthSetupComplete){
-            return HandleResponse("AlreadySetup2FA");
-        }else{
-            klant.TwoFactorAuthSetupComplete = true;
-            await _context.SaveChangesAsync();
-            return HandleResponse("Success");
-        }
-    }
+    // [HttpPost("complete2fa")]
+    // public async Task<ActionResult> Complete2FA([FromBody] string AccessToken)
+    // {
+    //     Klant klant = await GetKlantByAccessToken(AccessToken);
+    //     if(klant == null) HandleResponse("UserNotFoundError");
+    //     if(klant.TwoFactorAuthSetupComplete){
+    //         return HandleResponse("AlreadySetup2FA");
+    //     }else{
+    //         klant.TwoFactorAuthSetupComplete = true;
+    //         await _context.SaveChangesAsync();
+    //         return HandleResponse("Success");
+    //     }
+    // }
 
     [HttpPost("use2fa")]
     public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey){ //Nog fixen dat hij deze 2 params accepteert.
         Klant k = await GetKlantByAccessToken(accessTokenKey.AccessToken);
         if(k == null) HandleResponse("UserNotFoundError");
-        return HandleResponse(await _service.Use2FA(k, accessTokenKey.Key));
+        var responseString = await _service.Use2FA(k, accessTokenKey.Key);
+        if(responseString == "Success"){
+            k.TwoFactorAuthSetupComplete = true;
+            await _context.SaveChangesAsync();
+        }
+        return HandleResponse(responseString);
     }
 
     [HttpPost("verifieer")]

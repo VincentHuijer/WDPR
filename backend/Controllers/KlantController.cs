@@ -26,27 +26,26 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<Klant>> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
+    public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
-        if(responseString == "2FA Setup Incomplete"){
-            return await GetKlantByEmailAsync(emailWachtwoord.Email); //Als klant is ingelogd, maar heeft nog geen 2fa ingesteld dan returnen we de klant zodat deze meegegeven kan worden aan "Setup2FA()" (evt dit nog aanpassen)
-        }
         var response = HandleResponse(responseString);
         return response;
     }
 
     [HttpGet("setup2fa")]
-    public async Task<ActionResult<(string, string)>> Setup2FA([FromBody] Klant klant) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
+    public async Task<ActionResult<(string, string)>> Setup2FA([FromBody] string AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
-        if(!_context.Klanten.Contains(klant)) return BadRequest("Klant bestaat niet!"); // error message weghalen, is voor debugging.
-        return await _service.Setup2FA(klant, _context);
+        Klant k = await GetKlantByAccessToken(AccessToken);
+        if(k == null) HandleResponse("UserNotFoundError");
+        return await _service.Setup2FA(k, _context);
     }
 
     [HttpPost("complete2fa")]
-    public async Task<ActionResult> Complete2FA([FromBody] Klant klant)
+    public async Task<ActionResult> Complete2FA([FromBody] string AccessToken)
     {
-        if(!_context.Klanten.Contains(klant)) return BadRequest();
+        Klant klant = await GetKlantByAccessToken(AccessToken);
+        if(klant == null) HandleResponse("UserNotFoundError");
         if(klant.TwoFactorAuthSetupComplete){
             return HandleResponse("AlreadySetup2FA");
         }else{
@@ -57,25 +56,28 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("use2fa")]
-    public async Task<ActionResult> Use2FA([FromBody] Klant klant, string key){ //Nog fixen dat hij deze 2 params accepteert.
-        if(!_context.Klanten.Contains(klant)) return BadRequest();
-        return HandleResponse(await _service.Use2FA(klant, key));
+    public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey){ //Nog fixen dat hij deze 2 params accepteert.
+        Klant k = await GetKlantByAccessToken(accessTokenKey.AccessToken);
+        if(k == null) HandleResponse("UserNotFoundError");
+        return HandleResponse(await _service.Use2FA(k, accessTokenKey.Key));
     }
 
     [HttpPost("verifieer")]
     public async Task<ActionResult> VerifieerKlant([FromBody] EmailToken emailToken) 
-    // Dit nog veranderen in email/token ipv klant. 
-    // Hiervoor moeten we token toevoegen aan emailwachtwoord class. Evt een andere manier om dit op te lossen?
     {
         var response = HandleResponse(await _service.Verifieer(emailToken.Email, emailToken.Token, _context));
         return response;
-        //Klant k =  _context.Klanten.First(k => k.Email == emailToken.Email);
-        //k.VerificatieToken = null;
-        //k.TokenId = null;
-        //VerificatieToken vtoken = _context.VerificatieTokens.First(vt => vt.Token == emailToken.Token);
-        //_context.VerificatieTokens.Remove(vtoken);
-        //_context.SaveChanges();
-        //return Ok();
+    }
+
+    [HttpGet("controleer2fa")]
+    public async Task<ActionResult> Controleer2FA([FromBody] string AccessToken){
+        Klant k = await GetKlantByAccessToken(AccessToken);
+        if(k.TwoFactorAuthSetupComplete){
+            return HandleResponse("Success");
+        }else if(!k.TwoFactorAuthSetupComplete) return HandleResponse("TwoFactorNotSetup");
+        else{
+            return BadRequest();
+        }
     }
 
     [HttpGet("klanten")]
@@ -106,6 +108,14 @@ public class KlantController : ControllerBase
         Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
         return k;
     }
+    public async Task<Klant> GetKlantByAccessToken(string AccessToken){
+        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
+        if(accessToken == null) return null;
+        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == AccessToken);
+        if(k == null) return null; // error message weghalen, is voor debugging.
+        else if(accessToken.VerloopDatum < DateTime.Now) return null;
+        return k;
+    }
 
 }
 
@@ -125,6 +135,10 @@ public class EmailToken{
     public string Email {set; get;}
     public string Token {set; get;}
 }
+public class AccessTokenKey{
+    public string AccessToken {set; get;}
+    public string Key {set; get;}
+}
 
 public class ResponseList{
         //Custom namen toevoegen aan tuples
@@ -139,6 +153,7 @@ public class ResponseList{
         {"EmailInUseError", Tuple.Create(409, "Email in use!")},
         {"AlreadySetup2FA", Tuple.Create(403, "User has already setup their 2FA!")},
         {"Invalid2FactorKeyError", Tuple.Create(401, "Invalid key used!")},
-        {"UserBlockedError", Tuple.Create(401, "User has been blocked because of too many login attempts!")}
+        {"UserBlockedError", Tuple.Create(401, "User has been blocked because of too many login attempts!")},
+        {"TwoFactorNotSetup", Tuple.Create(200, "User hasn't set up 2FA")}
     };
 }

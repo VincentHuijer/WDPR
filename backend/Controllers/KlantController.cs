@@ -46,6 +46,7 @@ public class KlantController : ControllerBase
         Klant k = await GetKlantByAccessToken(AccessToken);
         if(k == null) HandleResponse("UserNotFoundError");
         var res = await _service.Setup2FA(k, _context);
+        if(res.Item1 == "" && res.Item2 == "") return HandleResponse("AlreadySetup2FA");
         List<string> responses = new List<string>();
         responses.Add(res.Item1);
         responses.Add(res.Item2);

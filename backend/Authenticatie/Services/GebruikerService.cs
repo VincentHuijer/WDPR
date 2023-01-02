@@ -58,6 +58,7 @@ public class GebruikerService : IGebruikerService{
     }
 
     public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){
+        if(klant.TwoFactorAuthSetupComplete) return ("", "");
         string key = GenerateRandomString(10);
 
         klant.TwoFactorAuthSecretKey = key;

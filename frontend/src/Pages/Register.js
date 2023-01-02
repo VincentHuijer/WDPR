@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PasswordChecklist from "react-password-checklist"
 import ReCAPTCHA from "react-google-recaptcha"
+import CheckGegevens from "../scripts/CheckGegevens";
 
 export default function Register() {
     const [email, setEmail] = useState('');
@@ -10,13 +11,16 @@ export default function Register() {
     const [lastName, setLastName] = useState('');
     const [geboorteDatum, setGeboortedatum] = useState('');
     const [geslacht, setGeslacht] = useState('');
+    const [errorMessage, setErrorMessage] = useState("");
 
 
-    const [errorMessage, setErrorMessage] = useState("")
-
+    var date = new Date();
+    var validatieCheck = false;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        CheckGegevens(firstName, lastName, geboorteDatum, validatieCheck);
 
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 
@@ -37,7 +41,7 @@ export default function Register() {
             },
             body: JSON.stringify(loginBody),
         }).then(async res => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 window.location.href = "/"
                 return
             }
@@ -72,7 +76,7 @@ export default function Register() {
                         <div className="flex w-10/12 m-auto justify-between">
                             <div className="flex flex-col pt-3 pr-2 w-1/2">
                                 <label className="font-bold" htmlFor="geboortedatum">Geboortedatum</label>
-                                <input className="focus:outline-none h-8 rounded-lg px-2" value={geboorteDatum} onChange={(e) => setGeboortedatum(e.target.value)} type="date" placeholder="******" id="geboortedatum" name="geboortedatum" />
+                                <input className="focus:outline-none h-8 rounded-lg px-2" value={geboorteDatum} min="01-01-1900"  onChange={(e) => setGeboortedatum(e.target.value)} type="date" placeholder="dd-mm-yyyy" id="geboortedatum" name="geboortedatum" />
                             </div>
 
                             <div className="flex flex-col pt-3 pl-2 w-1/2">
@@ -84,7 +88,7 @@ export default function Register() {
 
                         <div className="flex flex-col w-10/12 m-auto pt-3">
                             <label className="font-bold" htmlFor="email">E-mail</label>
-                            <input className="focus:outline-none h-8 rounded-lg px-2" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="naam@gmail.com" id="email" name="email" />
+                            <input className="focus:outline-none h-8 rounded-lg px-2" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="email@email.com" id="email" name="email" />
                         </div>
 
 
@@ -123,12 +127,14 @@ export default function Register() {
                         </div>
 
 
-                        {errorMessage != "" && <div className="w-10/12 m-auto mt-4">
+                        {errorMessage !== "" && <div className="w-10/12 m-auto mt-4">
                             <p className="font-bold text-appRed">{errorMessage}</p>
                         </div>}
 
                         <div className="w-10/12 m-auto mt-6 hover:cursor-default">
-                            <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button>
+                            {/* <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button> */}
+                            <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold" onClick={() =>{CheckGegevens(firstName, lastName, geboorteDatum, validatieCheck)}}>REGISTREREN</button>
+
                         </div>
 
                     </div>

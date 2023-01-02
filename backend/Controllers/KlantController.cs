@@ -20,7 +20,6 @@ public class KlantController : ControllerBase
     public async Task<ActionResult> NieuweKlant([FromBody] NieuweKlant klant)
     {   
         VerificatieToken verificatieToken = new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)};
-        await _context.SaveChangesAsync();
         var response = HandleResponse(await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, verificatieToken,  _context));
         return response;
     }
@@ -40,6 +39,7 @@ public class KlantController : ControllerBase
         if(k == null) HandleResponse("UserNotFoundError");
         return await _service.Setup2FA(k, _context);
     }
+
 
     [HttpPost("complete2fa")]
     public async Task<ActionResult> Complete2FA([FromBody] string AccessToken)

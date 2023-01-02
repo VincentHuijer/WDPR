@@ -31,7 +31,6 @@ public class GebruikerService : IGebruikerService{
         } 
         else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
-                if(!klant.TwoFactorAuthSetupComplete) return "2FA Setup Incomplete";
                 return "Success";
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){

@@ -25,9 +25,15 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
+    public async Task<ActionResult<KlantInfo>> LoginKlant([FromBody] EmailWachtwoord emailWachtwoord)
     {
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
+        if(responseString == "Success!"){
+            Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
+            if(klant == null) return HandleResponse("Error");
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false};
+            return klantInfo;
+        }
         var response = HandleResponse(responseString);
         return response;
     }
@@ -118,7 +124,10 @@ public class KlantController : ControllerBase
     }
 
 }
-
+public class KlantInfo{
+    public bool TwoFactorAuthSetupComplete {set; get;}
+    public bool IsVerified {set; get;}
+}
 public class EmailWachtwoord{
     public string Email {set; get;}
     public string Wachtwoord {set; get;}

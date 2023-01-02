@@ -19,7 +19,7 @@ public class GebruikerService : IGebruikerService{
         }
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
-        //await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
+        await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
         return "Success";
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
@@ -42,13 +42,16 @@ public class GebruikerService : IGebruikerService{
     }
     public async Task<string> Verifieer(string email, string token, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        
         if(klant == null) return "UserNotFoundError";
         else if(klant.TokenId == null) return "AlreadyVerifiedError";
-        else if(klant.VerificatieToken.Token == token && klant.VerificatieToken.VerloopDatum > DateTime.Now){
+        VerificatieToken? VerificatieToken = await context.VerificatieTokens.FirstOrDefaultAsync(a => a.Token == klant.TokenId);
+        if(VerificatieToken == null) return "ServerError";
+        if(VerificatieToken.Token == token && VerificatieToken.VerloopDatum > DateTime.Now){
             klant.VerificatieToken = null;
             klant.TokenId = null;
-            VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
-            context.VerificatieTokens.Remove(vtoken);
+            //VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
+            context.VerificatieTokens.Remove(VerificatieToken);
             await context.SaveChangesAsync();
             return "Success";
         }

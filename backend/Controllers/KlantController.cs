@@ -20,6 +20,7 @@ public class KlantController : ControllerBase
     public async Task<ActionResult> NieuweKlant([FromBody] NieuweKlant klant)
     {   
         VerificatieToken verificatieToken = new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)};
+        await _context.SaveChangesAsync();
         var response = HandleResponse(await _service.Registreer(klant.Voornaam, klant.Achternaam, klant.Email, klant.Wachtwoord, verificatieToken,  _context));
         return response;
     }
@@ -66,15 +67,15 @@ public class KlantController : ControllerBase
     // Dit nog veranderen in email/token ipv klant. 
     // Hiervoor moeten we token toevoegen aan emailwachtwoord class. Evt een andere manier om dit op te lossen?
     {
-        //var response = HandleResponse(await _service.Verifieer(emailToken.Email, emailToken.Token, _context));
-        //return response;
-        Klant k =  _context.Klanten.First(k => k.Email == emailToken.Email);
+        var response = HandleResponse(await _service.Verifieer(emailToken.Email, emailToken.Token, _context));
+        return response;
+        //Klant k =  _context.Klanten.First(k => k.Email == emailToken.Email);
         //k.VerificatieToken = null;
         //k.TokenId = null;
-        VerificatieToken vtoken = _context.VerificatieTokens.First(vt => vt.Token == emailToken.Token);
-        _context.VerificatieTokens.Remove(vtoken);
-        _context.SaveChanges();
-        return Ok();
+        //VerificatieToken vtoken = _context.VerificatieTokens.First(vt => vt.Token == emailToken.Token);
+        //_context.VerificatieTokens.Remove(vtoken);
+        //_context.SaveChanges();
+        //return Ok();
     }
 
     [HttpGet("klanten")]

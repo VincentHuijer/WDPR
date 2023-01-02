@@ -39,13 +39,17 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("setup2fa")]
-    public async Task<ActionResult<(string, string)>> Setup2FA() //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
+    public async Task<ActionResult<List<string>>> Setup2FA() //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
         string AccessToken = "12345678";
         System.Console.WriteLine(AccessToken);
         Klant k = await GetKlantByAccessToken(AccessToken);
         if(k == null) HandleResponse("UserNotFoundError");
-        return await _service.Setup2FA(k, _context);
+        var res = await _service.Setup2FA(k, _context);
+        List<string> responses = new List<string>();
+        responses.Add(res.Item1);
+        responses.Add(res.Item2);
+        return responses;
     }
 
 

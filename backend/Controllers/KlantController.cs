@@ -33,7 +33,7 @@ public class KlantController : ControllerBase
         if(responseString == "Success"){
             Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
             if(klant == null) return HandleResponse("Error");
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false};
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessToken == null? new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)} : klant.AccessToken};
             return klantInfo;
         }
         var response = HandleResponse(responseString);
@@ -141,6 +141,8 @@ public class KlantController : ControllerBase
 public class KlantInfo{
     public bool TwoFactorAuthSetupComplete {set; get;}
     public bool IsVerified {set; get;}
+    public bool IsBlocked {set; get;}
+    public AccessToken AccessToken {set; get;}
 }
 public class EmailWachtwoord{
     public string Email {set; get;}

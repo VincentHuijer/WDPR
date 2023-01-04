@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace backend.Authenticatie;
 public class Klant{
     public Klant(string voornaam, string achternaam, string email, string wachtwoord){
@@ -23,6 +25,7 @@ public class Klant{
     public string? TokenId {set; get;}
     public int Inlogpoging {get; set;} // Hier misschien iets mooiers op bedenken. Eventueel een inlogpoging class met info over de login poging erbij? Kan nuttig zijn voor logging en monitoring.
     //Toevoegen dat als inlogpoging > 3 ==> account geblokkeerd = true;
+    [JsonIgnore]
     public List<AccessToken> AccessTokens {set; get;}
     public string? TwoFactorAuthSecretKey {set; get;}
     public bool TwoFactorAuthSetupComplete {set; get;}

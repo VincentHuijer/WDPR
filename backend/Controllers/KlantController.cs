@@ -33,7 +33,8 @@ public class KlantController : ControllerBase
         if(responseString == "Success"){
             Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
             if(klant == null) return HandleResponse("Error");
-            if(klant.AccessTokens.Count() == 0){
+            if(klant.AccessTokens == null || klant.AccessTokens.Count() == 0 ){
+                klant.AccessTokens = new List<AccessToken>();
                 klant.AccessTokens.Add(new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)});
                 await _context.SaveChangesAsync();
             }

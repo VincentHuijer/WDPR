@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace backend.Authenticatie;
 public class AccessToken{
 
@@ -7,6 +9,7 @@ public class AccessToken{
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string Token {set; get;}
     public DateTime VerloopDatum {set; get;}
+    [JsonIgnore]
     public Klant Klant {set; get;}
     public int KlandId {set; get;}
     public Medewerker Medewerker {set; get;}

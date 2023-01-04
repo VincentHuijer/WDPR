@@ -10,7 +10,7 @@ public class GebruikerService : IGebruikerService{
         _emailService = emailService;
     }
     public async Task<string> Registreer(string voornaam, string achternaam, string email, string wachtwoord, VerificatieToken verificatieToken, GebruikerContext context){
-        Klant klant = new Klant(voornaam, achternaam, email, wachtwoord){VerificatieToken = verificatieToken};
+        Klant klant = new Klant(voornaam, achternaam, email, wachtwoord){VerificatieToken = verificatieToken, AccessTokens = new List<AccessToken>()};
         if(await CheckDomainIsDisposable(email)) return "DisposableMailError"; 
         else if(context.Klanten.Any(k => k.Email == email)) return "EmailInUseError"; 
         if(await context.Rollen.FirstOrDefaultAsync(r => r.Naam == "Klant") != null){

@@ -8,9 +8,11 @@ export default function Seat({ type = 5 }) {
 
     //1 = VIP
     //2 = GEHANDICAPT
-    //3 = STANDAARD
+    //3 = EERSTERANGS
     //4 = GESELECTEERD
     //5 = GERESERVEERD
+    //6 = TWEEDERANGS
+    //7 = DERDERANGS
 
     const [svg, setSvg] = useState()
 
@@ -22,7 +24,15 @@ export default function Seat({ type = 5 }) {
             setTempType(type)
         }
 
-        if (tempType === 1) {
+
+         if (tempType === 0) {
+            setSvg(
+                <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#EDEDED" stroke="black" />
+                </svg>
+            )
+        }
+       else if (tempType === 1) {
             setSvg(
                 <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FAFF1E" stroke="black" />
@@ -49,10 +59,29 @@ export default function Seat({ type = 5 }) {
                     <rect x="11" y="10.5" width="18" height="18" rx="4.5" fill="black" stroke="black" />
                 </svg>
             )
-        } else {
+        } else if (tempType === 5) {
             setSvg(
                 <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#EDEDED" stroke="black" />
+                </svg>
+            )
+        }
+        else if (tempType === 6) {
+            setSvg(
+                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FF0000" stroke="#FF0000" />
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="black" stroke="black" />
+                    <rect x="4" y="4" width="32" height="32" rx="4.5" fill="blue" stroke="yellow" />
+                </svg>
+            )
+        }
+
+        else if (tempType === 7) {
+            setSvg(
+                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FF0000" stroke="#FF0000" />
+                    <rect x="4" y="4" width="32" height="32" rx="4.5" fill="orange" stroke="yellow" />
+                                        <rect x="11" y="10.5" width="18" height="18" rx="4.5" fill="green" stroke="green" />
                 </svg>
             )
         }

@@ -8,7 +8,8 @@ export default function VoorstellingenPreview() {
                 <p className="text-4xl font-extrabold">NU IN THEATER LAAK</p>
             </div>
 
-            <div className="flex flex-wrap w-full h-fit justify-between gap-12 mt-6">
+            {/* <div className="flex flex-wrap w-full h-fit justify-between gap-12 mt-6"> */}
+            <div className="flex flex-col sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full mt-8">
                 <VoorstellingPosterCard name={"Aladin"} afbeelding={"/media/AladinShow.png"} voorstellingPagelink={"/voorstelling/Aladin"} />
                 <VoorstellingPosterCard name={"Soldaat van Oranje"} afbeelding={"/media/SoldaatVanOranje.png"} voorstellingPagelink={"/voorstelling/SoldaatVanOranje"} />
                 <VoorstellingPosterCard name={"Sneeuwwitje"} afbeelding={"/media/Sneeuwwitje.png"} voorstellingPagelink={"/voorstelling/Sneeuwwitje"} />

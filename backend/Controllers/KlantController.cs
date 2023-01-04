@@ -45,10 +45,10 @@ public class KlantController : ControllerBase
     }
 
     [HttpPost("setup2fa")]
-    public async Task<ActionResult<List<string>>> Setup2FA([FromBody] string AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
+    public async Task<ActionResult<List<string>>> Setup2FA([FromBody] AccessTokenObject AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
         
-        Klant k = await GetKlantByAccessToken(AccessToken);
+        Klant k = await GetKlantByAccessToken(AccessToken.AccessToken);
         if(k == null) HandleResponse("UserNotFoundError");
         var res = await _service.Setup2FA(k, _context);
         if(res.Item1 == "" && res.Item2 == "") return HandleResponse("AlreadySetup2FA");
@@ -154,6 +154,9 @@ public class KlantInfo{
 public class EmailWachtwoord{
     public string Email {set; get;}
     public string Wachtwoord {set; get;}
+}
+public class AccessTokenObject{
+    public string AccessToken {set; get;}
 }
 
 public class NieuweKlant{

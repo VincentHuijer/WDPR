@@ -9,6 +9,7 @@ Configuration configuration = JsonConvert.DeserializeObject<Configuration>(jsonS
 builder.Services.AddDbContext<GebruikerContext>(options =>{
     options.UseNpgsql(configuration.ConnectionString);
 });
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("MyAllowedSpecificOrigins");
 app.UseHttpsRedirection();
-
+//app.UseDeveloperExceptionPage();
 app.UseAuthorization();
 
 app.MapControllers();

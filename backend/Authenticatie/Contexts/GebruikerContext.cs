@@ -61,10 +61,16 @@ public class GebruikerContext : DbContext{
         //     .OnDelete(DeleteBehavior.Cascade);
 
         // roostersysteem
-        modelBuilder.Entity<Kalender>()
-            .HasMany(k => k.Voorstellingen)
-            .WithOne(v => v.Kalender)
-            .HasForeignKey(m => m.KalenderId)
+        // modelBuilder.Entity<Kalender>()
+        //     .HasMany(k => k.Voorstellingen)
+        //     .WithOne(v => v.Kalender)
+        //     .HasForeignKey(k => k.VoorstellingId)
+        //     .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voorstelling>()
+            .HasOne(v => v.Kalender)
+            .WithMany(k => k.Voorstellingen)
+            .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Voorstelling>()

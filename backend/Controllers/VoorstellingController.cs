@@ -9,12 +9,12 @@ public class VoorstellingController : ControllerBase
     //nog ff maken
 
     private readonly GebruikerContext _context;
-    private Kalender _kalender = new Kalender();
-
+    private Kalender _kalender;
     public VoorstellingController(GebruikerContext context)
     {
         _context = context;
     }
+
 
 
     [HttpGet("GetVoorstellingen")]
@@ -27,6 +27,7 @@ public class VoorstellingController : ControllerBase
     [HttpPost("AddVoorstelling")]
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
+        _kalender = _context.Kalenders.Find(0);
         Console.WriteLine("parameters:" + nieuweVoorstelling.AantalKeer + nieuweVoorstelling.Interval + nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs);
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs);
         //Voorstelling sussyvoorstelling = new Voorstelling("sus", 420, "find the imposter", 500);

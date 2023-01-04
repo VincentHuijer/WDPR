@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 public class Kalender
 {
-    // public Kalender(/*List<Voorstelling> Voorstellingen*/)
+    // public Kalender()
     // {
-    //     //voorstellingen = Voorstellingen;
     // }
     [Key]
     public int KalenderId { get; set; }

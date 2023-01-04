@@ -37,7 +37,8 @@ public class KlantController : ControllerBase
                 klant.AccessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)};
                 await _context.SaveChangesAsync();
             }
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId)};
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),
+            Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
             return klantInfo;
         }
         var response = HandleResponse(responseString);
@@ -118,6 +119,13 @@ public class KlantController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+    [HttpGet("klant/by/at")]
+    public async Task<ActionResult<KlantInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
+        KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),
+        Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
+        return klantInfo;
+    }
 
     public ActionResult HandleResponse(string response){ 
         var responses = ResponseList.Responses;
@@ -150,6 +158,16 @@ public class KlantInfo{
     public bool IsVerified {set; get;}
     public bool IsBlocked {set; get;}
     public AccessToken AccessToken {set; get;}
+    public string Voornaam {set; get;}
+    public string Achternaam {set; get;}
+    public string Email {set; get;}
+    public string Beschrijving {set; get;}
+    public string Afbeelding {set; get;}
+    public DateTime? GeboorteDatum {set; get;}
+    public bool IsDonateur {set; get;}
+    public bool IsArtiest {set; get;}
+    public string RolNaam {set; get;}
+    
 }
 public class EmailWachtwoord{
     public string Email {set; get;}

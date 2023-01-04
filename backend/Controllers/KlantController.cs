@@ -33,7 +33,11 @@ public class KlantController : ControllerBase
         if(responseString == "Success"){
             Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
             if(klant == null) return HandleResponse("Error");
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessToken == null? new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)} : klant.AccessToken};
+            if(klant.AccessTokenId == null){
+                klant.AccessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)};
+                await _context.SaveChangesAsync();
+            }
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessToken};
             return klantInfo;
         }
         var response = HandleResponse(responseString);

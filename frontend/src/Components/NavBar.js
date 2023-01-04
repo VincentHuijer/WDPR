@@ -32,7 +32,7 @@ export function NavBar() {
                             <Link to="/login" className='border-2 border-black bg-white px-3 py-1 rounded-xl font-extrabold'>INLOGGEN</Link>
                             <Link to="/register" className='border-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>REGISTREREN</Link>
                         </>)
-                        : <p onClick={() => {logout("none"); window.location.href = "/"}} className='border-2 border-black bg-white px-3 py-1 rounded-xl font-extrabold'>UITLOGGEN</p>}
+                        : <p onClick={() => {logout("none"); window.location.href = "/"}} className='border-2 border-black bg-white px-3 py-1 rounded-xl font-extrabold cursor-pointer'>UITLOGGEN</p>}
 
                 </div>
             </div>

@@ -17,6 +17,7 @@ import Login from './Pages/Login';
 import Register from './Pages/Register';
 
 import { AuthProvider } from './Authentication/AuthContext';
+import Verify from './Pages/auth/Verify';
 
 export default function App() {
 
@@ -35,6 +36,7 @@ export default function App() {
                         <Route path='/voorstellingen' element={<Voorstellingen />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/register' element={<Register />} />
+                        <Route path='/verify' element={<Verify />} />
                     </Routes>
 
                     <Footer />

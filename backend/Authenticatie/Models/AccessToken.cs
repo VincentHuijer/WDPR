@@ -8,6 +8,7 @@ public class AccessToken{
     public string Token {set; get;}
     public DateTime VerloopDatum {set; get;}
     public Klant Klant {set; get;}
+    public int KlandId {set; get;}
     public Medewerker Medewerker {set; get;}
 
 }

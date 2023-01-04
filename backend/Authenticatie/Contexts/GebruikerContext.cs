@@ -46,8 +46,8 @@ public class GebruikerContext : DbContext{
 
         modelBuilder.Entity<AccessToken>()
             .HasOne(a => a.Klant)
-            .WithOne(k => k.AccessToken)
-            .HasForeignKey<Klant>(k => k.AccessTokenId)
+            .WithMany(k => k.AccessTokens)
+            .HasForeignKey(a => a.KlandId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<AccessToken>()

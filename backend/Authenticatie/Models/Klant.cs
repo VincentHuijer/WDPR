@@ -23,8 +23,7 @@ public class Klant{
     public string? TokenId {set; get;}
     public int Inlogpoging {get; set;} // Hier misschien iets mooiers op bedenken. Eventueel een inlogpoging class met info over de login poging erbij? Kan nuttig zijn voor logging en monitoring.
     //Toevoegen dat als inlogpoging > 3 ==> account geblokkeerd = true;
-    public AccessToken? AccessToken {set; get;}
-    public string? AccessTokenId {set; get;}
+    public List<AccessToken> AccessTokens {set; get;}
     public string? TwoFactorAuthSecretKey {set; get;}
     public bool TwoFactorAuthSetupComplete {set; get;}
     public bool IsBlocked {set; get;}

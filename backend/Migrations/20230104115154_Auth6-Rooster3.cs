@@ -8,23 +8,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Auth4Rooster1 : Migration
+    public partial class Auth6Rooster3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AccessTokens",
-                columns: table => new
-                {
-                    Token = table.Column<string>(type: "text", nullable: false),
-                    VerloopDatum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccessTokens", x => x.Token);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Kalenders",
                 columns: table => new
@@ -54,12 +42,44 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     Zaalnummer = table.Column<int>(type: "integer", nullable: false),
-                    Rooster = table.Column<string>(type: "text", nullable: false),
                     BeschikbareRangen = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Zalen", x => x.Zaalnummer);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stoelen",
+                columns: table => new
+                {
+                    StoelID = table.Column<int>(type: "integer", nullable: false),
+                    IsGereserveerd = table.Column<bool>(type: "boolean", nullable: false),
+                    Rang = table.Column<int>(type: "integer", nullable: false),
+                    Prijs = table.Column<double>(type: "double precision", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stoelen", x => x.StoelID);
+                    table.ForeignKey(
+                        name: "FK_Stoelen_Zalen_StoelID",
+                        column: x => x.StoelID,
+                        principalTable: "Zalen",
+                        principalColumn: "Zaalnummer",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccessTokens",
+                columns: table => new
+                {
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    VerloopDatum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    KlandId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessTokens", x => x.Token);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,26 +106,6 @@ namespace backend.Migrations
                         column: x => x.AccessTokenId,
                         principalTable: "AccessTokens",
                         principalColumn: "Token",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stoelen",
-                columns: table => new
-                {
-                    StoelID = table.Column<int>(type: "integer", nullable: false),
-                    IsGereserveerd = table.Column<bool>(type: "boolean", nullable: false),
-                    Rang = table.Column<int>(type: "integer", nullable: false),
-                    Prijs = table.Column<double>(type: "double precision", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stoelen", x => x.StoelID);
-                    table.ForeignKey(
-                        name: "FK_Stoelen_Zalen_StoelID",
-                        column: x => x.StoelID,
-                        principalTable: "Zalen",
-                        principalColumn: "Zaalnummer",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -144,20 +144,14 @@ namespace backend.Migrations
                     RolNaam = table.Column<string>(type: "text", nullable: false),
                     TokenId = table.Column<string>(type: "text", nullable: true),
                     Inlogpoging = table.Column<int>(type: "integer", nullable: false),
-                    AccessTokenId = table.Column<string>(type: "text", nullable: true),
                     TwoFactorAuthSecretKey = table.Column<string>(type: "text", nullable: true),
                     TwoFactorAuthSetupComplete = table.Column<bool>(type: "boolean", nullable: false),
+                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
                     VoorstellingTitel = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Klanten", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Klanten_AccessTokens_AccessTokenId",
-                        column: x => x.AccessTokenId,
-                        principalTable: "AccessTokens",
-                        principalColumn: "Token",
-                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Klanten_Rollen_RolNaam",
                         column: x => x.RolNaam,
@@ -177,11 +171,11 @@ namespace backend.Migrations
                 columns: table => new
                 {
                     VoorstellingTitel = table.Column<string>(type: "text", nullable: false),
+                    KalenderId = table.Column<int>(type: "integer", nullable: false),
                     BetrokkenPersonen = table.Column<List<string>>(type: "text[]", nullable: false),
                     Omschrijving = table.Column<string>(type: "text", nullable: false),
                     ActeurId = table.Column<int>(type: "integer", nullable: false),
                     Prijs = table.Column<double>(type: "double precision", nullable: false),
-                    KalenderId = table.Column<int>(type: "integer", nullable: false),
                     Zaalnummer = table.Column<int>(type: "integer", nullable: false),
                     DatumEnTijd = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -209,10 +203,9 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Klanten_AccessTokenId",
-                table: "Klanten",
-                column: "AccessTokenId",
-                unique: true);
+                name: "IX_AccessTokens_KlandId",
+                table: "AccessTokens",
+                column: "KlandId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Klanten_RolNaam",
@@ -257,6 +250,14 @@ namespace backend.Migrations
                 column: "Zaalnummer");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_AccessTokens_Klanten_KlandId",
+                table: "AccessTokens",
+                column: "KlandId",
+                principalTable: "Klanten",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Klanten_Voorstellingen_VoorstellingTitel",
                 table: "Klanten",
                 column: "VoorstellingTitel",
@@ -268,36 +269,21 @@ namespace backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Klanten_AccessTokens_AccessTokenId",
-                table: "Klanten");
+                name: "FK_AccessTokens_Klanten_KlandId",
+                table: "AccessTokens");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Medewerkers_AccessTokens_AccessTokenId",
-                table: "Medewerkers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Klanten_Rollen_RolNaam",
-                table: "Klanten");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Klanten_VerificatieTokens_TokenId",
-                table: "Klanten");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Klanten_Voorstellingen_VoorstellingTitel",
-                table: "Klanten");
+                name: "FK_Voorstellingen_Klanten_ActeurId",
+                table: "Voorstellingen");
 
             migrationBuilder.DropTable(
                 name: "Stoelen");
 
             migrationBuilder.DropTable(
-                name: "AccessTokens");
+                name: "Klanten");
 
             migrationBuilder.DropTable(
                 name: "Rollen");
-
-            migrationBuilder.DropTable(
-                name: "Medewerkers");
 
             migrationBuilder.DropTable(
                 name: "VerificatieTokens");
@@ -306,13 +292,16 @@ namespace backend.Migrations
                 name: "Voorstellingen");
 
             migrationBuilder.DropTable(
+                name: "Medewerkers");
+
+            migrationBuilder.DropTable(
                 name: "Kalenders");
 
             migrationBuilder.DropTable(
-                name: "Klanten");
+                name: "Zalen");
 
             migrationBuilder.DropTable(
-                name: "Zalen");
+                name: "AccessTokens");
         }
     }
 }

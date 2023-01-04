@@ -126,6 +126,18 @@ public class KlantController : ControllerBase
         Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
         return klantInfo;
     }
+    [HttpPost("logoutall")]
+    public async Task<ActionResult> LogoutAll([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
+        if(klant == null) return HandleResponse("Error");
+        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == accessTokenObject.AccessToken);
+        if(accessToken == null) return HandleResponse("Error");
+        _context.AccessTokens.Remove(accessToken);
+        klant.AccessToken = null;
+        klant.AccessTokenId = null;
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
 
     public ActionResult HandleResponse(string response){ 
         var responses = ResponseList.Responses;

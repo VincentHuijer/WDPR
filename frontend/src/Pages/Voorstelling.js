@@ -240,7 +240,7 @@ export default function Voorstelling() {
                       <Seat type={7} />
                       <p className="font-bold">= DERDERANGS</p>
                     </div>
-                  </div>
+                  </div> 
                 </div>
 
 

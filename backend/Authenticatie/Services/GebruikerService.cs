@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Google.Authenticator;
 using System.Security.Cryptography;
+namespace backend.Authenticatie;
 public class GebruikerService : IGebruikerService{
 
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+namespace backend.Authenticatie;
 public class GebruikerContext : DbContext{
 
     public GebruikerContext(DbContextOptions<GebruikerContext> options) : base(options){

@@ -1,3 +1,4 @@
+namespace backend.Authenticatie;
 public interface IGebruikerService{
 
     Task<string> Registreer(string voornaam, string achternaam, string email, string wachtwoord, VerificatieToken verificatieToken, GebruikerContext context);

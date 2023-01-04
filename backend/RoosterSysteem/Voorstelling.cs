@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using backend.Authenticatie;
 public class Voorstelling{
     public Voorstelling() { }
     public Voorstelling(string titel,int zaalnummer, string omschrijving, double prijs)

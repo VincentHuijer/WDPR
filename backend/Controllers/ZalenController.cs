@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using backend.Authenticatie;
 namespace backend.Controllers;
 
 [ApiController]

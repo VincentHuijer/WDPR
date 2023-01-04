@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using backend.Authenticatie;
 using System.IO;
 var builder = WebApplication.CreateBuilder(args);
 

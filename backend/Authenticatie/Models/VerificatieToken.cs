@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+namespace backend.Authenticatie;
 public class VerificatieToken{
     public VerificatieToken(){
         Console.WriteLine("nieuwe token");

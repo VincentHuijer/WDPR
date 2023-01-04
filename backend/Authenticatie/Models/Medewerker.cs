@@ -1,3 +1,4 @@
+namespace backend.Authenticatie;
 public class Medewerker{
     public Medewerker(string voornaam, string achternaam, string email, string wachtwoord){
         Voornaam = voornaam;

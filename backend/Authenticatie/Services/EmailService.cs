@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using Newtonsoft.Json;
+namespace backend.Authenticatie;
 public class EmailService : IEmailService{
 
     public async Task Send(string email, string content){

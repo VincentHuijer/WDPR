@@ -18,9 +18,10 @@ public class Voorstelling{
     public string VoorstellingTitel { get; set; }
     public int KalenderId { get; set; }
     public List<string> BetrokkenPersonen { get; set; }
-    public List<Klant> Kaartjeshouders { get; set; }
+    public List<Klant>? Kaartjeshouders { get; set; }
     public string Omschrijving { get; set; }
-    public Klant Acteur { get; set; }
+    public ICollection<ActeurVoorstelling>? Acteur { get; set; }
+    public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public double Prijs { get; set; }
     public Kalender? Kalender { get; set; }
     public int Zaalnummer { get; set; }

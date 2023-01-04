@@ -86,7 +86,33 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(z => z.StoelID)
             .OnDelete(DeleteBehavior.SetNull);
 
+        // voorstelling - klant (acteur)
+        modelBuilder.Entity<ActeurVoorstelling>()
+            .HasKey(av => new { av.ActeurId, av.voorstellingTitel });
 
+        modelBuilder.Entity<ActeurVoorstelling>()
+            .HasOne(av => av.Acteur)
+            .WithMany(k => k.ActeurVoorstelling)
+            .HasForeignKey(av => av.ActeurId);
+
+        modelBuilder.Entity<ActeurVoorstelling>()
+            .HasOne(av => av.Voorstelling)
+            .WithMany(v => v.Acteur)
+            .HasForeignKey(av => av.voorstellingTitel);
+
+        // voorstelling - klant (kaartjeshouder)
+        modelBuilder.Entity<Kaartjeshouders>()
+            .HasKey(kh => new { kh.KlantId, kh.VoorstellingTitel });
+
+        modelBuilder.Entity<Kaartjeshouders>()
+            .HasOne(kh => kh.Klant)
+            .WithMany(k => k.Kaartjeshouder)
+            .HasForeignKey(kh => kh.KlantId);
+
+        modelBuilder.Entity<Kaartjeshouders>()
+            .HasOne(v => v.voorstelling)
+            .WithMany(kh => kh.Kaartjeshouder)
+            .HasForeignKey(v => v.VoorstellingTitel);
 
     }
     public DbSet<Klant> Klanten {set; get;}
@@ -101,4 +127,6 @@ public class GebruikerContext : DbContext{
     public DbSet<Voorstelling> Voorstellingen {set; get;}
     public DbSet<Zaal> Zalen {set; get;}
     public DbSet<Stoel> Stoelen {set; get;}
-}
+    public DbSet<Kaartjeshouders> Kaartjeshouders {set; get;}
+    public DbSet<ActeurVoorstelling> ActeurVoorstellingen {set; get;}
+}   

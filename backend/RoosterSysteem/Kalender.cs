@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 public class Kalender
 {
-    // public Kalender()
-    // {
-    // }
+    public Kalender()
+    {
+        KalenderId = 0;
+    }
     [Key]
     public int KalenderId { get; set; }
     public List<Voorstelling> Voorstellingen { get; set; }

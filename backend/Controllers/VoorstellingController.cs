@@ -10,7 +10,7 @@ public class VoorstellingController : ControllerBase
     //nog ff maken
 
     private readonly GebruikerContext _context;
-    private Kalender _kalender;
+    private Kalender _kalender = new Kalender();
     public VoorstellingController(GebruikerContext context)
     {
         _context = context;

@@ -33,12 +33,11 @@ public class KlantController : ControllerBase
         if(responseString == "Success"){
             Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
             if(klant == null) return HandleResponse("Error");
-            if(klant.AccessTokens == null || klant.AccessTokens.Count() == 0 ){
-                klant.AccessTokens = new List<AccessToken>();
-                klant.AccessTokens.Add(new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)});
+            if(klant.AccessTokenId == null){
+                klant.AccessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)};
                 await _context.SaveChangesAsync();
             }
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessTokens.First()};
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessToken};
             return klantInfo;
         }
         var response = HandleResponse(responseString);
@@ -136,7 +135,7 @@ public class KlantController : ControllerBase
     public async Task<Klant> GetKlantByAccessToken(string AccessToken){
         AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
         if(accessToken == null) return null;
-        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokens.First() == accessToken);
+        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessToken == accessToken);
         if(k == null) return null; // error message weghalen, is voor debugging.
         else if(accessToken.VerloopDatum < DateTime.Now) return null;
         return k;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Authenticatie;
@@ -12,9 +13,11 @@ using backend.Authenticatie;
 namespace backend.Migrations
 {
     [DbContext(typeof(GebruikerContext))]
-    partial class GebruikerContextModelSnapshot : ModelSnapshot
+    [Migration("20230104122052_Auth7-Rooster3")]
+    partial class Auth7Rooster3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,6 +132,7 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccessTokenId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Achternaam")
@@ -316,7 +320,8 @@ namespace backend.Migrations
                     b.HasOne("backend.Authenticatie.AccessToken", "AccessToken")
                         .WithOne("Klant")
                         .HasForeignKey("backend.Authenticatie.Klant", "AccessTokenId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("backend.Authenticatie.Rol", "Rol")
                         .WithMany("Klanten")

@@ -37,7 +37,7 @@ public class KlantController : ControllerBase
                 klant.AccessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)};
                 await _context.SaveChangesAsync();
             }
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = klant.AccessToken};
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId)};
             return klantInfo;
         }
         var response = HandleResponse(responseString);
@@ -139,6 +139,10 @@ public class KlantController : ControllerBase
         if(k == null) return null; // error message weghalen, is voor debugging.
         else if(accessToken.VerloopDatum < DateTime.Now) return null;
         return k;
+    }
+    public async Task<AccessToken> GetAccessTokenByTokenIdAsync(string AccessTokenId){
+        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessTokenId);
+        return accessToken;
     }
 
 }

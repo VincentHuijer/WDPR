@@ -12,7 +12,7 @@ public class Voorstelling{
         Omschrijving = omschrijving;
         Prijs = prijs;
         BetrokkenPersonen = new List<string>();
-        DatumEnTijd = datumEnTijd;
+        Datum = datumEnTijd;
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -28,5 +28,5 @@ public class Voorstelling{
     public Kalender? Kalender { get; set; }
     public int? Zaalnummer{ get; set; }
     public Zaal? Zaal { get; set; }
-    public List<DateTime> DatumEnTijd { get; set; }
+    public List<DateTime>? Datum { get; set; }
 }

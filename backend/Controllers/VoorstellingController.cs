@@ -29,9 +29,8 @@ public class VoorstellingController : ControllerBase
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
         _kalender = _context.Kalenders.Find(0);
-        Console.WriteLine("parameters:" + nieuweVoorstelling.AantalKeer + nieuweVoorstelling.Interval + nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.DatumEnTijd);
-        Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.DatumEnTijd);
-        //Voorstelling sussyvoorstelling = new Voorstelling("sus", 420, "find the imposter", 500);
+        Console.WriteLine("parameters:" + nieuweVoorstelling.AantalKeer + nieuweVoorstelling.Interval + nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
+        Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.Datum);
         //interval = "once", "weekly","monthly","yearly"
         //aantalKeer = aantal keer dat de afspraak herhaalt wordt
         //interval is weekly en aantalKeer is 5, dan wordt de afspraak elke week herhaalt voor 5 weken
@@ -40,7 +39,7 @@ public class VoorstellingController : ControllerBase
         // voorlijst = _kalender.HerhaalOptie(nieuweVoorstelling.Interval, nieuweVoorstelling.AantalKeer, voorstelling);
         // for (int i = 0; i < voorlijst.Count; i++)
         // {
-        //         _context.Voorstellingen.Add(voorlijst[i]);
+        _context.Voorstellingen.Add(voorstelling);
         // }
         if (await _context.SaveChangesAsync() > 0)
         {
@@ -76,5 +75,5 @@ public class NieuweVoorstelling
     public string Interval { get; set; }
     public int AantalKeer { get; set; }
     public double Prijs { get; set; }
-    public List<DateTime> DatumEnTijd { get; set; }
+    public List<DateTime> Datum { get; set; }
 }

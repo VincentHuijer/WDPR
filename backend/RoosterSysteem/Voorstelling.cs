@@ -12,6 +12,7 @@ public class Voorstelling{
         Omschrijving = omschrijving;
         Prijs = prijs;
         BetrokkenPersonen = new List<string>();
+        DatumEnTijd = DateTime.Now;
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -23,7 +24,7 @@ public class Voorstelling{
     public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public double Prijs { get; set; }
     public Kalender? Kalender { get; set; }
-    public int Zaalnummer { get; set; }
-    public Zaal Zaal { get; set; }
+    public int? Zaalnummer{ get; set; }
+    public Zaal? Zaal { get; set; }
     public DateTime DatumEnTijd { get; set; }
 }

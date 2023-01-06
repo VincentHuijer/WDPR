@@ -62,6 +62,7 @@ public class GebruikerContext : DbContext{
         //     .OnDelete(DeleteBehavior.Cascade);
 
         // roostersysteem
+
         // modelBuilder.Entity<Kalender>()
         //     .HasMany(k => k.Voorstellingen)
         //     .WithOne(v => v.Kalender)
@@ -74,9 +75,9 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Voorstelling>()
-            .HasOne(v => v.Zaal)
-            .WithMany(z => z.Voorstellingen)
+        modelBuilder.Entity<Zaal>()
+            .HasMany(z => z.Voorstellingen)
+            .WithOne(v => v.Zaal)
             .HasForeignKey(v => v.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
@@ -93,12 +94,14 @@ public class GebruikerContext : DbContext{
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Acteur)
             .WithMany(k => k.ActeurVoorstelling)
-            .HasForeignKey(av => av.ActeurId);
+            .HasForeignKey(av => av.ActeurId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Voorstelling)
             .WithMany(v => v.Acteur)
-            .HasForeignKey(av => av.voorstellingTitel);
+            .HasForeignKey(av => av.voorstellingTitel)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (kaartjeshouder)
         modelBuilder.Entity<Kaartjeshouders>()
@@ -107,12 +110,14 @@ public class GebruikerContext : DbContext{
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(kh => kh.Klant)
             .WithMany(k => k.Kaartjeshouder)
-            .HasForeignKey(kh => kh.KlantId);
+            .HasForeignKey(kh => kh.KlantId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(v => v.voorstelling)
             .WithMany(kh => kh.Kaartjeshouder)
-            .HasForeignKey(v => v.VoorstellingTitel);
+            .HasForeignKey(v => v.VoorstellingTitel)
+            .OnDelete(DeleteBehavior.SetNull);
 
     }
     public DbSet<Klant> Klanten {set; get;}

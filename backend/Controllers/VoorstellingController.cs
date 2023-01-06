@@ -40,14 +40,7 @@ public class VoorstellingController : ControllerBase
         voorlijst = _kalender.HerhaalOptie(nieuweVoorstelling.Interval, nieuweVoorstelling.AantalKeer, voorstelling);
         for (int i = 0; i < voorlijst.Count; i++)
         {
-            if (_context.Voorstellingen.Any(v => v.DatumEnTijd == voorlijst[i].DatumEnTijd))
-            {
-                return BadRequest();
-            }
-            else
-            {
                 _context.Voorstellingen.Add(voorlijst[i]);
-            }
         }
         if (await _context.SaveChangesAsync() > 0)
         {

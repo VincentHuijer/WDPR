@@ -119,9 +119,9 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.VoorstellingTitel)
             .OnDelete(DeleteBehavior.SetNull);
         
-        modelBuilder.Entity<List<string>>().HasNoKey();
+    
         modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
-
+        modelBuilder.Entity<Voorstelling>().Ignore(v => v.Datum);
     }
     public DbSet<Klant> Klanten {set; get;}
     public DbSet<Medewerker> Medewerkers {set; get;}

@@ -118,6 +118,9 @@ public class GebruikerContext : DbContext{
             .WithMany(kh => kh.Kaartjeshouder)
             .HasForeignKey(v => v.VoorstellingTitel)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        modelBuilder.Entity<List<string>>().HasNoKey();
+        modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
 
     }
     public DbSet<Klant> Klanten {set; get;}

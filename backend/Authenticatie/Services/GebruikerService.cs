@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Google.Authenticator;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
+
 namespace backend.Authenticatie;
 public class GebruikerService : IGebruikerService{
 
@@ -25,7 +27,7 @@ public class GebruikerService : IGebruikerService{
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        if(klant == null) return "UserNotFoundError";
+        if(klant == null) return "InvalidCredentialsError";
         if(klant.IsBlocked) return "UserBlockedError";
         else if(klant.TokenId != null){
             return "NotVerifiedError";
@@ -88,13 +90,11 @@ public class GebruikerService : IGebruikerService{
     }   
 
     public async Task<bool> CheckDomainIsDisposable(string email){
-        string domain = email.Split('@')[1];
-        string path = "./Authenticatie/disposable-emails.txt";
-        string[] lines = await File.ReadAllLinesAsync(path);
-        if(lines.Any(l => l==domain)){ //Als een van de lines gelijk is aan het domein van het doorgegeven email adres is het een temporary domain. 
-            return true;
-        }else{
-            return false;
-        }
+        string apiUrl = "https://disposable.debounce.io/?email=" + email;
+        HttpClient client = new HttpClient();
+        var response = await client.GetAsync(apiUrl);
+        dynamic result = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+        bool isDisposable = result.disposable;
+        return isDisposable;
     }
 }

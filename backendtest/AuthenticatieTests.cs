@@ -156,5 +156,94 @@ public class AuthenticatieTests
         Assert.Equal(expected, await result);
     }
 
+    [Fact]
+    public async void TestVerifieerSuccesvol()
+    {
+        var options = new DbContextOptionsBuilder<GebruikerContext>()
+                            .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+        var context = new GebruikerContext(options);
+        
+        Mock<IEmailService> emailServiceMock = new Mock<IEmailService>();
+        GebruikerService gebruikerService = new GebruikerService(emailServiceMock.Object);
+        emailServiceMock.Setup(x => x.Send(It.IsAny<string>(), It.IsAny<string>()));
+
+
+        await gebruikerService.Registreer("TestVoornaam", "TestAchternaam", "unique9@gmail.com", "TestWachtwoord", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, context);
+        Klant klant = context.Klanten.First(k => k.Email == "unique9@gmail.com");
+        string token = klant.VerificatieToken.Token;
+    
+        var result = gebruikerService.Verifieer("unique9@gmail.com", token, context);
+        var expected = "Success";
+        Assert.Equal(expected, await result);
+    }
+
+    [Fact]
+    public async void TestVerifieerAlreadyVerified()
+    {
+        var options = new DbContextOptionsBuilder<GebruikerContext>()
+                            .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+        var context = new GebruikerContext(options);
+        
+        Mock<IEmailService> emailServiceMock = new Mock<IEmailService>();
+        GebruikerService gebruikerService = new GebruikerService(emailServiceMock.Object);
+        emailServiceMock.Setup(x => x.Send(It.IsAny<string>(), It.IsAny<string>()));
+
+
+        await gebruikerService.Registreer("TestVoornaam", "TestAchternaam", "unique10@gmail.com", "TestWachtwoord", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, context);
+        Klant klant = context.Klanten.First(k => k.Email == "unique10@gmail.com");
+        string token = klant.VerificatieToken.Token;
+        klant.TokenId = null;
+        klant.VerificatieToken = null;
+        await context.SaveChangesAsync();
+        var result = gebruikerService.Verifieer("unique10@gmail.com", token, context);
+        var expected = "AlreadyVerifiedError";
+        Assert.Equal(expected, await result);
+    }
+
+    [Fact]
+    public async void TestVerifieerExpiredToken()
+    {
+        var options = new DbContextOptionsBuilder<GebruikerContext>()
+                            .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+        var context = new GebruikerContext(options);
+        
+        Mock<IEmailService> emailServiceMock = new Mock<IEmailService>();
+        GebruikerService gebruikerService = new GebruikerService(emailServiceMock.Object);
+        emailServiceMock.Setup(x => x.Send(It.IsAny<string>(), It.IsAny<string>()));
+
+
+        await gebruikerService.Registreer("TestVoornaam", "TestAchternaam", "unique11@gmail.com", "TestWachtwoord", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, context);
+        Klant klant = context.Klanten.First(k => k.Email == "unique11@gmail.com");
+        VerificatieToken verificatieToken = klant.VerificatieToken;
+        verificatieToken.VerloopDatum = DateTime.Now.AddDays(-1);
+        await context.SaveChangesAsync();
+        var result = gebruikerService.Verifieer("unique11@gmail.com", verificatieToken.Token, context);
+        var expected = "ExpiredTokenError";
+        Assert.Equal(expected, await result);
+    }
+    [Fact]
+    public async void TestVerifieerError()
+    {
+        var options = new DbContextOptionsBuilder<GebruikerContext>()
+                            .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+        var context = new GebruikerContext(options);
+        
+        Mock<IEmailService> emailServiceMock = new Mock<IEmailService>();
+        GebruikerService gebruikerService = new GebruikerService(emailServiceMock.Object);
+        emailServiceMock.Setup(x => x.Send(It.IsAny<string>(), It.IsAny<string>()));
+
+
+        await gebruikerService.Registreer("TestVoornaam", "TestAchternaam", "unique12@gmail.com", "TestWachtwoord", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, context);
+        Klant klant = context.Klanten.First(k => k.Email == "unique12@gmail.com");
+
+        var result = gebruikerService.Verifieer("unique12@gmail.com", "niet-bestaand-token", context);
+        var expected = "ExpiredTokenError";
+        Assert.Equal(expected, await result);
+    }
+
 
 }

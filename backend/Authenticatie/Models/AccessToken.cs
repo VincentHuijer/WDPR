@@ -11,6 +11,7 @@ public class AccessToken{
     public DateTime VerloopDatum {set; get;}
     [JsonIgnore]
     public Klant Klant {set; get;}
+    [JsonIgnore]
     public Medewerker Medewerker {set; get;}
 
 }

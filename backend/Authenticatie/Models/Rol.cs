@@ -10,4 +10,5 @@ public class Rol{
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string Naam {set; get;}
     public List<Klant> Klanten {set; get;}
+    public List<Medewerker> Medewerkers {set; get;}
 }

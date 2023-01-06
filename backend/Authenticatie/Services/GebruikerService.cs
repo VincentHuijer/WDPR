@@ -57,7 +57,7 @@ public class GebruikerService : IGebruikerService{
             await context.SaveChangesAsync();
             return "Success";
         }
-        return "ExpiredTokenError";
+        return "ExpiredTokenError"; // Error message misschien veranderen? Token kan ook een niet bestaande zijn namelijk.
     }
 
     public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){

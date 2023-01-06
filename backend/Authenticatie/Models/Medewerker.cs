@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace backend.Authenticatie;
 public class Medewerker{
     public Medewerker(string voornaam, string achternaam, string email, string wachtwoord){
@@ -5,18 +7,23 @@ public class Medewerker{
         Achternaam = achternaam;
         Email = email;
         Wachtwoord = wachtwoord;
-        Rollen = new List<Rol>(){Rol.MedewerkerRol};
+        Rol = Rol.MedewerkerRol;
     }
     public int Id {set; get;}
     public string Voornaam {set; get;}
     public string Achternaam {set; get;}
-    public string Email {set; get;} // Komt in contactgegevens
+    public string Email {set; get;}
     public string Wachtwoord {set; get;}
     public string? Functie {set; get;}
-    public string? ContactGegevens {set; get;} //Eigen class van maken
     public DateTime GeboorteDatum {set; get;}
     public string? Afbeelding {set; get;}
-    public List<Rol> Rollen {set; get;}
+    public Rol Rol {set; get;}
+    public string RolNaam {set; get;}
+    [JsonIgnore]
     public AccessToken? AccessToken {set; get;}
     public string? AccessTokenId {set; get;}
+    public string? TwoFactorAuthSecretKey {set; get;}
+    public bool TwoFactorAuthSetupComplete {set; get;}
+    public bool IsBlocked {set; get;}
+    public int Inlogpoging {set; get;}
 }

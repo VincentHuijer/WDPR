@@ -33,4 +33,7 @@ public class Klant{
     public string? TwoFactorAuthSecretKey {set; get;}
     public bool TwoFactorAuthSetupComplete {set; get;}
     public bool IsBlocked {set; get;}
+    [JsonIgnore]
+    public AuthenticatieToken? AuthenticatieToken {set; get;}
+    public string? AuthenticatieTokenId {set; get;}
 }

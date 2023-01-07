@@ -6,5 +6,7 @@ public interface IGebruikerService{
     Task<string> Verifieer(string email, string token, GebruikerContext context);
     Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context);
     Task<string> Use2FA(Klant klant, string key);
+    Task<string> InitiatePasswordReset(Klant klant, GebruikerContext context);
+    Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context);
     Task<bool> CheckDomainIsDisposable(string email);
 }

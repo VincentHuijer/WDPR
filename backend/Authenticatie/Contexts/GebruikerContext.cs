@@ -56,6 +56,18 @@ public class GebruikerContext : DbContext{
             .HasForeignKey<Medewerker>(m => m.AccessTokenId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<AuthenticatieToken>()
+            .HasOne(a => a.Klant)
+            .WithOne(k => k.AuthenticatieToken)
+            .HasForeignKey<Klant>(k => k.AuthenticatieTokenId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<AuthenticatieToken>()
+            .HasOne(a => a.Medewerker)
+            .WithOne(m => m.AuthenticatieToken)
+            .HasForeignKey<Medewerker>(m => m.AuthenticatieTokenId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Medewerker>()
             .HasOne(m => m.Rol)
             .WithMany(r => r.Medewerkers)
@@ -134,6 +146,7 @@ public class GebruikerContext : DbContext{
     public DbSet<Rol> Rollen {set; get;}
     public DbSet<VerificatieToken> VerificatieTokens {set; get;}
     public DbSet<AccessToken> AccessTokens {set; get;}
+    public DbSet<AuthenticatieToken> AuthenticatieTokens {set; get;}
 
 
     // roostersysteem

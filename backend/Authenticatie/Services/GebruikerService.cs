@@ -75,6 +75,27 @@ public class GebruikerService : IGebruikerService{
         var tuple = (QrCodeUrl: qrUrl, ManualEntryCode: manualEntryCode);
         return tuple;
     }
+    public async Task<string> InitiatePasswordReset(Klant klant, GebruikerContext context){
+        if(klant.AuthenticatieTokenId != null){
+            AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.First(a => a.Token == klant.AuthenticatieTokenId);
+            context.AuthenticatieTokens.Remove(authenticatieToken);
+            await context.SaveChangesAsync();
+        }
+        klant.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
+        await context.SaveChangesAsync();
+        await _emailService.Send(klant.Email, klant.AuthenticatieTokenId!);
+        return "Success";
+    }
+    public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){
+        AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
+        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        klant.AuthenticatieToken = null;
+        klant.AuthenticatieTokenId = null;
+        klant.Wachtwoord = wachtwoord;
+        await context.SaveChangesAsync();
+        return "Success";
+    }
 
     public static string GenerateRandomString(int length){
         var random = new byte[length];

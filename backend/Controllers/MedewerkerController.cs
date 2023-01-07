@@ -86,6 +86,20 @@ public class MedewerkerController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("request/passwordreset/{email}")]
+    public async Task<ActionResult> InitiatePasswordReset(string email){
+        Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
+        if(medewerker == null) return BadRequest();
+        return HandleResponse(await _service.InitiatePasswordReset(medewerker, _context));
+    }
+
+    [HttpPost("complete/passwordreset/{email}")]
+    public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email){
+        Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
+        if(medewerker == null) return BadRequest();
+        return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
+    } 
+
 
     // FUNCTIONS
 
@@ -110,7 +124,7 @@ public class MedewerkerController : ControllerBase
         var responses = ResponseList.Responses;
         if (responses.ContainsKey(response))
         {
-            return StatusCode(responses[response].Item1, responses[response].Item2);
+            return StatusCode(responses[response].StatusCode, responses[response].Message);
         }
         return StatusCode(500);
     }

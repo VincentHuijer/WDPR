@@ -59,30 +59,17 @@ public class KlantController : ControllerBase
         return responses;
     }
 
-
-    // [HttpPost("complete2fa")]
-    // public async Task<ActionResult> Complete2FA([FromBody] string AccessToken)
-    // {
-    //     Klant klant = await GetKlantByAccessToken(AccessToken);
-    //     if(klant == null) HandleResponse("UserNotFoundError");
-    //     if(klant.TwoFactorAuthSetupComplete){
-    //         return HandleResponse("AlreadySetup2FA");
-    //     }else{
-    //         klant.TwoFactorAuthSetupComplete = true;
-    //         await _context.SaveChangesAsync();
-    //         return HandleResponse("Success");
-    //     }
-    // }
-
     [HttpPost("use2fa")]
-    public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey){ //Nog fixen dat hij deze 2 params accepteert.
+    public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey){
         Klant k = await GetKlantByAccessToken(accessTokenKey.AccessToken);
         if(k == null) HandleResponse("UserNotFoundError");
         var responseString = await _service.Use2FA(k, accessTokenKey.Key);
-        if(responseString == "Success"){
+
+        if(responseString == "Success" && k.TwoFactorAuthSetupComplete == false){ //Voor de eerste keer 2fa gebruiken.
             k.TwoFactorAuthSetupComplete = true;
             await _context.SaveChangesAsync();
         }
+
         return HandleResponse(responseString);
     }
 
@@ -93,39 +80,20 @@ public class KlantController : ControllerBase
         return response;
     }
 
-    [HttpGet("controleer2fa")]
-    public async Task<ActionResult> Controleer2FA([FromBody] string AccessToken){
-        Klant k = await GetKlantByAccessToken(AccessToken);
-        if(k.TwoFactorAuthSetupComplete){
-            return HandleResponse("Success");
-        }else if(!k.TwoFactorAuthSetupComplete) return HandleResponse("TwoFactorNotSetup");
-        else{
-            return BadRequest();
-        }
-    }
-
     [HttpGet("klanten")]
     public async Task<List<Klant>> GetKlantenAsync(){
         List<Klant> klanten = await _context.Klanten.ToListAsync();
         return klanten;
     }
 
-    [HttpPost("reset")]
-    public async Task<ActionResult> Reset(){
-        var rows = _context.Klanten.ToList();
-        foreach(var row in rows){
-            _context.Klanten.Remove(row);
-        }
-        await _context.SaveChangesAsync();
-        return Ok();
-    }
-    [HttpGet("klant/by/at")]
+    [HttpGet("klant/by/at")] //Get klant by accesstoken
     public async Task<ActionResult<KlantInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
         KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),
         Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
         return klantInfo;
     }
+
     [HttpPost("logoutall")]
     public async Task<ActionResult> LogoutAll([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
@@ -139,14 +107,27 @@ public class KlantController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("request/passwordreset/{email}")]
+    public async Task<ActionResult> InitiatePasswordReset(string email){
+        Klant klant = await GetKlantByEmailAsync(email);
+        if(klant == null) return BadRequest();
+        return HandleResponse(await _service.InitiatePasswordReset(klant, _context));
+    }
+
+    [HttpPost("complete/passwordreset/{email}")]
+    public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email){
+        Klant klant = await GetKlantByEmailAsync(email);
+        if(klant == null) return BadRequest();
+        return HandleResponse(await _service.ResetPassword(klant, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
+    }   
+
     public ActionResult HandleResponse(string response){ 
         var responses = ResponseList.Responses;
         if(responses.ContainsKey(response)){
-            return StatusCode(responses[response].Item1, responses[response].Item2);
+            return StatusCode(responses[response].StatusCode, responses[response].Message);
         }
         return StatusCode(500);
     }
-    //Wordt geen endpoint, is alleen nodig voor 2fa/login, misschien halen we het weg want evt niet nodig.
     public async Task<Klant> GetKlantByEmailAsync(string email){
         Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
         return k;
@@ -155,7 +136,7 @@ public class KlantController : ControllerBase
         AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
         if(accessToken == null) return null;
         Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessToken == accessToken);
-        if(k == null) return null; // error message weghalen, is voor debugging.
+        if(k == null) return null; 
         else if(accessToken.VerloopDatum < DateTime.Now) return null;
         return k;
     }
@@ -188,6 +169,10 @@ public class EmailWachtwoord{
 public class AccessTokenObject{
     public string AccessToken {set; get;}
 }
+public class AuthenticatieTokenNieuwWachtwoord{
+    public string AuthenticatieToken {set; get;}
+    public string NieuwWachtwoord {set; get;}
+}
 
 public class NieuweKlant{
     public string Email {set; get;}
@@ -207,18 +192,18 @@ public class AccessTokenKey{
 
 public class ResponseList{
         //Custom namen toevoegen aan tuples
-    public static Dictionary<string, Tuple<int, string>> Responses = new Dictionary<string, Tuple<int, string>>(){
-        {"Success", Tuple.Create(200, "Success!")},
-        {"AlreadyVerifiedError", Tuple.Create(403, "User already verified!")},
-        {"UserNotFoundError", Tuple.Create(400, "User not found!")},
-        {"ExpiredTokenError", Tuple.Create(403, "Token expired!")},
-        {"NotVerifiedError", Tuple.Create(403, "User not verified!")},
-        {"InvalidCredentialsError", Tuple.Create(401, "Email or password incorrect!")},
-        {"DisposableMailError", Tuple.Create(406, "Disposable email used!")},
-        {"EmailInUseError", Tuple.Create(409, "Email in use!")},
-        {"AlreadySetup2FA", Tuple.Create(403, "User has already setup their 2FA!")},
-        {"Invalid2FactorKeyError", Tuple.Create(401, "Invalid key used!")},
-        {"UserBlockedError", Tuple.Create(401, "User has been blocked because of too many login attempts!")},
-        {"TwoFactorNotSetup", Tuple.Create(200, "User hasn't set up 2FA")}
+    public static Dictionary<string, (int StatusCode, string Message)> Responses = new Dictionary<string, (int StatusCode, string Message)>(){
+        {"Success", (200, "Success!")},
+        {"AlreadyVerifiedError", (403, "User already verified!")},
+        {"UserNotFoundError", (400, "User not found!")},
+        {"ExpiredTokenError", (403, "Token expired!")},
+        {"NotVerifiedError", (403, "User not verified!")},
+        {"InvalidCredentialsError", (401, "Email or password incorrect!")},
+        {"DisposableMailError", (406, "Disposable email used!")},
+        {"EmailInUseError", (409, "Email in use!")},
+        {"AlreadySetup2FA", (403, "User has already setup their 2FA!")},
+        {"Invalid2FactorKeyError", (401, "Invalid key used!")},
+        {"UserBlockedError", (401, "User has been blocked because of too many login attempts!")},
+        {"TwoFactorNotSetup", (200, "User hasn't set up 2FA")}
     };
 }

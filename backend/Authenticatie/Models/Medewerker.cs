@@ -26,4 +26,7 @@ public class Medewerker{
     public bool TwoFactorAuthSetupComplete {set; get;}
     public bool IsBlocked {set; get;}
     public int Inlogpoging {set; get;}
+    [JsonIgnore]
+    public AuthenticatieToken? AuthenticatieToken {set; get;}
+    public string AuthenticatieTokenId {set; get;}
 }

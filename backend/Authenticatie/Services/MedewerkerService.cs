@@ -6,6 +6,7 @@ namespace backend.Authenticatie;
 
 public class MedewerkerService : IMedewerkerService
 {
+    private IEmailService _emailService = new EmailService();
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context)
     {
         Medewerker medewerker = await context.Medewerkers.FirstOrDefaultAsync(k => k.Email == email);
@@ -45,6 +46,28 @@ public class MedewerkerService : IMedewerkerService
         bool result = tfa.ValidateTwoFactorPIN(medewerker.TwoFactorAuthSecretKey, key);
         if(result) return "Success";
         return "Invalid2FactorKeyError";
+    }
+
+    public async Task<string> InitiatePasswordReset(Medewerker medewerker, GebruikerContext context){
+        if(medewerker.AuthenticatieTokenId != null){
+            AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.First(a => a.Token == medewerker.AuthenticatieTokenId);
+            context.AuthenticatieTokens.Remove(authenticatieToken);
+            await context.SaveChangesAsync();
+        }
+        medewerker.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
+        await context.SaveChangesAsync();
+        await _emailService.Send(medewerker.Email, medewerker.AuthenticatieTokenId!);
+        return "Success";
+    }
+    public async Task<string> ResetPassword(Medewerker medewerker, string token, string wachtwoord, GebruikerContext context){
+        AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
+        if(medewerker.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        medewerker.AuthenticatieToken = null;
+        medewerker.AuthenticatieTokenId = null;
+        medewerker.Wachtwoord = wachtwoord;
+        await context.SaveChangesAsync();
+        return "Success";
     }
     public static string GenerateRandomString(int length){
         var random = new byte[length];

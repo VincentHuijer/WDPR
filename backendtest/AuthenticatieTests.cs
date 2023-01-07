@@ -1,5 +1,3 @@
-using Moq;
-using Microsoft.EntityFrameworkCore;
 namespace backendtest;
 
 
@@ -83,7 +81,7 @@ public class AuthenticatieTests
         var expected = "Success";
         Assert.Equal(expected, await result);
     }
-        [Fact]
+    [Fact]
     public async void TestLoginNotVerified()
     {
         var options = new DbContextOptionsBuilder<GebruikerContext>()

@@ -24,6 +24,9 @@ public class Voorstelling{
     public string Omschrijving { get; set; }
     public ICollection<ActeurVoorstelling>? Acteur { get; set; }
     public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
+
+    public ICollection<VoorstellingRegel>? VoorstellingRegels { get; set; }
+
     public double Prijs { get; set; }
     public Kalender? Kalender { get; set; }
     public int? Zaalnummer{ get; set; }

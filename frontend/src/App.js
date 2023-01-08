@@ -15,7 +15,7 @@ import WinkelMand from './Pages/WinkelMand';
 import Voorstellingen from './Pages/Voorstellingen';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-
+import Betalen from './Pages/Betalen';
 import { AuthProvider } from './Authentication/AuthContext';
 import Verify from './Pages/auth/Verify';
 
@@ -37,6 +37,7 @@ export default function App() {
                         <Route path='/login' element={<Login />} />
                         <Route path='/register' element={<Register />} />
                         <Route path='/verify' element={<Verify />} />
+                        <Route path='betalen' element={<Betalen />} />
                     </Routes>
 
                     <Footer />

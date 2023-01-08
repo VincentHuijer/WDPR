@@ -7,7 +7,18 @@ public class Stoel{
     public bool IsGereserveerd { get; set; }
     public int Rang { get; set; }
     public double Prijs { get; set; }
-    public Zaal Zaal { get; set; }
+
+    public string Zaalnummer { get; set; }
+
+    public Zaal? Zaal { get; set; }
+    public ICollection<Zaal>? Zalen { get; set; }
+
+    public Bestelling Bestelling { get; set; }
+
+    public ICollection<Bestelling>? Bestellingen { get; set; }
+
+    public ICollection<Stoel>? StoelReserveren { get; set; }
+
     public string stoelReserveren(){
         return "geen logica toegevoegd";
     }

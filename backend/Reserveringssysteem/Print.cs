@@ -1,9 +1,9 @@
 class Print {
-    public iBestelling Bestellinginformatie;
+    public Bestelling Bestellinginformatie;
     public string qrCode;
 
 
-    public Print(iBestelling Bestellinginformatie){
+    public Print(Bestelling Bestellinginformatie){
         
     }
 }

@@ -6,37 +6,39 @@ export default function Seat({ type = 5 }) {
     const [selected, setSelected] = useState(false)
     const [tempType, setTempType] = useState(type)
 
-    //1 = VIP
-    //2 = GEHANDICAPT
-    //3 = EERSTERANGS
-    //4 = GESELECTEERD
-    //5 = GERESERVEERD
-    //6 = TWEEDERANGS
-    //7 = DERDERANGS
+    // 1 = VIP
+    // 2 = GEHANDICAPT
+    // 3 = EERSTERANGS
+    // 4 = TWEEDERANGS
+    // 7 = DERDERANGS
+    // 6 = GESELECTEERD
+    // 5 = GERESERVEERD
+
 
     const [svg, setSvg] = useState()
 
     useEffect(() => {
 
         if (selected) {
-            setTempType(4)
+            setTempType(6)
         } else {
             setTempType(type)
         }
 
 
-         if (tempType === 0) {
+        if (tempType === 0) {
             setSvg(
-                <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg onClick={() => setSelected(!selected)} width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#EDEDED" stroke="black" />
                 </svg>
             )
         }
-       else if (tempType === 1) {
+        else if (tempType === 1) {
             setSvg(
-                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FAFF1E" stroke="black" />
+                <svg onClick={() => setSelected(!selected)} width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FFFC3B" stroke="black" />
                 </svg>
+
             )
         } else if (tempType === 2) {
             setSvg(
@@ -47,11 +49,25 @@ export default function Seat({ type = 5 }) {
             )
         } else if (tempType === 3) {
             setSvg(
-                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FF0000" stroke="#FF0000" />
+                <svg onClick={() => setSelected(!selected)} width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FFFC3B" stroke="black" />
                 </svg>
             )
         } else if (tempType === 4) {
+            setSvg(
+                <svg onClick={() => setSelected(!selected)} width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FE9628" stroke="black" />
+                </svg>
+            )
+        } else if (tempType === 5) {
+            setSvg(
+
+                <svg onClick={() => setSelected(!selected)} width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FE0C1C" stroke="black" />
+                </svg>
+            )
+        }
+        else if (tempType === 6) {
             setSvg(
                 <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="black" stroke="black" />
@@ -59,33 +75,17 @@ export default function Seat({ type = 5 }) {
                     <rect x="11" y="10.5" width="18" height="18" rx="4.5" fill="black" stroke="black" />
                 </svg>
             )
-        } else if (tempType === 5) {
-            setSvg(
-                <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#EDEDED" stroke="black" />
-                </svg>
-            )
-        }
-        else if (tempType === 6) {
-            setSvg(
-                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FF0000" stroke="#FF0000" />
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="black" stroke="black" />
-                    <rect x="4" y="4" width="32" height="32" rx="4.5" fill="blue" stroke="yellow" />
-                </svg>
-            )
         }
 
         else if (tempType === 7) {
             setSvg(
-                <svg onClick={() => setSelected(!selected)} className="hover:cursor-pointer" width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#FF0000" stroke="#FF0000" />
-                    <rect x="4" y="4" width="32" height="32" rx="4.5" fill="orange" stroke="yellow" />
-                                        <rect x="11" y="10.5" width="18" height="18" rx="4.5" fill="green" stroke="green" />
+                <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="39" height="39" rx="7.5" fill="#EDEDED" stroke="black" />
+                    <path d="M12.7071 29.2929C12.3166 29.6834 11.6834 29.6834 11.2929 29.2929L10.7071 28.7071C10.3166 28.3166 10.3166 27.6834 10.7071 27.2929L17.2929 20.7071C17.6834 20.3166 17.6834 19.6834 17.2929 19.2929L10.7071 12.7071C10.3166 12.3166 10.3166 11.6834 10.7071 11.2929L11.2929 10.7071C11.6834 10.3166 12.3166 10.3166 12.7071 10.7071L19.2929 17.2929C19.6834 17.6834 20.3166 17.6834 20.7071 17.2929L27.2929 10.7071C27.6834 10.3166 28.3166 10.3166 28.7071 10.7071L29.2929 11.2929C29.6834 11.6834 29.6834 12.3166 29.2929 12.7071L22.7071 19.2929C22.3166 19.6834 22.3166 20.3166 22.7071 20.7071L29.2929 27.2929C29.6834 27.6834 29.6834 28.3166 29.2929 28.7071L28.7071 29.2929C28.3166 29.6834 27.6834 29.6834 27.2929 29.2929L20.7071 22.7071C20.3166 22.3166 19.6834 22.3166 19.2929 22.7071L12.7071 29.2929Z" fill="black" />
                 </svg>
             )
         }
-    }, [selected,tempType])
+    }, [selected, tempType])
 
     return svg
 }

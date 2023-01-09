@@ -58,7 +58,7 @@ export default function Register() {
     return (
         <div className="auth-form-container w-full mt-32 pb-24">
             {!complete ? <div>
-                <p className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">REGISTREREN</p>
+                <h2 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">REGISTREREN</h2>
 
 
                 <div className="w-11/12 md:w-6/12 lg:w-4/12 bg-appSuperLightWhite m-auto rounded-2xl pb-6">

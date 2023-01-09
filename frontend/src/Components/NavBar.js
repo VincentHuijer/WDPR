@@ -17,20 +17,18 @@ export function NavBar() {
         <header className='w-full bg-white pt-2 fixed top-0 z-50' >
             <div className='w-11/12 flex justify-between items-center m-auto pb-2'>
 
-                <div onClick={() => setOpenMobileNav(false)} className='flex items-center gap-4'>
+                <nav onClick={() => setOpenMobileNav(false)} className='flex items-center gap-4'>
 
                     <Link to="/#"><img alt='Theater Laak Logo' src='/media/tl-logo.png' /></Link>
 
                     <div className="gap-4 font-extrabold hidden lg:flex">
-
                         <Link to="/overons">Over Ons</Link>
                         <Link to="/voorstellingen">Alle Voorstellingen</Link>
                         <Link to="/overons#contact">Contact Opnemen</Link>
-
                     </div>
-                </div>
+                </nav>
 
-                <div className='hidden lg:flex gap-4'>
+                <nav className='hidden lg:flex gap-4'>
                     {
                         accesToken == "none" ?
                             (<>
@@ -39,17 +37,17 @@ export function NavBar() {
                             </>)
                             : <p onClick={() => { logout("none"); window.location.href = "/" }} className='border-2 border-black bg-white px-3 py-1 rounded-xl font-extrabold cursor-pointer'>UITLOGGEN</p>}
 
-                </div>
+                </nav>
 
-                <div className='block lg:hidden'>
+                <nav className='block lg:hidden'>
                     <svg onClick={() => setOpenMobileNav(!openMobileNav)} width="35" height="35" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M17.1875 76.5625H82.8125M17.1875 51.5625H82.8125M17.1875 26.5625H82.8125" stroke="#2E2E38" stroke-width="9.375" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
-                </div>
+                </nav>
             </div>
 
             {openMobileNav && <div onClick={() => setOpenMobileNav(false)}>
-                <div className='flex fixed flex-col bg-white w-full items-center justify-center pb-4 font-bold'>
+                <nav className='flex fixed flex-col bg-white w-full items-center justify-center pb-4 font-bold'>
                     <Link to="/overons">Over Ons</Link>
                     <Link to="/voorstellingen">Alle Voorstellingen</Link>
                     <Link to="/overons#contact">Contact Opnemen</Link>
@@ -62,7 +60,7 @@ export function NavBar() {
                                 </>)
                                 : <p onClick={() => { logout("none"); window.location.href = "/" }} className='border-2 border-black bg-white px-3 py-1 text-sm rounded-xl font-extrabold cursor-pointer'>UITLOGGEN</p>}
                     </div>
-                </div>
+                </nav>
             </div>}
 
             <div className='w-full bg-black h-fit py-1 text-white font-bold flex items-center justify-center'>

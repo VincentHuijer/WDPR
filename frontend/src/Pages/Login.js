@@ -21,6 +21,15 @@ export default function Login() {
     const [at, setAt] = useState(null)
 
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            if (email == "" && wachtwoord == "") return
+
+            console.log('do validate')
+            handleSubmit()
+        }
+    }
+
     /**
      * LOGIN
      * NOT VERIFIED = SHOW MESSAGE
@@ -35,7 +44,9 @@ export default function Login() {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
 
         if (!email || !wachtwoord) return;
 
@@ -98,7 +109,7 @@ export default function Login() {
         <div className="auth-form-container w-full mt-32 pb-24">
 
             {isVerified ? <div>
-                {!isAuth && <p className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">INLOGGEN</p>}
+                {!isAuth && <h2 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">INLOGGEN</h2>}
 
                 {!isAuth ? <div className="w-11/12 md:w-6/12 lg:w-4/12 bg-appSuperLightWhite m-auto rounded-2xl pb-6">
                     <form className="login-form " onSubmit={handleSubmit}>
@@ -114,6 +125,7 @@ export default function Login() {
                                     placeholder=" Uw emailadres"
                                     id="email"
                                     name="email"
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
 
@@ -127,6 +139,7 @@ export default function Login() {
                                     placeholder="*********"
                                     id="wachtwoord"
                                     name="wachtwoord"
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
 

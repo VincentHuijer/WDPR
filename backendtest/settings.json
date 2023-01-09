@@ -1,0 +1,15 @@
+{
+    "cucumberautocomplete.steps":[
+    "Steps/*.cs"
+    ],
+    "cucumberautocomplete.customParameters": [
+    {
+    "parameter": "\"(.*)\"",
+    "value": ".*"
+    },
+    {
+    "parameter": "\"\"(.*)\"\"",
+    "value": ".*"
+    }
+    ]
+}

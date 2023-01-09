@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using backend.Authenticatie;
 using System.IO;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,11 +10,19 @@ Configuration configuration = JsonConvert.DeserializeObject<Configuration>(jsonS
 builder.Services.AddDbContext<GebruikerContext>(options =>{
     options.UseNpgsql(configuration.ConnectionString);
 });
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddCors(options =>{
+     options.AddPolicy(name: "MyAllowedSpecificOrigins",
+                       policy  =>
+                       {
+                           policy.AllowAnyOrigin()
+                           .AllowAnyHeader().AllowAnyMethod(); // add the allowed origins
+                       });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,9 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("MyAllowedSpecificOrigins");
 app.UseHttpsRedirection();
-
+//app.UseDeveloperExceptionPage();
 app.UseAuthorization();
 
 app.MapControllers();

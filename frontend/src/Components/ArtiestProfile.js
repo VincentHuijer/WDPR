@@ -1,9 +1,11 @@
-export default function ArtiestProfile({name, picture,role}) {
+export default function ArtiestProfile({ name, picture, role }) {
     return (
-        <div className="w-fit h-fit">
-            <img className="rounded-3xl border-2 border-black h-48 w-48" src={picture} />
-            <p className="font-bold text-xl text-appLightBlack w-48 text-center">{name}</p>
-            <p className="font-bold text-sm text-appLightBlack w-48 text-center">{role}</p>
+        <div className="w-full artistCard aspect-square">
+            <div className="aspect-square overflow-hidden rounded-3xl border-2 border-black flex justify-start items-center">
+                <img className="w-full" src={picture} />
+            </div>
+            <p className="font-bold text-xl text-appLightBlack w-11/12 m-auto">{name}</p>
+            <p className="font-bold text-sm text-appLightBlack w-11/12 m-auto">{role}</p>
         </div>
     )
 }

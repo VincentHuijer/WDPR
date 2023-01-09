@@ -1,4 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Google.Authenticator;
+using System.Security.Cryptography;
+using Newtonsoft.Json;
+
+namespace backend.Authenticatie;
 public class GebruikerService : IGebruikerService{
 
 
@@ -17,12 +22,13 @@ public class GebruikerService : IGebruikerService{
         }
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
-        //await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
+        await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
         return "Success";
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        if(klant == null) return "UserNotFoundError";
+        if(klant == null) return "InvalidCredentialsError";
+        if(klant.IsBlocked) return "UserBlockedError";
         else if(klant.TokenId != null){
             return "NotVerifiedError";
         } 
@@ -32,32 +38,84 @@ public class GebruikerService : IGebruikerService{
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
+                if(klant.Inlogpoging >= 3) klant.IsBlocked = true;
         }
         return "InvalidCredentialsError";
     }
     public async Task<string> Verifieer(string email, string token, GebruikerContext context){
         Klant? klant = await context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        
         if(klant == null) return "UserNotFoundError";
         else if(klant.TokenId == null) return "AlreadyVerifiedError";
-        else if(klant.VerificatieToken.Token == token && klant.VerificatieToken.VerloopDatum > DateTime.Now){
+        VerificatieToken? VerificatieToken = await context.VerificatieTokens.FirstOrDefaultAsync(a => a.Token == klant.TokenId);
+        if(VerificatieToken == null) return "ServerError";
+        if(VerificatieToken.Token == token && VerificatieToken.VerloopDatum > DateTime.Now){
             klant.VerificatieToken = null;
             klant.TokenId = null;
-            VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
-            context.VerificatieTokens.Remove(vtoken);
+            //VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
+            context.VerificatieTokens.Remove(VerificatieToken);
             await context.SaveChangesAsync();
             return "Success";
         }
-        return "ExpiredTokenError";
+        return "ExpiredTokenError"; // Error message misschien veranderen? Token kan ook een niet bestaande zijn namelijk.
     }
 
-    public async Task<bool> CheckDomainIsDisposable(string email){
-        string domain = email.Split('@')[1];
-        string path = "./Authenticatie/disposable-emails.txt";
-        string[] lines = await File.ReadAllLinesAsync(path);
-        if(lines.Any(l => l==domain)){ //Als een van de lines gelijk is aan het domein van het doorgegeven email adres is het een temporary domain. 
-            return true;
-        }else{
-            return false;
+    public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){
+        if(klant.TwoFactorAuthSetupComplete) return ("", "");
+        string key = GenerateRandomString(10);
+
+        klant.TwoFactorAuthSecretKey = key;
+        await context.SaveChangesAsync();
+
+        TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+        SetupCode setupInfo = tfa.GenerateSetupCode("System", klant.Email, klant.TwoFactorAuthSecretKey, false, 3);
+
+        string qrUrl = setupInfo.QrCodeSetupImageUrl;
+        string manualEntryCode = setupInfo.ManualEntryKey;
+        var tuple = (QrCodeUrl: qrUrl, ManualEntryCode: manualEntryCode);
+        return tuple;
+    }
+    public async Task<string> InitiatePasswordReset(Klant klant, GebruikerContext context){
+        if(klant.AuthenticatieTokenId != null){
+            AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.First(a => a.Token == klant.AuthenticatieTokenId);
+            context.AuthenticatieTokens.Remove(authenticatieToken);
+            await context.SaveChangesAsync();
         }
+        klant.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
+        await context.SaveChangesAsync();
+        await _emailService.Send(klant.Email, klant.AuthenticatieTokenId!);
+        return "Success";
+    }
+    public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){
+        AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
+        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        klant.AuthenticatieToken = null;
+        klant.AuthenticatieTokenId = null;
+        klant.Wachtwoord = wachtwoord;
+        await context.SaveChangesAsync();
+        return "Success";
+    }
+
+    public static string GenerateRandomString(int length){
+        var random = new byte[length];
+        RandomNumberGenerator.Fill(random);
+        string base32String = Convert.ToBase64String(random); //convert to base32string
+        return base32String;
+    }
+    public async Task<string> Use2FA(Klant klant, string key){
+        TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+        bool result = tfa.ValidateTwoFactorPIN(klant.TwoFactorAuthSecretKey, key);
+        if(result) return "Success";
+        return "Invalid2FactorKeyError";
+    }   
+
+    public async Task<bool> CheckDomainIsDisposable(string email){
+        string apiUrl = "https://disposable.debounce.io/?email=" + email;
+        HttpClient client = new HttpClient();
+        var response = await client.GetAsync(apiUrl);
+        dynamic result = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+        bool isDisposable = result.disposable;
+        return isDisposable;
     }
 }

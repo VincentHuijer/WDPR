@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+namespace backend.Authenticatie;
 public class Rol{
     public static Rol KlantRol = new Rol(){Naam = "Klant"};
     public static Rol ArtiestRol = new Rol(){Naam = "Artiest"};
@@ -10,4 +10,5 @@ public class Rol{
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string Naam {set; get;}
     public List<Klant> Klanten {set; get;}
+    public List<Medewerker> Medewerkers {set; get;}
 }

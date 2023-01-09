@@ -1,7 +1,7 @@
 using backend.Authenticatie;
 public class ActeurVoorstelling
 {
-    public string voorstellingTitel { get; set; }
+    public int VoorstellingId { get; set; }
     public Voorstelling Voorstelling { get; set; }
     public int ActeurId { get; set; }
     public Klant Acteur { get; set; }

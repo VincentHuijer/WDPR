@@ -75,5 +75,5 @@ public class NieuweVoorstelling
     public string Interval { get; set; }
     public int AantalKeer { get; set; }
     public double Prijs { get; set; }
-    public List<DateTime> Datum { get; set; }
+    public DateTime Datum { get; set; }
 }

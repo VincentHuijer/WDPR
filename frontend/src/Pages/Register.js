@@ -58,7 +58,7 @@ export default function Register() {
     return (
         <div className="auth-form-container w-full mt-32 pb-24">
             {!complete ? <div>
-                <h2 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">REGISTREREN</h2>
+                <h1 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">REGISTREREN</h1>
 
 
                 <div className="w-11/12 md:w-6/12 lg:w-4/12 bg-appSuperLightWhite m-auto rounded-2xl pb-6">
@@ -68,7 +68,7 @@ export default function Register() {
                             <div className="flex w-10/12 m-auto justify-between">
                                 <div className="flex flex-col pt-3 pr-2 w-1/2">
                                     <label className="font-bold" htmlFor="firstName">Voornaam</label>
-                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={firstName} name="firstName" onChange={(e) => setFirstName(e.target.value)} id="FirstName" placeholder="First Name" />
+                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={firstName} name="firstName" onChange={(e) => setFirstName(e.target.value)} id="firstName" placeholder="First Name" />
                                 </div>
 
                                 <div className="flex flex-col pt-3 pl-2 w-1/2">
@@ -119,7 +119,7 @@ export default function Register() {
                                         specialChar: "Een special karakter!",
                                         number: "Een nummer!",
                                         capital: "Een hoofdletter!",
-                                        match: "niet overeen!",
+                                        match: "Zijn gelijk!",
                                     }}
                                 />
                             </div>

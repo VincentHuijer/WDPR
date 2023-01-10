@@ -5,7 +5,7 @@ export default function ArticlePreview({text, overonspagina = false}) {
     return (
         <article className="w-11/12 flex flex-col md:flex-row justify-between m-auto mt-12 h-full">
             <div className='h-fit pb-1.5 flex flex-col justify-between'>
-                <h2 className="text-2xl lg:text-4xl font-extrabold">OVER THEATER LAAK</h2>
+                <h1 className="text-2xl lg:text-4xl font-extrabold">OVER THEATER LAAK</h1>
                 <p className="mt-3 font-semibold text-appLightBlack w-full md:w-3/4 ">{text}<br /></p>
 
                 {!overonspagina && <div className='mt-6'>

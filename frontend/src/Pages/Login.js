@@ -109,7 +109,7 @@ export default function Login() {
         <div className="auth-form-container w-full mt-32 pb-24">
 
             {isVerified ? <div>
-                {!isAuth && <h2 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">INLOGGEN</h2>}
+                {!isAuth && <h1 className="text-5xl font-extrabold w-11/12 m-auto md:w-full text-left md:text-center pb-6 mt-16">INLOGGEN</h1>}
 
                 {!isAuth ? <div className="w-11/12 md:w-6/12 lg:w-4/12 bg-appSuperLightWhite m-auto rounded-2xl pb-6">
                     <form className="login-form " onSubmit={handleSubmit}>

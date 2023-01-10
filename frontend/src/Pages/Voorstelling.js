@@ -161,7 +161,7 @@ export default function Voorstelling() {
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h2 className="text-4xl font-extrabold">SOME VOORSTELLING NAAM</h2>
+              <h1 className="text-4xl font-extrabold">SOME VOORSTELLING NAAM</h1>
               <p className="font-bold text-appLightBlack">
                 20-12-2022 tot 03-04-2023
               </p>
@@ -202,7 +202,7 @@ export default function Voorstelling() {
               <img
                 className="border-2 border-black h-96 bg-black rounded-2xl"
                 src="/media/AladinShow.png"
-                alt="AladinFoto"
+                alt="Aladin Poster Disney"
               />
             </div>
           </div>

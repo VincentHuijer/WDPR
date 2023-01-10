@@ -20,7 +20,7 @@ export function NavBar() {
 
                 <nav onClick={() => setOpenMobileNav(false)} className='flex items-center gap-4'>
 
-                    <Link to="/#"><img alt='Theater Laak Logo' src='/media/tl-logo.png' /></Link>
+                    <Link to="/#"><img alt='Theater Laak Logo en Home page knop' src='/media/tl-logo.png' /></Link>
 
                     <div className="gap-4 font-extrabold hidden lg:flex">
                         <Link to="/overons">Over Ons</Link>

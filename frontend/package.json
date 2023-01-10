@@ -11,6 +11,7 @@
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
+    "react-helmet": "^6.1.0",
     "react-password-checklist": "^1.4.3",
     "react-router-dom": "^6.5.0",
     "react-scripts": "5.0.1",

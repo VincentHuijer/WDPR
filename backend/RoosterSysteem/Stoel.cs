@@ -17,7 +17,6 @@ public class Stoel{
 
     public ICollection<Bestelling>? Bestellingen { get; set; }
 
-    public ICollection<Stoel>? StoelReserveren { get; set; }
 
     public string stoelReserveren(){
         return "geen logica toegevoegd";

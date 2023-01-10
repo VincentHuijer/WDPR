@@ -93,6 +93,7 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        //zaal - voorstelling
         modelBuilder.Entity<Zaal>()
             .HasMany(z => z.Voorstellingen)
             .WithOne(v => v.Zaal)
@@ -144,39 +145,44 @@ public class GebruikerContext : DbContext{
 
         //bestelling - stoel
         modelBuilder.Entity<Bestelling>()
-        .HasKey(b => new {b.BestellingId, b.StoelReserveren});
+        .HasKey(b => new {b.BestellingId, b.Stoelen});
 
         modelBuilder.Entity<Bestelling>()
-        .HasMany(b => b.StoelReserveren)
+        .HasMany(b => b.Stoelen)
         .WithOne(s => s.Bestelling)
-        .HasForeignKey(b => b.StoelReserveren)
+        .HasForeignKey(b => b.StoelID)
         .OnDelete(DeleteBehavior.SetNull);
 
-        //stoel - zaal
-        modelBuilder.Entity<Stoel>()
-        .HasKey(s => new {s.StoelID, s.Zaalnummer});
+        //stoel - zaal (zaal stoel bestaat al boven)
+        // modelBuilder.Entity<Stoel>()
+        // .HasKey(s => new {s.StoelID, s.Zaalnummer});
 
-        modelBuilder.Entity<Stoel>()
-        .HasOne(s => s.Zaal)
-        .WithMany(z => z.Stoelen)
-        .HasForeignKey(s => s.Zaal)
-        .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Stoel>()
+        // .HasOne(s => s.Zaal)
+        // .WithMany(z => z.Stoelen)
+        // .HasForeignKey(s => s.Zaal)
+        // .OnDelete(DeleteBehavior.SetNull);
 
-        //Zaal - voorstelling (Voorstellingregel)
-        modelBuilder.Entity<VoorstellingRegel>()
-            .HasKey(vr => new {vr.Zaalnummer, vr.VoorstellingTitel});
 
-        modelBuilder.Entity<VoorstellingRegel>()
-            .HasOne(vr => vr.voorstelling)
-            .WithMany(v => v.VoorstellingRegels)
-            .HasForeignKey(vr => vr.voorstelling)
-            .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<VoorstellingRegel>()
-            .HasOne(z => z.Zaal)
-            .WithMany(vr => vr.VoorstellingRegels)
-            .HasForeignKey(v => v.VoorstellingTitel)
-            .OnDelete(DeleteBehavior.SetNull);
+
+
+
+        // //Zaal - voorstelling (veel op veel) (Voorstellingregel)
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasKey(vr => new {vr.Zaalnummer, vr.VoorstellingTitel});
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(vr => vr.voorstelling)
+        //     .WithMany(v => v.VoorstellingRegels)
+        //     .HasForeignKey(vr => vr.voorstelling)
+        //     .OnDelete(DeleteBehavior.SetNull);
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(z => z.Zaal)
+        //     .WithMany(vr => vr.VoorstellingRegels)
+        //     .HasForeignKey(v => v.VoorstellingTitel)
+        //     .OnDelete(DeleteBehavior.SetNull);
         
     }
     public DbSet<Klant> Klanten {set; get;}

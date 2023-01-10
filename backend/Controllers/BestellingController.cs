@@ -17,7 +17,7 @@ public class BestellingController : ControllerBase
     [HttpGet("getBestelling")]
     public async Task<List<Bestelling>> GetBestellingen()
     {
-        List<Bestelling> bestellingen = await _context.Bestelling.ToListAsync();
+        List<Bestelling> bestellingen = await _context.Bestellingen.ToListAsync();
         return bestellingen;
     }
 
@@ -25,7 +25,7 @@ public class BestellingController : ControllerBase
     public async Task<ActionResult> AddBestelling(Bestelling bestelling)
     {
 
-        _context.Bestelling.Add(bestelling);
+        _context.Bestellingen.Add(bestelling);
         if (await _context.SaveChangesAsync() > 0)
         {
             return Ok();
@@ -39,7 +39,7 @@ public class BestellingController : ControllerBase
     [HttpPost("VerwijderBestelling")]
     public async Task<ActionResult> VerwijderBestelling(Bestelling bestelling)
     {
-        _context.Bestelling.Remove(bestelling);
+        _context.Bestellingen.Remove(bestelling);
         if (await _context.SaveChangesAsync() > 0)
         {
             return Ok();

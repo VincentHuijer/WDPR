@@ -13,6 +13,7 @@ public DateTime bestelDatum{get; set;}
 
 public double kortingscode{get; set;}
 
-public ICollection<Stoel> StoelReserveren { get; set; }
+
+public ICollection<Stoel> Stoelen { get; set; }
 
 }

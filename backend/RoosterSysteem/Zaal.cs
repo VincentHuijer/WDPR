@@ -8,4 +8,7 @@ public class Zaal{
     public int BeschikbareRangen { get; set; }
     public List<Voorstelling>? Voorstellingen { get; set; }
     public List<Stoel> Stoelen { get; set; }
+
+    public ICollection<VoorstellingRegel>? VoorstellingRegels { get; set; }
+
 }

@@ -93,6 +93,7 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        //zaal - voorstelling
         modelBuilder.Entity<Zaal>()
             .HasMany(z => z.Voorstellingen)
             .WithOne(v => v.Zaal)
@@ -141,6 +142,48 @@ public class GebruikerContext : DbContext{
         modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
         modelBuilder.Entity<Voorstelling>().Ignore(v => v.Datum);
 
+
+        //bestelling - stoel
+        modelBuilder.Entity<Bestelling>()
+        .HasKey(b => new {b.BestellingId, b.Stoelen});
+
+        modelBuilder.Entity<Bestelling>()
+        .HasMany(b => b.Stoelen)
+        .WithOne(s => s.Bestelling)
+        .HasForeignKey(b => b.StoelID)
+        .OnDelete(DeleteBehavior.SetNull);
+
+        //stoel - zaal (zaal stoel bestaat al boven)
+        // modelBuilder.Entity<Stoel>()
+        // .HasKey(s => new {s.StoelID, s.Zaalnummer});
+
+        // modelBuilder.Entity<Stoel>()
+        // .HasOne(s => s.Zaal)
+        // .WithMany(z => z.Stoelen)
+        // .HasForeignKey(s => s.Zaal)
+        // .OnDelete(DeleteBehavior.SetNull);
+
+
+
+
+
+
+        // //Zaal - voorstelling (veel op veel) (Voorstellingregel)
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasKey(vr => new {vr.Zaalnummer, vr.VoorstellingTitel});
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(vr => vr.voorstelling)
+        //     .WithMany(v => v.VoorstellingRegels)
+        //     .HasForeignKey(vr => vr.voorstelling)
+        //     .OnDelete(DeleteBehavior.SetNull);
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(z => z.Zaal)
+        //     .WithMany(vr => vr.VoorstellingRegels)
+        //     .HasForeignKey(v => v.VoorstellingTitel)
+        //     .OnDelete(DeleteBehavior.SetNull);
+        
         //Groepen
         modelBuilder.Entity<Klant>()
             .HasOne(k => k.ArtiestGroep)
@@ -169,6 +212,13 @@ public class GebruikerContext : DbContext{
     public DbSet<Stoel> Stoelen {set; get;}
     public DbSet<Kaartjeshouders> Kaartjeshouders {set; get;}
     public DbSet<ActeurVoorstelling> ActeurVoorstellingen {set; get;}
+
+    
+    //Bestelling
+
+    public DbSet<Stoel> stoelen {get; set;}
+    public DbSet<Bestelling> Bestellingen {get; set;}
+
 
     //Groepen
     public DbSet<ArtiestGroep> ArtiestGroepen {set; get;}

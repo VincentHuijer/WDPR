@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using backend.Authenticatie;
 public class Voorstelling{
     public Voorstelling() { }
-    public Voorstelling(string titel,int zaalnummer, string omschrijving, double prijs, DateTime datumEnTijd)
+    public Voorstelling(string titel,int zaalnummer, string omschrijving, double prijs, DateTime datumEnTijd, string image)
     {
         VoorstellingTitel = titel;
         Zaalnummer = zaalnummer;
@@ -13,6 +13,7 @@ public class Voorstelling{
         Prijs = prijs;
         BetrokkenPersonen = new List<string>();
         Datum = datumEnTijd;
+        Image = image;
     }
     [Key]
     public int VoorstellingId { get; set; }

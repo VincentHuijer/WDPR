@@ -144,8 +144,9 @@ public class GebruikerContext : DbContext{
 
 
         //bestelling - stoel
-        modelBuilder.Entity<Bestelling>()
-        .HasKey(b => new {b.BestellingId, b.Stoelen});
+        
+        // modelBuilder.Entity<Bestelling>()
+        // .HasKey(b => new {b.BestellingId, b.Stoelen});
 
         modelBuilder.Entity<Bestelling>()
         .HasMany(b => b.Stoelen)

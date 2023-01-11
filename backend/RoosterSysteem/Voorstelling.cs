@@ -23,11 +23,8 @@ public class Voorstelling{
     public int leeftijd { get; set; }
     public List<string> BetrokkenPersonen { get; set; }
     public string Omschrijving { get; set; }
-    public ICollection<ActeurVoorstelling>? Acteur { get; set; }
-    public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
-
-    public ICollection<VoorstellingRegel>? VoorstellingRegels { get; set; }
-
+    public List<ActeurVoorstelling>? Acteur { get; set; }
+    public List<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public double Prijs { get; set; }
     public Kalender? Kalender { get; set; }
     public int? Zaalnummer{ get; set; }

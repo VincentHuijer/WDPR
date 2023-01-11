@@ -14,6 +14,6 @@ public DateTime bestelDatum{get; set;}
 public double kortingscode{get; set;}
 
 
-public ICollection<Stoel> Stoelen { get; set; }
+public List<Stoel> Stoelen { get; set; }
 
 }

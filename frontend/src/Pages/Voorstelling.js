@@ -231,11 +231,6 @@ export default function Voorstelling() {
             </div>
 
             <div className="w-96 flex flex-col lg:flex-row lg:mt-6 lg:mb-7 gap-2 pointer-events-none">
-              {types.includes(1) && <div className="flex min-w-max items-center gap-2 ">
-                <Seat type={1} />
-                <p className="font-bold">= VIP</p>
-              </div>}
-
               {types.includes(3) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={3} />
                 <p className="font-bold">= 1ᵉ RANG</p>

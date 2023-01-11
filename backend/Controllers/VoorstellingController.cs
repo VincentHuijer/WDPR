@@ -30,7 +30,7 @@ public class VoorstellingController : ControllerBase
     {
         _kalender = _context.Kalenders.Find(0);
         Console.WriteLine("parameters:" +  nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
-        Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.Datum);
+        Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.Datum, nieuweVoorstelling.Image);
         //interval = "once", "weekly","monthly","yearly"
         //aantalKeer = aantal keer dat de afspraak herhaalt wordt
         //interval is weekly en aantalKeer is 5, dan wordt de afspraak elke week herhaalt voor 5 weken
@@ -74,4 +74,5 @@ public class NieuweVoorstelling
     public int Zaalnummer { get; set; }
     public double Prijs { get; set; }
     public DateTime Datum { get; set; }
+    public string Image { get; set; }
 }

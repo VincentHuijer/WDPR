@@ -23,7 +23,8 @@ export default function App() {
 
     return (
         <AuthProvider>
-            <div className='flex flex-col'>
+            {/* add rotating to this class */}
+            <div className='flex flex-col '>
 
                 <Router>
                     <NavBar />
@@ -31,7 +32,7 @@ export default function App() {
                     <Routes>
                         <Route exact path='/' element={<HomePage />} />
                         <Route path='/overons' element={<OverOns />} />
-                        <Route path='/voorstelling/:showID' element={<Voorstelling />} />
+                        <Route path='/voorstelling/:id' element={<Voorstelling />} />
                         <Route path='/winkelmand' element={<WinkelMand />} />
                         <Route path='/voorstellingen' element={<Voorstellingen />} />
                         <Route path='/login' element={<Login />} />

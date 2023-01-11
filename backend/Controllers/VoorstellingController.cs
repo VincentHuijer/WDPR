@@ -17,7 +17,6 @@ public class VoorstellingController : ControllerBase
     }
 
 
-
     [HttpGet("GetVoorstellingen")]
     public async Task<List<Voorstelling>> GetVoorstellingen()
     {
@@ -25,11 +24,22 @@ public class VoorstellingController : ControllerBase
         return voorstellingen;
     }
 
+    [HttpGet("GetVoorstellingWithId/{id}")]
+    public async Task<ActionResult<Voorstelling>> GetVoorstellingWithId(int id)
+    {
+        Voorstelling v = await _context.Voorstellingen.FirstOrDefaultAsync(v => v.VoorstellingId == id);
+        if(v == null){
+            return NotFound();
+        }
+
+        return v;
+    }
+
     [HttpPost("AddVoorstelling")]
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
         _kalender = _context.Kalenders.Find(0);
-        Console.WriteLine("parameters:" +  nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
+        Console.WriteLine("parameters:" + nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.Datum, nieuweVoorstelling.Image);
         //interval = "once", "weekly","monthly","yearly"
         //aantalKeer = aantal keer dat de afspraak herhaalt wordt
@@ -65,6 +75,11 @@ public class VoorstellingController : ControllerBase
         }
     }
 
+}
+
+public class VoorstellingIdObject
+{
+    public int Id { get; set; }
 }
 
 public class NieuweVoorstelling

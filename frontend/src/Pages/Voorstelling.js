@@ -1,36 +1,52 @@
 import Row from "../Components/Zaal/Row";
 
 import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import Seat from "../Components/Zaal/Seat";
 
 import ArtiestProfile from "../Components/ArtiestProfile";
 
 import { useAccesToken } from "../Authentication/AuthContext";
+import Loading from "../Components/Loading";
 
 export default function Voorstelling() {
+  const { id } = useParams();
   const [zaalLayout, setZaalLayout] = useState()
 
-  // 1 = VIP
-  // 2 = GEHANDICAPT
-  // 3 = EERSTERANGS
-  // 4 = TWEEDERANGS
-  // 7 = DERDERANGS
-  // 6 = GESELECTEERD
-  // 5 = GERESERVEERD
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const accesToken = useAccesToken();
   const [seats, setSeats] = useState([]);
 
   const [types, setTypes] = useState([])
 
-  // 6 = 4
-  // 7 = 5
+  console.log(id);
 
   useEffect(() => {
     setZaalLayout(1)
+
+    getVoorstellingData()
   }, [])
 
+  async function getVoorstellingData() {
+    await fetch(`https://localhost:7253/api/voorstelling/GetVoorstellingWithId/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        setData(data)
+        setLoading(false)
+      })
+  }
+
   useEffect(() => {
+
+    // 1 = VIP
+    // 2 = GEHANDICAPT
+    // 3 = EERSTERANGS
+    // 4 = TWEEDERANGS
+    // 7 = DERDERANGS
+    // 6 = GESELECTEERD
+    // 5 = GERESERVEERD
     if (zaalLayout == 1) { //240 stoelen.
       setSeats([
         [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -153,15 +169,18 @@ export default function Voorstelling() {
     }
   }
 
+
+
+
   //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
 
   return (
     <div className="w-full mt-40">
-      <div className="w-11/12 m-auto">
+      {!loading ? <div className="w-11/12 m-auto">
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h1 className="text-4xl font-extrabold">SOME VOORSTELLING NAAM</h1>
+              <h1 className="text-4xl font-extrabold">{data.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
                 20-12-2022 tot 03-04-2023
               </p>
@@ -169,22 +188,18 @@ export default function Voorstelling() {
 
             <div className="mt-3">
               <p className="text-black font-bold">Leeftijd</p>
-              <p className="text-appLightBlack font-bold">5+</p>
+              <p className="text-appLightBlack font-bold">{data.leeftijd}+</p>
             </div>
 
             <div className="mt-2">
               <p className="text-black font-bold">Prijs</p>
-              <p className="text-appLightBlack font-bold">€ 7, -</p>
+              <p className="text-appLightBlack font-bold">€ {data.prijs}</p>
             </div>
 
             <div className="mt-6">
               <p className="text-black font-bold">Beschrijving</p>
               <p className="text-appLightBlack font-bold">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore.
+              {data.omschrijving}
               </p>
             </div>
 
@@ -201,7 +216,7 @@ export default function Voorstelling() {
             <div className="flex flex-col gap-8 items-end  overflow-hidden">
               <img
                 className="border-2 border-black h-96 bg-black rounded-2xl"
-                src="/media/AladinShow.png"
+                src={data.image}
                 alt="Aladin Poster Disney"
               />
             </div>
@@ -326,7 +341,7 @@ export default function Voorstelling() {
             />
           </div>
         </section>
-      </div>
+      </div> : <Loading text={"VOORSTELLING LADEN"} />}
     </div>
   );
 }

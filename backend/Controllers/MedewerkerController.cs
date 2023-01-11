@@ -99,7 +99,13 @@ public class MedewerkerController : ControllerBase
         if(medewerker == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     } 
-
+    
+    [HttpPost("rol/by/at")]
+    public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject){
+        Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
+        string rol = medewerker.RolNaam;
+        return rol;
+    }
 
     // FUNCTIONS
 

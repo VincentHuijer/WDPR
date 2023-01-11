@@ -37,6 +37,27 @@ namespace backend.Migrations
                     b.ToTable("ActeurVoorstellingen");
                 });
 
+            modelBuilder.Entity("ArtiestGroep", b =>
+                {
+                    b.Property<int>("GroepsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroepsId"));
+
+                    b.Property<string>("Groepsnaam")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Omschrijving")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("GroepsId");
+
+                    b.ToTable("ArtiestGroepen");
+                });
+
             modelBuilder.Entity("Kaartjeshouders", b =>
                 {
                     b.Property<int>("KlantId")
@@ -92,6 +113,9 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoorstellingId"));
 
+                    b.Property<int?>("ArtiestGroepId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
@@ -117,6 +141,8 @@ namespace backend.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("VoorstellingId");
+
+                    b.HasIndex("ArtiestGroepId");
 
                     b.HasIndex("KalenderId");
 
@@ -184,6 +210,9 @@ namespace backend.Migrations
                     b.Property<bool>("Artiest")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("ArtiestGroepId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("AuthenticatieTokenId")
                         .HasColumnType("text");
 
@@ -231,6 +260,8 @@ namespace backend.Migrations
 
                     b.HasIndex("AccessTokenId")
                         .IsUnique();
+
+                    b.HasIndex("ArtiestGroepId");
 
                     b.HasIndex("AuthenticatieTokenId")
                         .IsUnique();
@@ -386,6 +417,11 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Voorstelling", b =>
                 {
+                    b.HasOne("ArtiestGroep", "ArtiestGroep")
+                        .WithMany("Voorstellingen")
+                        .HasForeignKey("ArtiestGroepId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Kalender", "Kalender")
                         .WithMany("Voorstellingen")
                         .HasForeignKey("KalenderId")
@@ -397,6 +433,8 @@ namespace backend.Migrations
                         .HasForeignKey("Zaalnummer")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("ArtiestGroep");
+
                     b.Navigation("Kalender");
 
                     b.Navigation("Zaal");
@@ -407,6 +445,11 @@ namespace backend.Migrations
                     b.HasOne("backend.Authenticatie.AccessToken", "AccessToken")
                         .WithOne("Klant")
                         .HasForeignKey("backend.Authenticatie.Klant", "AccessTokenId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ArtiestGroep", "ArtiestGroep")
+                        .WithMany("Leden")
+                        .HasForeignKey("ArtiestGroepId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend.Authenticatie.AuthenticatieToken", "AuthenticatieToken")
@@ -426,6 +469,8 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("AccessToken");
+
+                    b.Navigation("ArtiestGroep");
 
                     b.Navigation("AuthenticatieToken");
 
@@ -458,6 +503,13 @@ namespace backend.Migrations
                     b.Navigation("AuthenticatieToken");
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("ArtiestGroep", b =>
+                {
+                    b.Navigation("Leden");
+
+                    b.Navigation("Voorstellingen");
                 });
 
             modelBuilder.Entity("Kalender", b =>

@@ -140,6 +140,19 @@ public class GebruikerContext : DbContext{
     
         modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
         modelBuilder.Entity<Voorstelling>().Ignore(v => v.Datum);
+
+        //Groepen
+        modelBuilder.Entity<Klant>()
+            .HasOne(k => k.ArtiestGroep)
+            .WithMany(a => a.Leden)
+            .HasForeignKey(k => k.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voorstelling>()
+            .HasOne(v => v.ArtiestGroep)
+            .WithMany(a => a.Voorstellingen)
+            .HasForeignKey(v => v.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
     public DbSet<Klant> Klanten {set; get;}
     public DbSet<Medewerker> Medewerkers {set; get;}
@@ -156,4 +169,7 @@ public class GebruikerContext : DbContext{
     public DbSet<Stoel> Stoelen {set; get;}
     public DbSet<Kaartjeshouders> Kaartjeshouders {set; get;}
     public DbSet<ActeurVoorstelling> ActeurVoorstellingen {set; get;}
+
+    //Groepen
+    public DbSet<ArtiestGroep> ArtiestGroepen {set; get;}
 }   

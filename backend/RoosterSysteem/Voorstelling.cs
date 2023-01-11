@@ -30,4 +30,6 @@ public class Voorstelling{
     public int? Zaalnummer{ get; set; }
     public Zaal? Zaal { get; set; }
     public DateTime Datum { get; set; }
+    public ArtiestGroep? ArtiestGroep {set; get;}
+    public int? ArtiestGroepId {set; get;}
 }

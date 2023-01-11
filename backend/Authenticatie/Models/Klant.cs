@@ -36,4 +36,6 @@ public class Klant{
     [JsonIgnore]
     public AuthenticatieToken? AuthenticatieToken {set; get;}
     public string? AuthenticatieTokenId {set; get;}
+    public ArtiestGroep? ArtiestGroep {set; get;}
+    public int? ArtiestGroepId {set; get;}
 }

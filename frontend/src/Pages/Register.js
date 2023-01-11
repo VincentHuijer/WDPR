@@ -3,7 +3,13 @@ import PasswordChecklist from "react-password-checklist"
 import ReCAPTCHA from "react-google-recaptcha"
 import CheckGegevens from "../scripts/CheckGegevens";
 
+import useSound from 'use-sound'
+import mySound from '../mario.mp3'
+
 export default function Register() {
+    const [playSound] = useSound(mySound)
+
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState("")
     const [passwordAgain, setPasswordAgain] = useState("");
@@ -27,6 +33,9 @@ export default function Register() {
         }
 
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
+
+
+        if(firstName.toLowerCase() == "damion") playSound()
 
         let loginBody = {
             "Email": email.toLowerCase(),

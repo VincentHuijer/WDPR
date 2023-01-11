@@ -29,7 +29,7 @@ public class VoorstellingController : ControllerBase
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
         _kalender = _context.Kalenders.Find(0);
-        Console.WriteLine("parameters:" + nieuweVoorstelling.AantalKeer + nieuweVoorstelling.Interval + nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
+        Console.WriteLine("parameters:" +  nieuweVoorstelling.Titel + nieuweVoorstelling.Zaalnummer + nieuweVoorstelling.Omschrijving + nieuweVoorstelling.Prijs + nieuweVoorstelling.Datum);
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Zaalnummer, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Prijs, nieuweVoorstelling.Datum);
         //interval = "once", "weekly","monthly","yearly"
         //aantalKeer = aantal keer dat de afspraak herhaalt wordt
@@ -72,8 +72,6 @@ public class NieuweVoorstelling
     public string Titel { get; set; }
     public string Omschrijving { get; set; }
     public int Zaalnummer { get; set; }
-    public string Interval { get; set; }
-    public int AantalKeer { get; set; }
     public double Prijs { get; set; }
     public DateTime Datum { get; set; }
 }

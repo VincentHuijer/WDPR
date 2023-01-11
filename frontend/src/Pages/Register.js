@@ -86,19 +86,6 @@ export default function Register() {
                                 </div>
                             </div>
 
-                            <div className="flex w-10/12 m-auto justify-between">
-                                <div className="flex flex-col pt-3 pr-2 w-1/2">
-                                    <label className="font-bold" htmlFor="geboortedatum">Geboortedatum</label>
-                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={geboorteDatum} min="01-01-1900" onChange={(e) => setGeboortedatum(e.target.value)} type="date" placeholder="dd-mm-yyyy" id="geboortedatum" name="geboortedatum" />
-                                </div>
-
-                                <div className="flex flex-col pt-3 pl-2 w-1/2">
-                                    <label className="font-bold" htmlFor="geslacht">Geslacht</label>
-                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={geslacht} onChange={(e) => setGeslacht(e.target.value)} type="geslacht" placeholder="MAN" id="geslacht" name="geslacht" />
-                                </div>
-                            </div>
-
-
                             <div className="flex flex-col w-10/12 m-auto pt-3">
                                 <label className="font-bold" htmlFor="email">E-mail</label>
                                 <input className="focus:outline-none h-8 rounded-lg px-2" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="email@email.com" id="email" name="email" />

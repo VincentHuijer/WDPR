@@ -12,8 +12,8 @@ using backend.Authenticatie;
 namespace backend.Migrations
 {
     [DbContext(typeof(GebruikerContext))]
-    [Migration("20230107162003_Auth11-Rooster6")]
-    partial class Auth11Rooster6
+    [Migration("20230111144510_Auth9-Rooster7-Groepen1")]
+    partial class Auth9Rooster7Groepen1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,14 +30,35 @@ namespace backend.Migrations
                     b.Property<int>("ActeurId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("voorstellingTitel")
-                        .HasColumnType("text");
+                    b.Property<int>("VoorstellingId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("ActeurId", "voorstellingTitel");
+                    b.HasKey("ActeurId", "VoorstellingId");
 
-                    b.HasIndex("voorstellingTitel");
+                    b.HasIndex("VoorstellingId");
 
                     b.ToTable("ActeurVoorstellingen");
+                });
+
+            modelBuilder.Entity("ArtiestGroep", b =>
+                {
+                    b.Property<int>("GroepsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroepsId"));
+
+                    b.Property<string>("Groepsnaam")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Omschrijving")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("GroepsId");
+
+                    b.ToTable("ArtiestGroepen");
                 });
 
             modelBuilder.Entity("Kaartjeshouders", b =>
@@ -45,12 +66,12 @@ namespace backend.Migrations
                     b.Property<int>("KlantId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("VoorstellingTitel")
-                        .HasColumnType("text");
+                    b.Property<int>("VoorstellingId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("KlantId", "VoorstellingTitel");
+                    b.HasKey("KlantId", "VoorstellingId");
 
-                    b.HasIndex("VoorstellingTitel");
+                    b.HasIndex("VoorstellingId");
 
                     b.ToTable("Kaartjeshouders");
                 });
@@ -89,8 +110,14 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Voorstelling", b =>
                 {
-                    b.Property<string>("VoorstellingTitel")
-                        .HasColumnType("text");
+                    b.Property<int>("VoorstellingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoorstellingId"));
+
+                    b.Property<int?>("ArtiestGroepId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -106,13 +133,19 @@ namespace backend.Migrations
                     b.Property<double>("Prijs")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("VoorstellingTitel")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("Zaalnummer")
                         .HasColumnType("integer");
 
                     b.Property<int>("leeftijd")
                         .HasColumnType("integer");
 
-                    b.HasKey("VoorstellingTitel");
+                    b.HasKey("VoorstellingId");
+
+                    b.HasIndex("ArtiestGroepId");
 
                     b.HasIndex("KalenderId");
 
@@ -180,6 +213,9 @@ namespace backend.Migrations
                     b.Property<bool>("Artiest")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("ArtiestGroepId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("AuthenticatieTokenId")
                         .HasColumnType("text");
 
@@ -228,6 +264,8 @@ namespace backend.Migrations
                     b.HasIndex("AccessTokenId")
                         .IsUnique();
 
+                    b.HasIndex("ArtiestGroepId");
+
                     b.HasIndex("AuthenticatieTokenId")
                         .IsUnique();
 
@@ -258,7 +296,6 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("AuthenticatieTokenId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -341,7 +378,7 @@ namespace backend.Migrations
 
                     b.HasOne("Voorstelling", "Voorstelling")
                         .WithMany("Acteur")
-                        .HasForeignKey("voorstellingTitel")
+                        .HasForeignKey("VoorstellingId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
@@ -360,7 +397,7 @@ namespace backend.Migrations
 
                     b.HasOne("Voorstelling", "voorstelling")
                         .WithMany("Kaartjeshouder")
-                        .HasForeignKey("VoorstellingTitel")
+                        .HasForeignKey("VoorstellingId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
@@ -382,6 +419,11 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Voorstelling", b =>
                 {
+                    b.HasOne("ArtiestGroep", "ArtiestGroep")
+                        .WithMany("Voorstellingen")
+                        .HasForeignKey("ArtiestGroepId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Kalender", "Kalender")
                         .WithMany("Voorstellingen")
                         .HasForeignKey("KalenderId")
@@ -393,6 +435,8 @@ namespace backend.Migrations
                         .HasForeignKey("Zaalnummer")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("ArtiestGroep");
+
                     b.Navigation("Kalender");
 
                     b.Navigation("Zaal");
@@ -403,6 +447,11 @@ namespace backend.Migrations
                     b.HasOne("backend.Authenticatie.AccessToken", "AccessToken")
                         .WithOne("Klant")
                         .HasForeignKey("backend.Authenticatie.Klant", "AccessTokenId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ArtiestGroep", "ArtiestGroep")
+                        .WithMany("Leden")
+                        .HasForeignKey("ArtiestGroepId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend.Authenticatie.AuthenticatieToken", "AuthenticatieToken")
@@ -423,6 +472,8 @@ namespace backend.Migrations
 
                     b.Navigation("AccessToken");
 
+                    b.Navigation("ArtiestGroep");
+
                     b.Navigation("AuthenticatieToken");
 
                     b.Navigation("Rol");
@@ -440,8 +491,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Authenticatie.AuthenticatieToken", "AuthenticatieToken")
                         .WithOne("Medewerker")
                         .HasForeignKey("backend.Authenticatie.Medewerker", "AuthenticatieTokenId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("backend.Authenticatie.Rol", "Rol")
                         .WithMany("Medewerkers")
@@ -454,6 +504,13 @@ namespace backend.Migrations
                     b.Navigation("AuthenticatieToken");
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("ArtiestGroep", b =>
+                {
+                    b.Navigation("Leden");
+
+                    b.Navigation("Voorstellingen");
                 });
 
             modelBuilder.Entity("Kalender", b =>

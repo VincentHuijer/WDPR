@@ -108,7 +108,7 @@ public class GebruikerContext : DbContext{
 
         // voorstelling - klant (acteur)
         modelBuilder.Entity<ActeurVoorstelling>()
-            .HasKey(av => new { av.ActeurId, av.voorstellingTitel });
+            .HasKey(av => new { av.ActeurId, av.VoorstellingId });
 
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Acteur)
@@ -119,12 +119,12 @@ public class GebruikerContext : DbContext{
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Voorstelling)
             .WithMany(v => v.Acteur)
-            .HasForeignKey(av => av.voorstellingTitel)
+            .HasForeignKey(av => av.VoorstellingId)
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (kaartjeshouder)
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasKey(kh => new { kh.KlantId, kh.VoorstellingTitel });
+            .HasKey(kh => new { kh.KlantId, kh.VoorstellingId });
 
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(kh => kh.Klant)
@@ -135,7 +135,7 @@ public class GebruikerContext : DbContext{
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(v => v.voorstelling)
             .WithMany(kh => kh.Kaartjeshouder)
-            .HasForeignKey(v => v.VoorstellingTitel)
+            .HasForeignKey(v => v.VoorstellingId)
             .OnDelete(DeleteBehavior.SetNull);
         
     
@@ -184,6 +184,18 @@ public class GebruikerContext : DbContext{
         //     .HasForeignKey(v => v.VoorstellingTitel)
         //     .OnDelete(DeleteBehavior.SetNull);
         
+        //Groepen
+        modelBuilder.Entity<Klant>()
+            .HasOne(k => k.ArtiestGroep)
+            .WithMany(a => a.Leden)
+            .HasForeignKey(k => k.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Voorstelling>()
+            .HasOne(v => v.ArtiestGroep)
+            .WithMany(a => a.Voorstellingen)
+            .HasForeignKey(v => v.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
     public DbSet<Klant> Klanten {set; get;}
     public DbSet<Medewerker> Medewerkers {set; get;}
@@ -208,4 +220,6 @@ public class GebruikerContext : DbContext{
     public DbSet<Bestelling> Bestellingen {get; set;}
 
 
+    //Groepen
+    public DbSet<ArtiestGroep> ArtiestGroepen {set; get;}
 }   

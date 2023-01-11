@@ -68,12 +68,12 @@ export default function Register() {
                             <div className="flex w-10/12 m-auto justify-between">
                                 <div className="flex flex-col pt-3 pr-2 w-1/2">
                                     <label className="font-bold" htmlFor="firstName">Voornaam</label>
-                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={firstName} name="firstName" onChange={(e) => setFirstName(e.target.value)} id="firstName" placeholder="First Name" />
+                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={firstName} name="firstName" onChange={(e) => setFirstName(e.target.value)} id="firstName" placeholder="Voornaam" />
                                 </div>
 
                                 <div className="flex flex-col pt-3 pl-2 w-1/2">
                                     <label className="font-bold" htmlFor="lastName">Achternaam</label>
-                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={lastName} name="name" onChange={(e) => setLastName(e.target.value)} id="lastName" placeholder="Last Name" />
+                                    <input className="focus:outline-none h-8 rounded-lg px-2" value={lastName} name="name" onChange={(e) => setLastName(e.target.value)} id="lastName" placeholder="Achternaam" />
                                 </div>
                             </div>
 
@@ -98,12 +98,12 @@ export default function Register() {
 
                             <div className="flex flex-col w-10/12 m-auto pt-3">
                                 <label className="font-bold" htmlFor="password">Wachtwoord</label>
-                                <input className="focus:outline-none h-8 rounded-lg px-2" value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Uw wachtwoord" id="Password" name="password" />
+                                <input className="focus:outline-none h-8 rounded-lg px-2" value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Uw wachtwoord" id="password" name="password" />
                             </div>
 
                             <div className="flex flex-col w-10/12 m-auto pt-3">
-                                <label className="font-bold" htmlFor="Password Again">Herhaal wachtwoord</label>
-                                <input className="focus:outline-none h-8 rounded-lg px-2" value={passwordAgain} onChange={(e) => setPasswordAgain(e.target.value)} type="password" placeholder="Opnieuw wachtwoord" id="Password2" name="password2" />
+                                <label className="font-bold" htmlFor="repeatpassword">Herhaal wachtwoord</label>
+                                <input className="focus:outline-none h-8 rounded-lg px-2" value={passwordAgain} onChange={(e) => setPasswordAgain(e.target.value)} type="password" placeholder="Herhaal Wachtwoord" id="repeatpassword" name="repeatpassword" />
                             </div>
 
 

@@ -28,5 +28,5 @@ public class Medewerker{
     public int Inlogpoging {set; get;}
     [JsonIgnore]
     public AuthenticatieToken? AuthenticatieToken {set; get;}
-    public string AuthenticatieTokenId {set; get;}
+    public string? AuthenticatieTokenId {set; get;}
 }

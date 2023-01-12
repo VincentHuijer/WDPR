@@ -15,8 +15,6 @@ export default function Register() {
     const [passwordAgain, setPasswordAgain] = useState("");
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [geboorteDatum, setGeboortedatum] = useState('');
-    const [geslacht, setGeslacht] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
 
     const [complete, setComplete] = useState(false)
@@ -25,7 +23,7 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let checkResponse = CheckGegevens(firstName, lastName, geboorteDatum)
+        let checkResponse = CheckGegevens(firstName, lastName)
 
         if(checkResponse.split("").length > 0){
             console.log("Check response: " + checkResponse);

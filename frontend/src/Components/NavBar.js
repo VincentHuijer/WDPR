@@ -54,7 +54,7 @@ export function NavBar() {
 
                 <nav className='block lg:hidden'>
                     <svg onClick={() => setOpenMobileNav(!openMobileNav)} width="35" height="35" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.1875 76.5625H82.8125M17.1875 51.5625H82.8125M17.1875 26.5625H82.8125" stroke="#2E2E38" stroke-width="9.375" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M17.1875 76.5625H82.8125M17.1875 51.5625H82.8125M17.1875 26.5625H82.8125" stroke="#2E2E38" strokeWidth="9.375" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </nav>
             </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-export default function Seat({ type = 5, row, seat }) {
+export default function Seat({ type = 5, row, seat, addStoel, removeStoel }) {
 
 
     const [selected, setSelected] = useState(false)
@@ -19,8 +19,10 @@ export default function Seat({ type = 5, row, seat }) {
     useEffect(() => {
 
         if (selected) {
+            addStoel(`${row}-${seat}`)
             setTempType(6)
         } else {
+            // removeStoel(`${row}-${seat}`)
             setTempType(type)
         }
 

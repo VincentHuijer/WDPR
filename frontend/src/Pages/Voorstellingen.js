@@ -10,6 +10,7 @@ export default function Voorstellingen() {
         await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen`)
             .then(res => res.json())
             .then(data => {
+                if(data.status == 404) return
                 setData(data)
                 setLoading(false)
             })

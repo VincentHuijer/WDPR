@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Auth9Rooster9Groepen1 : Migration
+    public partial class Auth9Rooster11Groepen1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -100,6 +100,22 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VerificatieTokens", x => x.Token);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Voorstellingen",
+                columns: table => new
+                {
+                    VoorstellingId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    VoorstellingTitel = table.Column<string>(type: "text", nullable: false),
+                    Image = table.Column<string>(type: "text", nullable: false),
+                    leeftijd = table.Column<int>(type: "integer", nullable: false),
+                    Omschrijving = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Voorstellingen", x => x.VoorstellingId);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,6 +235,47 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Show",
+                columns: table => new
+                {
+                    ShowId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Zaalnummer = table.Column<int>(type: "integer", nullable: false),
+                    VoorstellingId = table.Column<int>(type: "integer", nullable: false),
+                    KalenderId = table.Column<int>(type: "integer", nullable: false),
+                    Datum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ArtiestGroepId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Show", x => x.ShowId);
+                    table.ForeignKey(
+                        name: "FK_Show_ArtiestGroepen_ArtiestGroepId",
+                        column: x => x.ArtiestGroepId,
+                        principalTable: "ArtiestGroepen",
+                        principalColumn: "GroepsId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Show_Kalenders_KalenderId",
+                        column: x => x.KalenderId,
+                        principalTable: "Kalenders",
+                        principalColumn: "KalenderId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Show_Voorstellingen_VoorstellingId",
+                        column: x => x.VoorstellingId,
+                        principalTable: "Voorstellingen",
+                        principalColumn: "VoorstellingId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Show_Zalen_Zaalnummer",
+                        column: x => x.Zaalnummer,
+                        principalTable: "Zalen",
+                        principalColumn: "Zaalnummer",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stoel",
                 columns: table => new
                 {
@@ -243,40 +300,50 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Voorstellingen",
+                name: "ActeurVoorstellingen",
                 columns: table => new
                 {
-                    VoorstellingId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    VoorstellingTitel = table.Column<string>(type: "text", nullable: false),
-                    KalenderId = table.Column<int>(type: "integer", nullable: false),
-                    Image = table.Column<string>(type: "text", nullable: false),
-                    leeftijd = table.Column<int>(type: "integer", nullable: false),
-                    Omschrijving = table.Column<string>(type: "text", nullable: false),
-                    Prijs = table.Column<double>(type: "double precision", nullable: false),
-                    Zaalnummer = table.Column<int>(type: "integer", nullable: true),
-                    ArtiestGroepId = table.Column<int>(type: "integer", nullable: true)
+                    ShowId = table.Column<int>(type: "integer", nullable: false),
+                    ActeurId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Voorstellingen", x => x.VoorstellingId);
+                    table.PrimaryKey("PK_ActeurVoorstellingen", x => new { x.ActeurId, x.ShowId });
                     table.ForeignKey(
-                        name: "FK_Voorstellingen_ArtiestGroepen_ArtiestGroepId",
-                        column: x => x.ArtiestGroepId,
-                        principalTable: "ArtiestGroepen",
-                        principalColumn: "GroepsId",
+                        name: "FK_ActeurVoorstellingen_Klanten_ActeurId",
+                        column: x => x.ActeurId,
+                        principalTable: "Klanten",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Voorstellingen_Kalenders_KalenderId",
-                        column: x => x.KalenderId,
-                        principalTable: "Kalenders",
-                        principalColumn: "KalenderId",
+                        name: "FK_ActeurVoorstellingen_Show_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Show",
+                        principalColumn: "ShowId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Kaartjeshouders",
+                columns: table => new
+                {
+                    ShowId = table.Column<int>(type: "integer", nullable: false),
+                    KlantId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Kaartjeshouders", x => new { x.KlantId, x.ShowId });
+                    table.ForeignKey(
+                        name: "FK_Kaartjeshouders_Klanten_KlantId",
+                        column: x => x.KlantId,
+                        principalTable: "Klanten",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Voorstellingen_Zalen_Zaalnummer",
-                        column: x => x.Zaalnummer,
-                        principalTable: "Zalen",
-                        principalColumn: "Zaalnummer",
+                        name: "FK_Kaartjeshouders_Show_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Show",
+                        principalColumn: "ShowId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -305,58 +372,10 @@ namespace backend.Migrations
                         onDelete: ReferentialAction.SetNull);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ActeurVoorstellingen",
-                columns: table => new
-                {
-                    VoorstellingId = table.Column<int>(type: "integer", nullable: false),
-                    ActeurId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ActeurVoorstellingen", x => new { x.ActeurId, x.VoorstellingId });
-                    table.ForeignKey(
-                        name: "FK_ActeurVoorstellingen_Klanten_ActeurId",
-                        column: x => x.ActeurId,
-                        principalTable: "Klanten",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_ActeurVoorstellingen_Voorstellingen_VoorstellingId",
-                        column: x => x.VoorstellingId,
-                        principalTable: "Voorstellingen",
-                        principalColumn: "VoorstellingId",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Kaartjeshouders",
-                columns: table => new
-                {
-                    VoorstellingId = table.Column<int>(type: "integer", nullable: false),
-                    KlantId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Kaartjeshouders", x => new { x.KlantId, x.VoorstellingId });
-                    table.ForeignKey(
-                        name: "FK_Kaartjeshouders_Klanten_KlantId",
-                        column: x => x.KlantId,
-                        principalTable: "Klanten",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Kaartjeshouders_Voorstellingen_VoorstellingId",
-                        column: x => x.VoorstellingId,
-                        principalTable: "Voorstellingen",
-                        principalColumn: "VoorstellingId",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_ActeurVoorstellingen_VoorstellingId",
+                name: "IX_ActeurVoorstellingen_ShowId",
                 table: "ActeurVoorstellingen",
-                column: "VoorstellingId");
+                column: "ShowId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BesteldeStoel_BestellingId",
@@ -364,9 +383,9 @@ namespace backend.Migrations
                 column: "BestellingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Kaartjeshouders_VoorstellingId",
+                name: "IX_Kaartjeshouders_ShowId",
                 table: "Kaartjeshouders",
-                column: "VoorstellingId");
+                column: "ShowId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Klanten_AccessTokenId",
@@ -414,23 +433,28 @@ namespace backend.Migrations
                 column: "RolNaam");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stoel_Zaalnummer",
-                table: "Stoel",
-                column: "Zaalnummer");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Voorstellingen_ArtiestGroepId",
-                table: "Voorstellingen",
+                name: "IX_Show_ArtiestGroepId",
+                table: "Show",
                 column: "ArtiestGroepId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voorstellingen_KalenderId",
-                table: "Voorstellingen",
+                name: "IX_Show_KalenderId",
+                table: "Show",
                 column: "KalenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voorstellingen_Zaalnummer",
-                table: "Voorstellingen",
+                name: "IX_Show_VoorstellingId",
+                table: "Show",
+                column: "VoorstellingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Show_Zaalnummer",
+                table: "Show",
+                column: "Zaalnummer");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stoel_Zaalnummer",
+                table: "Stoel",
                 column: "Zaalnummer");
         }
 
@@ -459,7 +483,7 @@ namespace backend.Migrations
                 name: "Klanten");
 
             migrationBuilder.DropTable(
-                name: "Voorstellingen");
+                name: "Show");
 
             migrationBuilder.DropTable(
                 name: "AccessTokens");
@@ -478,6 +502,9 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Kalenders");
+
+            migrationBuilder.DropTable(
+                name: "Voorstellingen");
 
             migrationBuilder.DropTable(
                 name: "Zalen");

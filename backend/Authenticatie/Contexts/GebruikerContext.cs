@@ -87,17 +87,17 @@ public class GebruikerContext : DbContext{
         //     .HasForeignKey(k => k.VoorstellingId)
         //     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Voorstelling>()
+        modelBuilder.Entity<Show>()
             .HasOne(v => v.Kalender)
-            .WithMany(k => k.Voorstellingen)
+            .WithMany(k => k.Shows)
             .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
         //zaal - voorstelling
-        modelBuilder.Entity<Zaal>()
-            .HasMany(z => z.Voorstellingen)
-            .WithOne(v => v.Zaal)
-            .HasForeignKey(v => v.Zaalnummer)
+        modelBuilder.Entity<Show>()
+            .HasOne(s => s.Zaal)
+            .WithMany(z => z.Shows)
+            .HasForeignKey(s => s.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Stoel>()
@@ -108,7 +108,7 @@ public class GebruikerContext : DbContext{
 
         // voorstelling - klant (acteur)
         modelBuilder.Entity<ActeurVoorstelling>()
-            .HasKey(av => new { av.ActeurId, av.VoorstellingId });
+            .HasKey(av => new { av.ActeurId, av.ShowId });
 
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Acteur)
@@ -117,14 +117,14 @@ public class GebruikerContext : DbContext{
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<ActeurVoorstelling>()
-            .HasOne(av => av.Voorstelling)
+            .HasOne(av => av.Show)
             .WithMany(v => v.Acteur)
-            .HasForeignKey(av => av.VoorstellingId)
+            .HasForeignKey(av => av.ShowId)
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (kaartjeshouder)
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasKey(kh => new { kh.KlantId, kh.VoorstellingId });
+            .HasKey(kh => new { kh.KlantId, kh.ShowId });
 
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(kh => kh.Klant)
@@ -133,14 +133,13 @@ public class GebruikerContext : DbContext{
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasOne(v => v.Voorstelling)
+            .HasOne(v => v.Show)
             .WithMany(kh => kh.Kaartjeshouder)
-            .HasForeignKey(v => v.VoorstellingId)
+            .HasForeignKey(v => v.ShowId)
             .OnDelete(DeleteBehavior.SetNull);
         
     
-        modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
-        modelBuilder.Entity<Voorstelling>().Ignore(v => v.Datum);
+        //modelBuilder.Entity<Show>().Ignore(v => v.Datum);
 
 
         //bestelling - stoel
@@ -201,9 +200,9 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(k => k.ArtiestGroepId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Voorstelling>()
+        modelBuilder.Entity<Show>()
             .HasOne(v => v.ArtiestGroep)
-            .WithMany(a => a.Voorstellingen)
+            .WithMany(a => a.Shows)
             .HasForeignKey(v => v.ArtiestGroepId)
             .OnDelete(DeleteBehavior.SetNull);
     }

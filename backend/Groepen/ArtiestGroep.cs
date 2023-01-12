@@ -6,5 +6,5 @@ public class ArtiestGroep{
     public string Omschrijving {set; get;}
     public string Groepsnaam {set; get;}
     public List<Klant> Leden {set; get;}
-    public List<Voorstelling> Voorstellingen {set; get;}
+    public List<Show> Shows {set; get;}
 }

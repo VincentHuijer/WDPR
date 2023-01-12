@@ -12,8 +12,8 @@ using backend.Authenticatie;
 namespace backend.Migrations
 {
     [DbContext(typeof(GebruikerContext))]
-    [Migration("20230112120425_Auth9-Rooster9-Groepen1")]
-    partial class Auth9Rooster9Groepen1
+    [Migration("20230112124509_Auth9-Rooster11-Groepen1")]
+    partial class Auth9Rooster11Groepen1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,12 +30,12 @@ namespace backend.Migrations
                     b.Property<int>("ActeurId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("VoorstellingId")
+                    b.Property<int>("ShowId")
                         .HasColumnType("integer");
 
-                    b.HasKey("ActeurId", "VoorstellingId");
+                    b.HasKey("ActeurId", "ShowId");
 
-                    b.HasIndex("VoorstellingId");
+                    b.HasIndex("ShowId");
 
                     b.ToTable("ActeurVoorstellingen");
                 });
@@ -112,12 +112,12 @@ namespace backend.Migrations
                     b.Property<int>("KlantId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("VoorstellingId")
+                    b.Property<int>("ShowId")
                         .HasColumnType("integer");
 
-                    b.HasKey("KlantId", "VoorstellingId");
+                    b.HasKey("KlantId", "ShowId");
 
-                    b.HasIndex("VoorstellingId");
+                    b.HasIndex("ShowId");
 
                     b.ToTable("Kaartjeshouders");
                 });
@@ -133,6 +133,42 @@ namespace backend.Migrations
                     b.HasKey("KalenderId");
 
                     b.ToTable("Kalenders");
+                });
+
+            modelBuilder.Entity("Show", b =>
+                {
+                    b.Property<int>("ShowId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShowId"));
+
+                    b.Property<int?>("ArtiestGroepId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("KalenderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VoorstellingId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Zaalnummer")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ShowId");
+
+                    b.HasIndex("ArtiestGroepId");
+
+                    b.HasIndex("KalenderId");
+
+                    b.HasIndex("VoorstellingId");
+
+                    b.HasIndex("Zaalnummer");
+
+                    b.ToTable("Show");
                 });
 
             modelBuilder.Entity("Stoel", b =>
@@ -176,40 +212,22 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VoorstellingId"));
 
-                    b.Property<int?>("ArtiestGroepId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("KalenderId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Omschrijving")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double>("Prijs")
-                        .HasColumnType("double precision");
-
                     b.Property<string>("VoorstellingTitel")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("Zaalnummer")
-                        .HasColumnType("integer");
 
                     b.Property<int>("leeftijd")
                         .HasColumnType("integer");
 
                     b.HasKey("VoorstellingId");
-
-                    b.HasIndex("ArtiestGroepId");
-
-                    b.HasIndex("KalenderId");
-
-                    b.HasIndex("Zaalnummer");
 
                     b.ToTable("Voorstellingen");
                 });
@@ -436,15 +454,15 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Voorstelling", "Voorstelling")
+                    b.HasOne("Show", "Show")
                         .WithMany("Acteur")
-                        .HasForeignKey("VoorstellingId")
+                        .HasForeignKey("ShowId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Acteur");
 
-                    b.Navigation("Voorstelling");
+                    b.Navigation("Show");
                 });
 
             modelBuilder.Entity("BesteldeStoel", b =>
@@ -474,15 +492,49 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Voorstelling", "Voorstelling")
+                    b.HasOne("Show", "Show")
                         .WithMany("Kaartjeshouder")
-                        .HasForeignKey("VoorstellingId")
+                        .HasForeignKey("ShowId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Klant");
 
+                    b.Navigation("Show");
+                });
+
+            modelBuilder.Entity("Show", b =>
+                {
+                    b.HasOne("ArtiestGroep", "ArtiestGroep")
+                        .WithMany("Shows")
+                        .HasForeignKey("ArtiestGroepId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Kalender", "Kalender")
+                        .WithMany("Shows")
+                        .HasForeignKey("KalenderId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.HasOne("Voorstelling", "Voorstelling")
+                        .WithMany("Shows")
+                        .HasForeignKey("VoorstellingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Zaal", "Zaal")
+                        .WithMany("Shows")
+                        .HasForeignKey("Zaalnummer")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("ArtiestGroep");
+
+                    b.Navigation("Kalender");
+
                     b.Navigation("Voorstelling");
+
+                    b.Navigation("Zaal");
                 });
 
             modelBuilder.Entity("Stoel", b =>
@@ -492,31 +544,6 @@ namespace backend.Migrations
                         .HasForeignKey("Zaalnummer")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
-
-                    b.Navigation("Zaal");
-                });
-
-            modelBuilder.Entity("Voorstelling", b =>
-                {
-                    b.HasOne("ArtiestGroep", "ArtiestGroep")
-                        .WithMany("Voorstellingen")
-                        .HasForeignKey("ArtiestGroepId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Kalender", "Kalender")
-                        .WithMany("Voorstellingen")
-                        .HasForeignKey("KalenderId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("Zaal", "Zaal")
-                        .WithMany("Voorstellingen")
-                        .HasForeignKey("Zaalnummer")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("ArtiestGroep");
-
-                    b.Navigation("Kalender");
 
                     b.Navigation("Zaal");
                 });
@@ -589,7 +616,7 @@ namespace backend.Migrations
                 {
                     b.Navigation("Leden");
 
-                    b.Navigation("Voorstellingen");
+                    b.Navigation("Shows");
                 });
 
             modelBuilder.Entity("Bestelling", b =>
@@ -599,7 +626,14 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Kalender", b =>
                 {
-                    b.Navigation("Voorstellingen");
+                    b.Navigation("Shows");
+                });
+
+            modelBuilder.Entity("Show", b =>
+                {
+                    b.Navigation("Acteur");
+
+                    b.Navigation("Kaartjeshouder");
                 });
 
             modelBuilder.Entity("Stoel", b =>
@@ -609,16 +643,14 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Voorstelling", b =>
                 {
-                    b.Navigation("Acteur");
-
-                    b.Navigation("Kaartjeshouder");
+                    b.Navigation("Shows");
                 });
 
             modelBuilder.Entity("Zaal", b =>
                 {
-                    b.Navigation("Stoelen");
+                    b.Navigation("Shows");
 
-                    b.Navigation("Voorstellingen");
+                    b.Navigation("Stoelen");
                 });
 
             modelBuilder.Entity("backend.Authenticatie.AccessToken", b =>

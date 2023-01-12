@@ -21,6 +21,19 @@ public class ZaalController : ControllerBase
         return Zalen;
     }
 
+   [HttpGet("GetZaalWithId/{id}")]
+    public async Task<ActionResult<Zaal>> GetZaalWithId(int id)
+    {
+        Zaal z = await _context.Zalen.FirstOrDefaultAsync(v => v.Zaalnummer == id);
+        if(z == null){
+            return NotFound();
+        }
+
+        return z;
+    }
+
+
+
     [HttpPost("AddZaal")]
     public async Task<ActionResult> AddZaal([FromBody] Zaal zaal)
     {

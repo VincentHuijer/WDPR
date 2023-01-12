@@ -1,12 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Stoel{
+public class Stoel
+{
     [Key]
     public int StoelID { get; set; }
     public bool IsGereserveerd { get; set; }
     public int Rang { get; set; }
     public double Prijs { get; set; }
+
+    public int X { get; set; }
+    public int Y { get; set; }
 
     public string Zaalnummer { get; set; }
 
@@ -18,7 +22,8 @@ public class Stoel{
     public ICollection<Bestelling>? Bestellingen { get; set; }
 
 
-    public string stoelReserveren(){
+    public string stoelReserveren()
+    {
         return "geen logica toegevoegd";
     }
 

@@ -91,7 +91,6 @@ export default function Register() {
                                 <input className="focus:outline-none h-8 rounded-lg px-2" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="email@email.com" id="email" name="email" />
                             </div>
 
-
                             <div className="flex flex-col w-10/12 m-auto pt-3">
                                 <label className="font-bold" htmlFor="password">Wachtwoord</label>
                                 <input className="focus:outline-none h-8 rounded-lg px-2" value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Uw wachtwoord" id="password" name="password" />
@@ -101,8 +100,6 @@ export default function Register() {
                                 <label className="font-bold" htmlFor="repeatpassword">Herhaal wachtwoord</label>
                                 <input className="focus:outline-none h-8 rounded-lg px-2" value={passwordAgain} onChange={(e) => setPasswordAgain(e.target.value)} type="password" placeholder="Herhaal Wachtwoord" id="repeatpassword" name="repeatpassword" />
                             </div>
-
-
 
                             <div className="w-10/12 m-auto pt-3">
                                 <PasswordChecklist
@@ -134,17 +131,10 @@ export default function Register() {
                             <div className="w-10/12 m-auto mt-6 hover:cursor-default">
                                 <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button>
                             </div>
-
                         </div>
                     </form>
                 </div>
             </div> :
-                        // <div className="w-10/12 m-auto mt-6 hover:cursor-default">
-                        //     {/* <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button> */}
-                        //     <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold" onClick={() =>{CheckGegevens(firstName, lastName, geboorteDatum, validatieCheck)}}>REGISTREREN</button>
-
-                        // </div>
-
                 <div className="w-11/12 m-auto">
                     <div className="text-center">
                         <p className="text-5xl font-extrabold w-full text-center pb-6 mt-16">VERIFIEER UW ACCOUNT</p>

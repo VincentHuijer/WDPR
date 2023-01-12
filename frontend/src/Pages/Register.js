@@ -28,7 +28,7 @@ export default function Register() {
         if(checkResponse.split("").length > 0){
             console.log("Check response: " + checkResponse);
             return
-        }
+        } 
 
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 

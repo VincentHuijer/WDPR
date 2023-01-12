@@ -224,9 +224,8 @@ public class GebruikerContext : DbContext{
 
     
     //Bestelling
-
-    public DbSet<Stoel> stoelen {get; set;}
     public DbSet<Bestelling> Bestellingen {get; set;}
+        public DbSet<BesteldeStoel> BesteldeStoelen {get; set;}
 
 
     //Groepen

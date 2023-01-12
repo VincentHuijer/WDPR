@@ -22,18 +22,24 @@ public class BestellingController : ControllerBase
     }
 
     [HttpPost("AddBestelling")]
-    public async Task<ActionResult> AddBestelling(Bestelling bestelling)
+    public async Task<ActionResult> AddBestelling([FromBody] BestellingBody bestellingBody)
     {
+        DateTime bestelDatum = DateTime.Parse(bestellingBody.BestelDatum);
+        Bestelling bestelling = new Bestelling() { BestelDatum = bestelDatum, Totaalbedrag = bestellingBody.Totaalbedrag };
+
+        foreach (var item in bestellingBody.Stoelen)
+        {
+            Stoel stoel = await _context.Stoelen.FirstOrDefaultAsync(v => v.StoelID.ToString() == item);
+            BesteldeStoel besteldeStoel = new BesteldeStoel() { Bestelling = bestelling, BestellingId = bestelling.BestellingId, Stoel = stoel, StoelID = stoel.StoelID, Datum = bestelDatum };
+
+            _context.BesteldeStoelen.Add(besteldeStoel);
+        }
 
         _context.Bestellingen.Add(bestelling);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpPost("VerwijderBestelling")]
@@ -49,4 +55,14 @@ public class BestellingController : ControllerBase
             return BadRequest();
         }
     }
+}
+
+public class BestellingBody
+{
+    public int Totaalbedrag { get; set; }
+    public string BestelDatum { get; set; }
+
+    public double Kortingscode { get; set; }
+
+    public List<string> Stoelen { get; set; }
 }

@@ -7,8 +7,7 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class VoorstellingController : ControllerBase
 {
-    //nog ff maken
-
+    private PrintBestelling _printBestelling = new PrintBestelling();
     private readonly GebruikerContext _context;
     private Kalender _kalender = new Kalender();
     public VoorstellingController(GebruikerContext context)
@@ -16,6 +15,30 @@ public class VoorstellingController : ControllerBase
         _context = context;
     }
 
+    //dit is alleen om het printen van tickets te
+    [HttpGet("Gettest")]
+    public async Task<string> Gettest()
+    {
+        return _printBestelling.ticketPrinten();
+    }
+
+    [HttpGet("GetVoorstellingen/leeftijd/{age}")]
+    public async Task<List<Voorstelling>> GetVoorstellingen(int age, [FromQuery] string sortOrder = "ascending")
+    {
+        List<Voorstelling> voorstellingen = await _context.Voorstellingen
+                                           .Where(v => v.leeftijd <= age)
+                                           .ToListAsync();
+
+        if (sortOrder == "ascending")
+        {
+            voorstellingen = voorstellingen.OrderBy(v => v.leeftijd).ToList();
+        }
+        else if (sortOrder == "descending")
+        {
+            voorstellingen = voorstellingen.OrderByDescending(v => v.leeftijd).ToList();
+        }
+        return voorstellingen;
+    }
 
     [HttpGet("GetVoorstellingen")]
     public async Task<List<Voorstelling>> GetVoorstellingen()

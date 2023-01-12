@@ -16,11 +16,11 @@ public class VoorstellingController : ControllerBase
     }
 
     //dit is alleen om het printen van tickets te
-    [HttpGet("Gettest")]
-    public async Task<string> Gettest()
-    {
-        return _printBestelling.ticketPrinten();
-    }
+    // [HttpGet("Gettest")]
+    // public async Task<string> Gettest()
+    // {
+    //     return _printBestelling.ticketPrinten();
+    // }
 
     [HttpGet("GetVoorstellingen/leeftijd/{age}")]
     public async Task<List<Voorstelling>> GetVoorstellingen(int age, [FromQuery] string sortOrder = "ascending")

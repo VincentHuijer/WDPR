@@ -47,7 +47,7 @@ class PrintBestelling
 
     public Voorstelling findVoorstelling(Bestelling bestellinginformatie){
 
-        _context.
+        //_context.
         return new Voorstelling();
     }
 }

@@ -35,6 +35,16 @@ public class GroepController : ControllerBase{
         return Ok();
     }
 
+    [HttpDelete("verwijdergroep/{groepsId}")]
+    public async Task<ActionResult> RemoveGroep([FromBody] AccessTokenObject accessToken, int groepsId){
+        if(!await IsAllowed(accessToken, "Medewerker")) return StatusCode(403, "No permissions!");
+        ArtiestGroep artiestGroep = await _context.ArtiestGroepen.FirstOrDefaultAsync(ag => ag.GroepsId == groepsId);
+        if(artiestGroep == null) return NotFound();
+        _context.ArtiestGroepen.Remove(artiestGroep);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
     [HttpPost("{groepsId}/nieuwlid/{klantId}")]
     public async Task<ActionResult> AddLid([FromBody] AccessTokenObject accessToken, int groepsId, int klantId){
         if(!await IsAllowed(accessToken, "Medewerker")) return StatusCode(403, "No permissions!");

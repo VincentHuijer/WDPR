@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class Auth8Rooster7Groepen1 : Migration
+    public partial class Auth9Rooster9Groepen1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,23 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuthenticatieTokens", x => x.Token);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bestellingen",
+                columns: table => new
+                {
+                    BestellingId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Totaalbedrag = table.Column<int>(type: "integer", nullable: false),
+                    BestelDatum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    isBetaald = table.Column<bool>(type: "boolean", nullable: false),
+                    bestelDatum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    kortingscode = table.Column<double>(type: "double precision", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bestellingen", x => x.BestellingId);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,7 +133,7 @@ namespace backend.Migrations
                     TwoFactorAuthSetupComplete = table.Column<bool>(type: "boolean", nullable: false),
                     IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
                     Inlogpoging = table.Column<int>(type: "integer", nullable: false),
-                    AuthenticatieTokenId = table.Column<string>(type: "text", nullable: false)
+                    AuthenticatieTokenId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,20 +219,24 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stoelen",
+                name: "Stoel",
                 columns: table => new
                 {
-                    StoelID = table.Column<int>(type: "integer", nullable: false),
+                    StoelID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsGereserveerd = table.Column<bool>(type: "boolean", nullable: false),
                     Rang = table.Column<int>(type: "integer", nullable: false),
-                    Prijs = table.Column<double>(type: "double precision", nullable: false)
+                    Prijs = table.Column<double>(type: "double precision", nullable: false),
+                    X = table.Column<int>(type: "integer", nullable: false),
+                    Y = table.Column<int>(type: "integer", nullable: false),
+                    Zaalnummer = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stoelen", x => x.StoelID);
+                    table.PrimaryKey("PK_Stoel", x => x.StoelID);
                     table.ForeignKey(
-                        name: "FK_Stoelen_Zalen_StoelID",
-                        column: x => x.StoelID,
+                        name: "FK_Stoel_Zalen_Zaalnummer",
+                        column: x => x.Zaalnummer,
                         principalTable: "Zalen",
                         principalColumn: "Zaalnummer",
                         onDelete: ReferentialAction.SetNull);
@@ -256,6 +277,31 @@ namespace backend.Migrations
                         column: x => x.Zaalnummer,
                         principalTable: "Zalen",
                         principalColumn: "Zaalnummer",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BesteldeStoel",
+                columns: table => new
+                {
+                    BestellingId = table.Column<int>(type: "integer", nullable: false),
+                    StoelID = table.Column<int>(type: "integer", nullable: false),
+                    Datum = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BesteldeStoel", x => new { x.StoelID, x.BestellingId });
+                    table.ForeignKey(
+                        name: "FK_BesteldeStoel_Bestellingen_BestellingId",
+                        column: x => x.BestellingId,
+                        principalTable: "Bestellingen",
+                        principalColumn: "BestellingId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_BesteldeStoel_Stoel_StoelID",
+                        column: x => x.StoelID,
+                        principalTable: "Stoel",
+                        principalColumn: "StoelID",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -313,6 +359,11 @@ namespace backend.Migrations
                 column: "VoorstellingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BesteldeStoel_BestellingId",
+                table: "BesteldeStoel",
+                column: "BestellingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Kaartjeshouders_VoorstellingId",
                 table: "Kaartjeshouders",
                 column: "VoorstellingId");
@@ -363,6 +414,11 @@ namespace backend.Migrations
                 column: "RolNaam");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Stoel_Zaalnummer",
+                table: "Stoel",
+                column: "Zaalnummer");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Voorstellingen_ArtiestGroepId",
                 table: "Voorstellingen",
                 column: "ArtiestGroepId");
@@ -385,13 +441,19 @@ namespace backend.Migrations
                 name: "ActeurVoorstellingen");
 
             migrationBuilder.DropTable(
+                name: "BesteldeStoel");
+
+            migrationBuilder.DropTable(
                 name: "Kaartjeshouders");
 
             migrationBuilder.DropTable(
                 name: "Medewerkers");
 
             migrationBuilder.DropTable(
-                name: "Stoelen");
+                name: "Bestellingen");
+
+            migrationBuilder.DropTable(
+                name: "Stoel");
 
             migrationBuilder.DropTable(
                 name: "Klanten");

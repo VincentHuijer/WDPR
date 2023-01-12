@@ -58,6 +58,24 @@ namespace backend.Migrations
                     b.ToTable("ArtiestGroepen");
                 });
 
+            modelBuilder.Entity("BesteldeStoel", b =>
+                {
+                    b.Property<int>("StoelID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BestellingId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("StoelID", "BestellingId");
+
+                    b.HasIndex("BestellingId");
+
+                    b.ToTable("BesteldeStoel");
+                });
+
             modelBuilder.Entity("Bestelling", b =>
                 {
                     b.Property<int>("BestellingId")
@@ -68,9 +86,6 @@ namespace backend.Migrations
 
                     b.Property<DateTime>("BestelDatum")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<int?>("StoelID")
-                        .HasColumnType("integer");
 
                     b.Property<int>("Totaalbedrag")
                         .HasColumnType("integer");
@@ -85,8 +100,6 @@ namespace backend.Migrations
                         .HasColumnType("double precision");
 
                     b.HasKey("BestellingId");
-
-                    b.HasIndex("StoelID");
 
                     b.ToTable("Bestellingen");
                 });
@@ -122,7 +135,10 @@ namespace backend.Migrations
             modelBuilder.Entity("Stoel", b =>
                 {
                     b.Property<int>("StoelID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StoelID"));
 
                     b.Property<bool>("IsGereserveerd")
                         .HasColumnType("boolean");
@@ -133,11 +149,18 @@ namespace backend.Migrations
                     b.Property<int>("Rang")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Zaalnummer")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("X")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Y")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Zaalnummer")
+                        .HasColumnType("integer");
 
                     b.HasKey("StoelID");
+
+                    b.HasIndex("Zaalnummer");
 
                     b.ToTable("Stoel");
                 });
@@ -196,12 +219,7 @@ namespace backend.Migrations
                     b.Property<int>("BeschikbareRangen")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("StoelID")
-                        .HasColumnType("integer");
-
                     b.HasKey("Zaalnummer");
-
-                    b.HasIndex("StoelID");
 
                     b.ToTable("Zalen");
                 });
@@ -426,11 +444,23 @@ namespace backend.Migrations
                     b.Navigation("Voorstelling");
                 });
 
-            modelBuilder.Entity("Bestelling", b =>
+            modelBuilder.Entity("BesteldeStoel", b =>
                 {
-                    b.HasOne("Stoel", null)
-                        .WithMany("Bestellingen")
-                        .HasForeignKey("StoelID");
+                    b.HasOne("Bestelling", "Bestelling")
+                        .WithMany("BesteldeStoelen")
+                        .HasForeignKey("BestellingId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.HasOne("Stoel", "Stoel")
+                        .WithMany("BesteldeStoelen")
+                        .HasForeignKey("StoelID")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("Bestelling");
+
+                    b.Navigation("Stoel");
                 });
 
             modelBuilder.Entity("Kaartjeshouders", b =>
@@ -441,7 +471,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Voorstelling", "voorstelling")
+                    b.HasOne("Voorstelling", "Voorstelling")
                         .WithMany("Kaartjeshouder")
                         .HasForeignKey("VoorstellingId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -449,24 +479,16 @@ namespace backend.Migrations
 
                     b.Navigation("Klant");
 
-                    b.Navigation("voorstelling");
+                    b.Navigation("Voorstelling");
                 });
 
             modelBuilder.Entity("Stoel", b =>
                 {
-                    b.HasOne("Bestelling", "Bestelling")
-                        .WithMany("Stoelen")
-                        .HasForeignKey("StoelID")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
                     b.HasOne("Zaal", "Zaal")
                         .WithMany("Stoelen")
-                        .HasForeignKey("StoelID")
+                        .HasForeignKey("Zaalnummer")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
-
-                    b.Navigation("Bestelling");
 
                     b.Navigation("Zaal");
                 });
@@ -494,13 +516,6 @@ namespace backend.Migrations
                     b.Navigation("Kalender");
 
                     b.Navigation("Zaal");
-                });
-
-            modelBuilder.Entity("Zaal", b =>
-                {
-                    b.HasOne("Stoel", null)
-                        .WithMany("Zalen")
-                        .HasForeignKey("StoelID");
                 });
 
             modelBuilder.Entity("backend.Authenticatie.Klant", b =>
@@ -576,7 +591,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Bestelling", b =>
                 {
-                    b.Navigation("Stoelen");
+                    b.Navigation("BesteldeStoelen");
                 });
 
             modelBuilder.Entity("Kalender", b =>
@@ -586,9 +601,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Stoel", b =>
                 {
-                    b.Navigation("Bestellingen");
-
-                    b.Navigation("Zalen");
+                    b.Navigation("BesteldeStoelen");
                 });
 
             modelBuilder.Entity("Voorstelling", b =>

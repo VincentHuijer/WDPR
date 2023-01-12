@@ -7,6 +7,6 @@ public class Zaal{
     public int Zaalnummer { get; set; }
     public int BeschikbareRangen { get; set; }
     public List<Voorstelling>? Voorstellingen { get; set; }
-    public List<Stoel> Stoelen { get; set; }
+    public List<Stoel>? Stoelen { get; set; }
 
 }

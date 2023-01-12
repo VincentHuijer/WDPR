@@ -100,10 +100,10 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Zaal>()
-            .HasMany(z => z.Stoelen)
-            .WithOne(s => s.Zaal)
-            .HasForeignKey(z => z.StoelID)
+        modelBuilder.Entity<Stoel>()
+            .HasOne(s => s.Zaal)
+            .WithMany(z => z.Stoelen)
+            .HasForeignKey(s => s.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (acteur)
@@ -133,7 +133,7 @@ public class GebruikerContext : DbContext{
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasOne(v => v.voorstelling)
+            .HasOne(v => v.Voorstelling)
             .WithMany(kh => kh.Kaartjeshouder)
             .HasForeignKey(v => v.VoorstellingId)
             .OnDelete(DeleteBehavior.SetNull);
@@ -148,11 +148,20 @@ public class GebruikerContext : DbContext{
         // modelBuilder.Entity<Bestelling>()
         // .HasKey(b => new {b.BestellingId, b.Stoelen});
 
-        modelBuilder.Entity<Bestelling>()
-        .HasMany(b => b.Stoelen)
-        .WithOne(s => s.Bestelling)
-        .HasForeignKey(b => b.StoelID)
-        .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasKey(b => new { b.StoelID, b.BestellingId });
+
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasOne(b => b.Stoel)
+            .WithMany(s => s.BesteldeStoelen)
+            .HasForeignKey(b => b.StoelID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasOne(b => b.Bestelling)
+            .WithMany(b => b.BesteldeStoelen)
+            .HasForeignKey(b => b.BestellingId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         //stoel - zaal (zaal stoel bestaat al boven)
         // modelBuilder.Entity<Stoel>()

@@ -12,14 +12,11 @@ public class Stoel
     public int X { get; set; }
     public int Y { get; set; }
 
-    public string Zaalnummer { get; set; }
+    public int Zaalnummer { get; set; }
 
     public Zaal? Zaal { get; set; }
-    public ICollection<Zaal>? Zalen { get; set; }
 
-    public Bestelling Bestelling { get; set; }
-
-    public ICollection<Bestelling>? Bestellingen { get; set; }
+    public List<BesteldeStoel>? BesteldeStoelen { get; set; }
 
 
     public string stoelReserveren()

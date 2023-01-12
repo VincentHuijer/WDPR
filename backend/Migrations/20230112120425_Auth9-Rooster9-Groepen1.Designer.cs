@@ -12,8 +12,8 @@ using backend.Authenticatie;
 namespace backend.Migrations
 {
     [DbContext(typeof(GebruikerContext))]
-    [Migration("20230111144510_Auth9-Rooster7-Groepen1")]
-    partial class Auth9Rooster7Groepen1
+    [Migration("20230112120425_Auth9-Rooster9-Groepen1")]
+    partial class Auth9Rooster9Groepen1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,52 @@ namespace backend.Migrations
                     b.ToTable("ArtiestGroepen");
                 });
 
+            modelBuilder.Entity("BesteldeStoel", b =>
+                {
+                    b.Property<int>("StoelID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BestellingId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("StoelID", "BestellingId");
+
+                    b.HasIndex("BestellingId");
+
+                    b.ToTable("BesteldeStoel");
+                });
+
+            modelBuilder.Entity("Bestelling", b =>
+                {
+                    b.Property<int>("BestellingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BestellingId"));
+
+                    b.Property<DateTime>("BestelDatum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Totaalbedrag")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("bestelDatum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("isBetaald")
+                        .HasColumnType("boolean");
+
+                    b.Property<double>("kortingscode")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("BestellingId");
+
+                    b.ToTable("Bestellingen");
+                });
+
             modelBuilder.Entity("Kaartjeshouders", b =>
                 {
                     b.Property<int>("KlantId")
@@ -92,7 +138,10 @@ namespace backend.Migrations
             modelBuilder.Entity("Stoel", b =>
                 {
                     b.Property<int>("StoelID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StoelID"));
 
                     b.Property<bool>("IsGereserveerd")
                         .HasColumnType("boolean");
@@ -103,9 +152,20 @@ namespace backend.Migrations
                     b.Property<int>("Rang")
                         .HasColumnType("integer");
 
+                    b.Property<int>("X")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Y")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Zaalnummer")
+                        .HasColumnType("integer");
+
                     b.HasKey("StoelID");
 
-                    b.ToTable("Stoelen");
+                    b.HasIndex("Zaalnummer");
+
+                    b.ToTable("Stoel");
                 });
 
             modelBuilder.Entity("Voorstelling", b =>
@@ -387,6 +447,25 @@ namespace backend.Migrations
                     b.Navigation("Voorstelling");
                 });
 
+            modelBuilder.Entity("BesteldeStoel", b =>
+                {
+                    b.HasOne("Bestelling", "Bestelling")
+                        .WithMany("BesteldeStoelen")
+                        .HasForeignKey("BestellingId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.HasOne("Stoel", "Stoel")
+                        .WithMany("BesteldeStoelen")
+                        .HasForeignKey("StoelID")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("Bestelling");
+
+                    b.Navigation("Stoel");
+                });
+
             modelBuilder.Entity("Kaartjeshouders", b =>
                 {
                     b.HasOne("backend.Authenticatie.Klant", "Klant")
@@ -395,7 +474,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Voorstelling", "voorstelling")
+                    b.HasOne("Voorstelling", "Voorstelling")
                         .WithMany("Kaartjeshouder")
                         .HasForeignKey("VoorstellingId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -403,14 +482,14 @@ namespace backend.Migrations
 
                     b.Navigation("Klant");
 
-                    b.Navigation("voorstelling");
+                    b.Navigation("Voorstelling");
                 });
 
             modelBuilder.Entity("Stoel", b =>
                 {
                     b.HasOne("Zaal", "Zaal")
                         .WithMany("Stoelen")
-                        .HasForeignKey("StoelID")
+                        .HasForeignKey("Zaalnummer")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
@@ -513,9 +592,19 @@ namespace backend.Migrations
                     b.Navigation("Voorstellingen");
                 });
 
+            modelBuilder.Entity("Bestelling", b =>
+                {
+                    b.Navigation("BesteldeStoelen");
+                });
+
             modelBuilder.Entity("Kalender", b =>
                 {
                     b.Navigation("Voorstellingen");
+                });
+
+            modelBuilder.Entity("Stoel", b =>
+                {
+                    b.Navigation("BesteldeStoelen");
                 });
 
             modelBuilder.Entity("Voorstelling", b =>

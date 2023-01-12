@@ -192,13 +192,13 @@ export default function Voorstelling() {
           </div>
 
           <div className="mt-6">
-            <div>
+            {!stoelenLoading && <div>
               <p className="font-bold text-lg text-black">
                 KIES UW PLEKKEN ({kaartjes.length}x Tickets)
               </p>
-            </div>
+            </div>}
 
-            <div className="w-96 flex flex-col lg:flex-row lg:mt-6 lg:mb-7 gap-2 pointer-events-none">
+            {!stoelenLoading && <div className="w-96 flex flex-col lg:flex-row lg:mt-6 lg:mb-7 gap-2 pointer-events-none">
               {types.includes(3) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={3} />
                 <p className="font-bold">= 1ᵉ RANG</p>
@@ -228,7 +228,7 @@ export default function Voorstelling() {
                 <Seat type={7} />
                 <p className="font-bold">= GERESERVEERD</p>
               </div>}
-            </div>
+            </div>}
 
             {/* ZAAL MATRIX */}
             <div className={"mt-6 w-full md:w-fit flex flex-col h-min gap-8 items-start " + (!stoelenLoading && "overflow-x-scroll md:overflow-x-hidden")}>
@@ -248,14 +248,14 @@ export default function Voorstelling() {
             </div>
           </div>
 
-          <div
+          {!stoelenLoading && <div
             onClick={() => {
               addToCart();
             }}
             className="hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6"
           >
             TOEVOEGEN AAN WINKELMAND
-          </div>
+          </div>}
         </section>
 
         <section className="mt-20 h-fit">

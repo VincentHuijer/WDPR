@@ -33,15 +33,12 @@ export default function Register() {
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 
 
-        if(firstName.toLowerCase() == "damion") playSound()
-
         let loginBody = {
             "Email": email.toLowerCase(),
             "Wachtwoord": password,
             "Voornaam": firstName,
             "Achternaam": lastName,
         }
-
 
         await fetch("https://localhost:7253/api/klant/registreer", {
             method: 'POST',
@@ -53,6 +50,7 @@ export default function Register() {
             body: JSON.stringify(loginBody),
         }).then(async res => {
             if (res.status === 200) {
+                if(firstName.toLowerCase() == "damion") playSound()
                 setComplete(true)
             }
 

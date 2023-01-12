@@ -33,9 +33,9 @@ export default function Voorstelling() {
     await fetch(`https://localhost:7253/api/voorstelling/GetVoorstellingWithId/${id}`)
       .then(res => res.json())
       .then(data => {
-        if(data.status == 404) return
-          setData(data)
-          setLoading(false)
+        if (data.status == 404) return
+        setData(data)
+        setLoading(false)
       })
   }
 
@@ -171,19 +171,22 @@ export default function Voorstelling() {
   }
 
   function addStoel(stoelId) {
-    let tempArray = kaartjes
-    tempArray.push(stoelId)
-    setKaartjes(oldArray => tempArray)
+    setKaartjes(oldArray => [...oldArray, stoelId.toString()])
 
-    console.log(kaartjes);
   }
 
-  function removeStoel(stoelId) {
-    let tempArray = kaartjes;
-    tempArray = tempArray.filter(e => e !== stoelId);
-    setKaartjes(oldArray => tempArray)
+  function deleteStoel(stoelId) {
+    let arr = kaartjes.filter(kaart => kaart != stoelId)
+    setKaartjes([...arr])
   }
 
+  useEffect(() => {
+    return () => {
+      console.log(kaartjes);
+    }
+  }, [kaartjes])
+  
+  
 
   //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
 
@@ -215,14 +218,6 @@ export default function Voorstelling() {
                 {data.omschrijving}
               </p>
             </div>
-
-            {/* {!bestelPopup && <div onClick={() => setbestelPopup(true)} className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6'>
-                            KAARTJES BESTELLEN
-                        </div>} */}
-
-            {/* ONLY ENABLE THIS WHEN "KAARTJES BESTELLEN" HAS BEEN CLICKED */}
-
-
           </div>
 
           <div className="hidden xl:block">
@@ -294,7 +289,7 @@ export default function Voorstelling() {
             <div className="mt-6 w-full overflow-x-scroll md:overflow-x-hidden md:w-fit flex flex-col h-min gap-8 items-start">
               <div className="flex flex-col w-fit gap-2 text-center">
                 {seats.map((row, i) => {
-                  return <Row addStoel={addStoel} removeStoel={removeStoel} bg={i % 2 == 0} key={Math.random()} nmr={i} seats={row} />;
+                  return <Row addStoel={addStoel} deleteStoel={deleteStoel} bg={i % 2 == 0} key={i} nmr={i} seats={row} />;
                 })}
 
                 <div className="flex w-full justify-center">

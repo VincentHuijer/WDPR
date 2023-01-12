@@ -82,7 +82,7 @@ export function NavBar() {
 
             <div className='w-full bg-black h-fit py-1 text-white font-bold flex items-center justify-center'>
                 <div className='w-11/12 m-auto text-center'>
-                    <p>ALADIN SHOW(30-12-2022) HAS BEEN CANCELLED DUE TO REASON. </p>
+                    <p>ALADIN SHOW(30-12-2022) HAS BEEN CANCELLED DUE TO REASON.</p>
                 </div>
             </div>
         </header>

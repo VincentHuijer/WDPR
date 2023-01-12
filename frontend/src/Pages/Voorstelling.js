@@ -1,4 +1,7 @@
 import Row from "../Components/Zaal/Row";
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment';
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
@@ -8,10 +11,10 @@ import ArtiestProfile from "../Components/ArtiestProfile";
 
 import { useAccesToken } from "../Authentication/AuthContext";
 import Loading from "../Components/Loading";
+import StoelenLoading from "../Components/StoelenLoading";
 
 export default function Voorstelling() {
   const { id } = useParams();
-  const [zaalLayout, setZaalLayout] = useState()
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -23,140 +26,87 @@ export default function Voorstelling() {
 
   const [kaartjes, setKaartjes] = useState([])
 
-  useEffect(() => {
-    setZaalLayout(1)
+  const [startDate, setStartDate] = useState();
+  const [allowedDates, setAllowedDate] = useState();
 
+  const [showList, setShowList] = useState([])
+  const [showId, setShowId] = useState()
+
+  const [stoelenLoading, setStoelenLoading] = useState(true)
+
+  useEffect(() => {
     getVoorstellingData()
   }, [])
 
+  //fetch STOEL DATA
+  useEffect(() => {
+
+    let showId;
+    showList.map(showLink => {
+      if (moment(showLink.datum).format("DD-MM-YYYY") == moment(startDate).format("DD-MM-YYYY")) showId = showLink.showID
+    })
+
+    if (!showId) {
+      console.log("something went wrong");
+      return
+    }
+
+    setStoelenLoading(true)
+    fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
+
+      let seatsList = []
+
+      data.map(row => {
+        let seats = []
+        row.map(seat => {
+          seats.push(seat.rang)
+        })
+
+        seatsList.push(seats)
+      })
+
+      setStoelenLoading(false)
+      setSeats(seatsList)
+      setShowId(showId)
+    })
+  }, [startDate])
+
+
   async function getVoorstellingData() {
-    await fetch(`https://localhost:7253/api/voorstelling/GetVoorstellingWithId/${id}`)
+    await fetch(`https://localhost:7253/api/show/GetShows/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.status == 404) return
+
+        let showLinks = data.shows.map(show => {
+          return {
+            "datum": show.datum,
+            "showID": show.showId
+          }
+
+        })
+
+        setShowList(showLinks)
+
+        let allowedDates = []
+        data.shows.map(show => {
+          let newDate = moment(new Date(show.datum)).format("DD-MM-YYYY")
+          allowedDates.push(newDate.toString())
+        })
+
         setData(data)
+        setStartDate(data.shows[0].datum)
+        setStartDate(new Date(data.shows[0].datum))
+        setAllowedDate(allowedDates)
         setLoading(false)
       })
   }
 
-  useEffect(() => {
-
-    // 1 = VIP
-    // 2 = GEHANDICAPT
-    // 3 = EERSTERANGS
-    // 4 = TWEEDERANGS
-    // 7 = DERDERANGS
-    // 6 = GESELECTEERD
-    // 5 = GERESERVEERD
-    if (zaalLayout == 1) { //240 stoelen.
-      setSeats([
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5],
-        [5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5],
-        [5, 5, 5, 5, 4, 4, 4, 7, 7, 7, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5],
-        [5, 5, 5, 5, 4, 4, 4, 4, 7, 7, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 7, 7, 7, 7, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 7, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 7, 7, 7, 7, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 7, 7, 4, 4, 4, 4, 4, 5, 5, 5],
-        [4, 4, 3, 3, 3, 7, 7, 7, 3, 3, 3, 3, 4, 4],
-        [3, 3, 2, 7, 7, 2, 2, 2, 2, 3],
-      ]);
-    }
-
-    else if (zaalLayout == 2) { //180 stoelen.
-      setSeats([
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ]);
-    }
-
-    else if (zaalLayout == 3) { //90 stoelen.
-      setSeats([
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ]);
-    }
-    else if (zaalLayout == 6) { //440 stoelen.
-      setSeats([
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3],
-      ]);
-    }
-
-    else if (zaalLayout == 7) { //30 stoelen. ruimte layout voor kleine voorstellingen/workshops
-      setSeats([
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ])
-    }
-
-    else { //geen zaal. Mockup
-      setSeats([
-        [5, 5, 4, 4, 4, 4, 5, 5],
-        [5, 4, 4, 3, 3, 3, 4, 5],
-        [3, 3, 3, 0, 3, 3, 0, 0],
-        [3, 0, 0, 0, 0, 0, 3, 3],
-        [2, 7, 3, 3, 7, 3, 3, 2],
-        [2, 1, 1, 1, 1, 1, 2],
-        [1, 1, 7, 7, 7, 1, 1],
-      ]);
-    }
-  }, [zaalLayout]);
 
   useEffect(() => {
     let newArr = []
 
     seats.map(row => {
-      // console.log([...new Set(row)]);
       newArr = [...newArr, ...[...new Set(row)]]
     })
 
@@ -180,23 +130,13 @@ export default function Voorstelling() {
     setKaartjes([...arr])
   }
 
-  useEffect(() => {
-    return () => {
-      console.log(kaartjes);
-    }
-  }, [kaartjes])
-  
-  
-
-  //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
-
   return (
     <div className="w-full mt-40">
       {!loading ? <div className="w-11/12 m-auto">
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h1 className="text-4xl font-extrabold">{data.voorstellingTitel.toUpperCase()}</h1>
+              <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
                 20-12-2022 tot 03-04-2023
               </p>
@@ -204,18 +144,18 @@ export default function Voorstelling() {
 
             <div className="mt-3">
               <p className="text-black font-bold">Leeftijd</p>
-              <p className="text-appLightBlack font-bold">{data.leeftijd}+</p>
+              <p className="text-appLightBlack font-bold">{data.voorstelling.leeftijd}+</p>
             </div>
 
             <div className="mt-2">
               <p className="text-black font-bold">Prijs</p>
-              <p className="text-appLightBlack font-bold">€ {data.prijs}</p>
+              <p className="text-appLightBlack font-bold">{data.voorstelling.prijs ? "€ " + data.voorstelling.prijs : "GRATIS"}</p>
             </div>
 
             <div className="mt-6">
               <p className="text-black font-bold">Beschrijving</p>
               <p className="text-appLightBlack font-bold">
-                {data.omschrijving}
+                {data.voorstelling.omschrijving}
               </p>
             </div>
           </div>
@@ -224,7 +164,7 @@ export default function Voorstelling() {
             <div className="flex flex-col gap-8 items-end  overflow-hidden">
               <img
                 className="border-2 border-black h-96 bg-black rounded-2xl"
-                src={data.image}
+                src={data.voorstelling.image}
                 alt="Aladin Poster Disney"
               />
             </div>
@@ -237,13 +177,18 @@ export default function Voorstelling() {
           </div>
 
           <div className="flex gap-8 items-center mt-6">
-            <p className="font-bold text-lg text-black">
+            <p className="font-bold text-lg text-black w-56">
               SELECTEER UW DATUM
             </p>
-            <input
-              className="border-2 border-appSuperLightWhite bg-appSuperLightWhite text-appLightBlack px-3 py-1 rounded-xl font-extrabold"
-              type={"date"}
-            />
+            <div>
+              <DatePicker
+                className="bg-appSuperLightWhite h-9 text-center rounded-2xl"
+                filterDate={(d) => allowedDates.includes(moment(d).format('DD-MM-YYYY'))}
+                placeholderText={"DD-MM-YYYY"}
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+            </div>
           </div>
 
           <div className="mt-6">
@@ -286,16 +231,18 @@ export default function Voorstelling() {
             </div>
 
             {/* ZAAL MATRIX */}
-            <div className="mt-6 w-full overflow-x-scroll md:overflow-x-hidden md:w-fit flex flex-col h-min gap-8 items-start">
+            <div className={"mt-6 w-full md:w-fit flex flex-col h-min gap-8 items-start " + (!stoelenLoading && "overflow-x-scroll md:overflow-x-hidden")}>
               <div className="flex flex-col w-fit gap-2 text-center">
-                {seats.map((row, i) => {
-                  return <Row addStoel={addStoel} deleteStoel={deleteStoel} bg={i % 2 == 0} key={i} nmr={i} seats={row} />;
-                })}
+                {!stoelenLoading ? <>
+                  {seats.map((row, i) => {
+                    return <Row addStoel={addStoel} deleteStoel={deleteStoel} bg={i % 2 == 0} key={`${i}-${showId}`} nmr={i} seats={row} />;
+                  })}
+                </> : <StoelenLoading />}
 
                 <div className="flex w-full justify-center">
-                  <p className="ml-20 mt-2 font-bold text-appLightBlack">
+                  {!stoelenLoading && <p className="ml-20 mt-2 font-bold text-appLightBlack">
                     PODIUM
-                  </p>
+                  </p>}
                 </div>
               </div>
             </div>

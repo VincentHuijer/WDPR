@@ -6,14 +6,8 @@ public class Bestelling{
 public int BestellingId{get; set;}
 public int Totaalbedrag{get; set;}
 public DateTime BestelDatum { get; set; }
-
 public Boolean isBetaald{get; set;}
-
-public DateTime bestelDatum{get; set;}
-
 public double kortingscode{get; set;}
-
-
 public List<BesteldeStoel>? BesteldeStoelen {set; get;}
 
 }

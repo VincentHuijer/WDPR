@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 public class Show{
     public Show(){
         
@@ -9,6 +11,8 @@ public class Show{
     public int ShowId {set; get;}
     public Zaal Zaal {set; get;}
     public int Zaalnummer {set; get;}
+
+    [JsonIgnore]
     public Voorstelling Voorstelling {set; get;}
     public int VoorstellingId {set; get;}
     public List<ActeurVoorstelling>? Acteur { get; set; }

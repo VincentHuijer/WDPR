@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using backend.Authenticatie;
-public class Voorstelling{
+public class Voorstelling
+{
     public Voorstelling() { }
     public Voorstelling(string titel, string omschrijving, string image)
     {
@@ -17,5 +19,7 @@ public class Voorstelling{
     public string Image { get; set; }
     public int leeftijd { get; set; }
     public string Omschrijving { get; set; }
-    public List<Show> Shows {set; get;}
+
+    [JsonIgnore]
+    public List<Show> Shows { set; get; }
 }

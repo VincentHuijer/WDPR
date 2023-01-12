@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 namespace backend.Authenticatie;
-public class GebruikerContext : DbContext{
+public class GebruikerContext : DbContext
+{
 
-    public GebruikerContext(DbContextOptions<GebruikerContext> options) : base(options){
+    public GebruikerContext(DbContextOptions<GebruikerContext> options) : base(options)
+    {
         //DB nog toevoegen. Kunnen kiezen voor Supabase of SQLserver. Nog overleggen.
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
@@ -137,13 +139,13 @@ public class GebruikerContext : DbContext{
             .WithMany(kh => kh.Kaartjeshouder)
             .HasForeignKey(v => v.ShowId)
             .OnDelete(DeleteBehavior.SetNull);
-        
-    
+
+
         //modelBuilder.Entity<Show>().Ignore(v => v.Datum);
 
 
         //bestelling - stoel
-        
+
         // modelBuilder.Entity<Bestelling>()
         // .HasKey(b => new {b.BestellingId, b.Stoelen});
 
@@ -192,7 +194,7 @@ public class GebruikerContext : DbContext{
         //     .WithMany(vr => vr.VoorstellingRegels)
         //     .HasForeignKey(v => v.VoorstellingTitel)
         //     .OnDelete(DeleteBehavior.SetNull);
-        
+
         //Groepen
         modelBuilder.Entity<Klant>()
             .HasOne(k => k.ArtiestGroep)
@@ -206,28 +208,29 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(v => v.ArtiestGroepId)
             .OnDelete(DeleteBehavior.SetNull);
     }
-    public DbSet<Klant> Klanten {set; get;}
-    public DbSet<Medewerker> Medewerkers {set; get;}
-    public DbSet<Rol> Rollen {set; get;}
-    public DbSet<VerificatieToken> VerificatieTokens {set; get;}
-    public DbSet<AccessToken> AccessTokens {set; get;}
-    public DbSet<AuthenticatieToken> AuthenticatieTokens {set; get;}
+    public DbSet<Klant> Klanten { set; get; }
+    public DbSet<Medewerker> Medewerkers { set; get; }
+    public DbSet<Rol> Rollen { set; get; }
+    public DbSet<VerificatieToken> VerificatieTokens { set; get; }
+    public DbSet<AccessToken> AccessTokens { set; get; }
+    public DbSet<AuthenticatieToken> AuthenticatieTokens { set; get; }
 
 
     // roostersysteem
-    public DbSet<Kalender> Kalenders {set; get;}
-    public DbSet<Voorstelling> Voorstellingen {set; get;}
-    public DbSet<Zaal> Zalen {set; get;}
-    public DbSet<Stoel> Stoelen {set; get;}
-    public DbSet<Kaartjeshouders> Kaartjeshouders {set; get;}
-    public DbSet<ActeurVoorstelling> ActeurVoorstellingen {set; get;}
+    public DbSet<Kalender> Kalenders { set; get; }
+    public DbSet<Voorstelling> Voorstellingen { set; get; }
+    public DbSet<Zaal> Zalen { set; get; }
+    public DbSet<Stoel> Stoelen { set; get; }
+    public DbSet<Kaartjeshouders> Kaartjeshouders { set; get; }
+    public DbSet<ActeurVoorstelling> ActeurVoorstellingen { set; get; }
+    public DbSet<Show> Shows { get; set; }
 
-    
+
     //Bestelling
-    public DbSet<Bestelling> Bestellingen {get; set;}
-        public DbSet<BesteldeStoel> BesteldeStoelen {get; set;}
+    public DbSet<Bestelling> Bestellingen { get; set; }
+    public DbSet<BesteldeStoel> BesteldeStoelen { get; set; }
 
 
     //Groepen
-    public DbSet<ArtiestGroep> ArtiestGroepen {set; get;}
-}   
+    public DbSet<ArtiestGroep> ArtiestGroepen { set; get; }
+}

@@ -1,20 +1,26 @@
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using backend.Authenticatie;
 class PrintBestelling
 {
-    public Bestelling Bestellinginformatie;
     public string qrCode = "https://www.google.com";
+    private readonly GebruikerContext _context;
+    // public PrintBestelling()
+    // {
+    // }
 
-    public string ticketPrinten()
+    public string ticketPrinten(Bestelling bestellinginformatie)
     {
+        findVoorstelling(bestellinginformatie);
         Guid guid = Guid.NewGuid();
         string path = "ticket"+guid+".pdf";
         using (var document = new Document())
         {
             // We create a writer that listens to the document
             // and directs a PDF-stream to a file
-            
             PdfWriter.GetInstance(document, new FileStream(path, FileMode.Create));
 
             document.Open();
@@ -37,5 +43,11 @@ class PrintBestelling
             document.Close();
         }
         return path;
+    }
+
+    public Voorstelling findVoorstelling(Bestelling bestellinginformatie){
+
+        _context.
+        return new Voorstelling();
     }
 }

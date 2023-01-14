@@ -34,6 +34,13 @@ export default function Voorstelling() {
 
   const [stoelenLoading, setStoelenLoading] = useState(true)
 
+  const [lowest, setLowest] = useState(100)
+  const [highest, setHighest] = useState(-100)
+
+  const [totaalPrijs, setTotaalPrijs] = useState(0)
+
+  const [bestelLoading, setBestelLoading] = useState(false)
+
   useEffect(() => {
     getVoorstellingData()
   }, [])
@@ -53,14 +60,18 @@ export default function Voorstelling() {
 
     setStoelenLoading(true)
     setKaartjes(oldArr => [])
+    setBestelLoading(false)
+
     fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
 
       let seatsList = []
-
       data.map(row => {
         let seats = []
-        row.map(seat => {
-          seats.push(seat.rang)
+        row.map(async seat => {
+          seats.push(seat)
+
+          await setPrice(true, seat.prijs)
+          await setPrice(false, seat.prijs)
         })
 
         seatsList.push(seats)
@@ -71,6 +82,21 @@ export default function Voorstelling() {
       setShowId(showId)
     })
   }, [startDate])
+
+  async function setPrice(type, price) {
+    return new Promise((resolve, reject) => {
+      if (type) {
+        if (price < lowest) {
+          setLowest(price)
+        }
+      } else {
+        if (price > highest) {
+          setHighest(price)
+        }
+      }
+      resolve(true)
+    })
+  }
 
 
   async function getVoorstellingData() {
@@ -90,8 +116,10 @@ export default function Voorstelling() {
         setShowList(showLinks)
 
         let allowedDates = []
+
+        data.shows.sort(function(a,b){return new Date(a.datum).getTime() - new Date(b.datum).getTime()});
         data.shows.map(show => {
-          let newDate = moment(new Date(show.datum)).format("DD-MM-YYYY")
+          let newDate =  moment(new Date(show.datum)).format("DD-MM-YYYY")
           allowedDates.push(newDate.toString())
         })
 
@@ -101,6 +129,31 @@ export default function Voorstelling() {
         setAllowedDate(allowedDates)
         setLoading(false)
       })
+  }
+
+  function Bestel() {
+    if (accesToken == "none") {
+      window.location.href = "/login";
+    }
+
+    let bestelBody = {
+      "ShowId": showId,
+      "StoelIds": kaartjes.map(kaart => { return kaart.stoelID.toString() }),
+      "AccessToken": accesToken
+    }
+
+    fetch("https://localhost:7253/api/Bestelling/nieuwebestelling", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Type": "application/json"
+      },
+      body: JSON.stringify(bestelBody)
+    }).then(response => {
+      console.log(response.text);
+      window.location.href = "/winkelmand"
+    })
+    setBestelLoading(true)
   }
 
 
@@ -114,20 +167,22 @@ export default function Voorstelling() {
     setTypes([...new Set(newArr)])
   }, [seats])
 
+  useEffect(() => {
+    let count = 0;
+    kaartjes.map(kaart => {
+      count += kaart.prijs
+    })
+    setTotaalPrijs(count)
+  }, [kaartjes])
 
-  function addToCart() {
-    if (accesToken == "none") {
-      window.location.href = "/login";
-    }
+
+  function addStoel(stoelData) {
+    setKaartjes(oldArray => [...oldArray, stoelData])
   }
 
-  function addStoel(stoelId) {
-    setKaartjes(oldArray => [...oldArray, stoelId.toString()])
-
-  }
-
-  function deleteStoel(stoelId) {
-    let arr = kaartjes.filter(kaart => kaart != stoelId)
+  function deleteStoel(stoelData) {
+    let id = stoelData.stoelID
+    let arr = kaartjes.filter(kaart => kaart.stoelID != id)
     setKaartjes([...arr])
   }
 
@@ -139,7 +194,7 @@ export default function Voorstelling() {
             <div>
               <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
-                20-12-2022 tot 03-04-2023
+                {allowedDates[0]} tot {allowedDates[allowedDates.length - 1]}
               </p>
             </div>
 
@@ -150,7 +205,7 @@ export default function Voorstelling() {
 
             <div className="mt-2">
               <p className="text-black font-bold">Prijs</p>
-              <p className="text-appLightBlack font-bold">{data.voorstelling.prijs ? "€ " + data.voorstelling.prijs : "GRATIS"}</p>
+              {!stoelenLoading ? <p className="text-appLightBlack font-bold">€{lowest} - €{highest}</p> : <p className="text-appLightBlack font-bold">Prijs Laden...</p>}
             </div>
 
             <div className="mt-6">
@@ -193,11 +248,6 @@ export default function Voorstelling() {
           </div>
 
           <div className="mt-6">
-            {!stoelenLoading && <div>
-              <p className="font-bold text-lg text-black">
-                KIES UW PLEKKEN ({kaartjes.length}x Tickets)
-              </p>
-            </div>}
 
             {!stoelenLoading && <div className="w-96 flex flex-col lg:flex-row lg:mt-6 lg:mb-7 gap-2 pointer-events-none">
               {types.includes(3) && <div className="flex min-w-max items-center gap-2">
@@ -247,16 +297,27 @@ export default function Voorstelling() {
                 </div>
               </div>
             </div>
+
+            {kaartjes.length > 0 && <div className="flex flex-col gap-2">
+              <p className="font-bold text-2xl mt-4">Tickets:</p>
+              {kaartjes.map(kaart => {
+                return (
+                  <div className="bg-appLight rounded-full text-center py-1 px-3 w-fit" key={`Kaartje: Stoel ${kaart.x + 1} Rij ${kaart.y + 1} ${Math.random()}`}>
+                    <p>Prijs: <b>€{kaart.prijs}</b> Stoel: <b>{kaart.x + 1}</b> Rij: <b>{kaart.y + 1}</b></p>
+                  </div>
+                )
+              })}
+
+              <p><span className="font-bold">Totaal:</span> €{totaalPrijs}</p>
+            </div>}
           </div>
 
-          {!stoelenLoading && <div
-            onClick={() => {
-              addToCart();
-            }}
-            className="hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6"
+          {(!stoelenLoading && kaartjes.length > 0) && <button
+            onClick={() => { if (!bestelLoading) Bestel() }}
+            className={"hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6 " + (bestelLoading && "opacity-50 hover:cursor-wait")}
           >
             TOEVOEGEN AAN WINKELMAND
-          </div>}
+          </button>}
         </section>
 
         <section className="mt-20 h-fit">

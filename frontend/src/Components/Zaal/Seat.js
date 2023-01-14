@@ -4,7 +4,7 @@ export default function Seat({ type = 5, row, seat, addStoel, deleteStoel }) {
 
 
     const [selected, setSelected] = useState(false)
-    const [tempType, setTempType] = useState(type)
+    const [tempType, setTempType] = useState(type.rang)
 
     // 1 = VIP
     // 2 = GEHANDICAPT
@@ -18,9 +18,9 @@ export default function Seat({ type = 5, row, seat, addStoel, deleteStoel }) {
 
     function changeTickets(state){
         if(state){
-            addStoel(`${row}-${seat}`)
+            addStoel(type)
         }else{
-            deleteStoel(`${row}-${seat}`)
+            deleteStoel(type)
         }
     }
 
@@ -29,7 +29,7 @@ export default function Seat({ type = 5, row, seat, addStoel, deleteStoel }) {
         if (selected) {
             setTempType(6)
         } else {
-            setTempType(type)
+            setTempType(type.rang)
         }
 
 

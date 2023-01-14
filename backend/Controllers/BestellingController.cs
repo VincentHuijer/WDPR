@@ -23,6 +23,28 @@ public class BestellingController : ControllerBase
 
     [HttpPost("nieuwebestelling")]
     public async Task<ActionResult<string>> NieuweBestelling([FromBody] BestelInfo bestelInfo){
+
+        //Clean up old inactive and unpaid bestellingen
+        bool anyOldActive = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).AnyAsync(b => b.IsActive);
+        if(anyOldActive){
+            var OldActiveBestellingen = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).Where(b => b.IsActive).ToListAsync();
+            foreach (var b in OldActiveBestellingen){
+                b.IsActive = false;
+            }
+            await _context.SaveChangesAsync();
+        }
+        bool anyUnpaidInactive = await _context.Bestellingen.Where(b => b.IsActive == false).AnyAsync(b => b.isBetaald == false);
+        if(anyUnpaidInactive){
+            var UnpaidInativeBestellingen = await _context.Bestellingen.Where(b => b.IsActive == false).Where(b => b.isBetaald == false).ToListAsync();
+            foreach (var b in UnpaidInativeBestellingen){
+                var SeatsToBeRemoved = await _context.BesteldeStoelen.Where(s => s.BestellingId == b.BestellingId).ToListAsync();
+                _context.RemoveRange(SeatsToBeRemoved);
+                _context.Remove(b);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        //Create new bestelling/add to existing bestelling
         Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == bestelInfo.AccessToken);
         if(klant == null) return NotFound();
         Show show = _context.Shows.FirstOrDefault(s => s.ShowId == bestelInfo.ShowId);
@@ -36,9 +58,13 @@ public class BestellingController : ControllerBase
             Stoelen.Add(stoel);
             if(await _context.BesteldeStoelen.Where(s => s.Datum == show.Datum).AnyAsync(s => s.StoelID == stoel.StoelID)) return StatusCode(403, "Stoel bezet");
         }
-
-        Bestelling bestelling = new Bestelling(){Totaalbedrag = Totaalbedrag, BestelDatum = DateTime.Now, isBetaald = false, kortingscode = 0};
-        await _context.AddAsync(bestelling);
+        bool anyActive = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).AnyAsync(b => b.IsActive);
+        Bestelling bestelling = anyActive ? await _context.Bestellingen.Where(b => b.KlantId == klant.Id).FirstAsync(b => b.IsActive) : new Bestelling(){Totaalbedrag = Totaalbedrag, BestelDatum = DateTime.Now, isBetaald = false, kortingscode = 0, Klant = klant, KlantId = klant.Id, IsActive = true};
+        if(anyActive){
+            bestelling.Totaalbedrag += Totaalbedrag;
+        }else{
+            await _context.AddAsync(bestelling);
+        }
         await _context.SaveChangesAsync();
         foreach(var Stoel in Stoelen){
             BesteldeStoel besteldeStoel = new BesteldeStoel(){Bestelling = bestelling, BestellingId = bestelling.BestellingId, Stoel = Stoel, StoelID = Stoel.StoelID, Datum = show.Datum};
@@ -47,6 +73,8 @@ public class BestellingController : ControllerBase
         await _context.SaveChangesAsync();
         return bestelling.BestellingId.ToString();
     }
+
+
  
 
     // [HttpPost("AddBestelling")]

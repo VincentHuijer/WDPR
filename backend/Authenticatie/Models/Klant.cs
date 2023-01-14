@@ -38,4 +38,5 @@ public class Klant{
     public string? AuthenticatieTokenId {set; get;}
     public ArtiestGroep? ArtiestGroep {set; get;}
     public int? ArtiestGroepId {set; get;}
+    public List<Bestelling> Bestellingen {set; get;}
 }

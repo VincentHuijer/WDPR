@@ -76,6 +76,12 @@ public class GebruikerContext : DbContext
             .HasForeignKey(m => m.RolNaam)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<Bestelling>()
+            .HasOne(b => b.Klant)
+            .WithMany(k => k.Bestellingen)
+            .HasForeignKey(b => b.KlantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         // modelBuilder.Entity<Klant>()
         //     .HasOne(k => k.VerificatieToken)
         //     .WithOne(vt => vt.Klant)

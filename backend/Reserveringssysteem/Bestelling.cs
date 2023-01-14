@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using backend.Authenticatie;
 
 public class Bestelling{
 
@@ -10,4 +11,7 @@ public Boolean isBetaald{get; set;}
 public double kortingscode{get; set;}
 public List<BesteldeStoel>? BesteldeStoelen {set; get;}
 
+public Klant Klant {set; get;}
+public int KlantId {set; get;}
+public bool IsActive {set; get;}
 }

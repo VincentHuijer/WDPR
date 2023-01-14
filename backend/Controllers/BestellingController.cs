@@ -74,7 +74,7 @@ public class BestellingController : ControllerBase
         return bestelling.BestellingId.ToString();
     }
 
-    [HttpGet("activebestelling")]
+    [HttpPost("activebestelling")]
     public async Task<ActionResult<List<ShowStoelen>>> GetCurrentActiveBestelling([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == accessTokenObject.AccessToken);
         if(klant == null) return NotFound();

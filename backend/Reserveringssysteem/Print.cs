@@ -31,14 +31,18 @@ class PrintBestelling
             var eventName = new Paragraph("Theater Show", font);
             var date = new Paragraph("January 1, 2021", font);
             var seat = new Paragraph("Seat 1A", font);
+            //var image = Image.GetInstance("Voorstelling image hier");
+            var logo = Image.GetInstance("https://theater-laak.netlify.app/media/tl-logo.png");
 
             qr.Alignment = Element.ALIGN_RIGHT;
+            //image.Alignment = Element.ALIGN_CENTER;
 
             document.Add(qr);
             document.Add(name);
             document.Add(eventName);
             document.Add(date);
             document.Add(seat);
+            //document.Add(image);
 
             document.Close();
         }

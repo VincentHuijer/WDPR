@@ -52,6 +52,7 @@ export default function Voorstelling() {
     }
 
     setStoelenLoading(true)
+    setKaartjes(oldArr => [])
     fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
 
       let seatsList = []

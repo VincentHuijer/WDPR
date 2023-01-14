@@ -45,7 +45,7 @@ export default function Footer() {
                     <p className="font-bold text-xl">DONEER</p>
                     <div className="flex flex-col mt-0 text-appLight">
                     <a href="http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"> Ondersteun het Theater door te doneren</a>
-                    <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold' onClick={"http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"}> Doneer hier!</button>
+                    <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold' onClick={"http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"}> Klik hier om te doneren!</button>
 
                     </div>
                     </div>

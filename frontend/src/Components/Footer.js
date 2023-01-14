@@ -56,7 +56,7 @@ export default function Footer() {
                     <div className="mt-2 flex flex-col gap-2 text-appLight">
                         <p>Meld je aan voor onze nieuwsbrief!</p>
                         <input className='border-2 border-White bg-appInputBlack text-white px-3 py-1 rounded-xl font-extrabold' type="email" placeholder="Vul hier uw E-mailadres in" />
-                        <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>Meld je hier aan!</button>
+                        <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>Meld je hier aan voor de nieuwsbrief!</button>
                     </div>
                 </div>
             </div>

@@ -74,6 +74,34 @@ public class BestellingController : ControllerBase
         return bestelling.BestellingId.ToString();
     }
 
+    [HttpGet("activebestelling")]
+    public async Task<ActionResult<List<ShowStoelen>>> GetCurrentActiveBestelling([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == accessTokenObject.AccessToken);
+        if(klant == null) return NotFound();
+        Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
+        if(bestelling == null) return NotFound();
+        List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync();
+        List<Show> shows = new List<Show>();
+        List<Stoel> stoelen = new List<Stoel>();
+        foreach(var besteldeStoel in besteldeStoelen){
+            Show show = await _context.Shows.FirstAsync(s => s.Datum == besteldeStoel.Datum);
+            shows.Add(show);
+            Stoel stoel = await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID);
+            stoelen.Add(stoel);
+        }
+        shows = shows.Distinct().ToList();
+        List<ShowStoelen> showStoelenList = new List<ShowStoelen>();
+        foreach(var show in shows){
+            Voorstelling voorstelling = await _context.Voorstellingen.FirstAsync(v => v.VoorstellingId == show.VoorstellingId);
+            List<Stoel> StoelenToAddToShowStoelen = new List<Stoel>();
+            foreach(var besteldeStoel in besteldeStoelen){
+                if(besteldeStoel.Datum == show.Datum) StoelenToAddToShowStoelen.Add(await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID));
+            }
+            ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen};
+            showStoelenList.Add(showStoelen);
+        }
+        return showStoelenList;
+    }
 
  
 
@@ -128,4 +156,11 @@ public class BestelInfo{
     public int ShowId {set; get;}
     public List<int> StoelIds {set; get;}
     public string AccessToken {set; get;}
+}
+
+
+public class ShowStoelen{
+    public int ShowId {set; get;}
+    public string ShowNaam {set; get;}
+    public List<Stoel> Stoelen {set; get;}
 }

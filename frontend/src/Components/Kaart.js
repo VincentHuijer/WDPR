@@ -11,7 +11,7 @@ export default function Kaart() {
                 </div>
 
                 <div className="mt-2 lg:md-0 w-full md:w-1/2">
-                    <img alt="Google Maps Kaart" className="h-full w-full" src="/media/Kaart.png" />
+                    <img alt="Google Maps Kaart locatie Theater Laak Adres: Ferrandweg 4-T, 2523 XT Den Haag" className="h-full w-full" src="/media/Kaart.png" />
                 </div>
             </div>
         </article>

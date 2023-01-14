@@ -16,7 +16,7 @@ export default function ArticlePreview({text, overonspagina = false}) {
 
             <div className='h-64 mt-8 md:mt-0'>
                 <div className='h-full w-96 overflow-hidden'>
-                    <img alt='theater laak' className='h-full rounded-2xl border-black border-2' src='./media/theaterLaak.jpg' />
+                    <img alt='Een live voorstelling in Theater Laak' className='h-full rounded-2xl border-black border-2' src='./media/theaterLaak.jpg' />
                 </div>
             </div>
         </article>

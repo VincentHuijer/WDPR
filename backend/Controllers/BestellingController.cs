@@ -80,24 +80,24 @@ public class BestellingController : ControllerBase
         if(klant == null) return NotFound();
         Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
         if(bestelling == null) return NotFound();
-        List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync();
-        List<Show> shows = new List<Show>();
-        List<Stoel> stoelen = new List<Stoel>();
+        List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync(); //Alle bestelde stoelen die bij deze bestelling horen.
+        List<Show> shows = new List<Show>(); //Alle shows die in de bestelling zitten
+        List<Stoel> stoelen = new List<Stoel>(); //Alle stoelen die in de bestelling zitten
         foreach(var besteldeStoel in besteldeStoelen){
             Show show = await _context.Shows.FirstAsync(s => s.Datum == besteldeStoel.Datum);
             shows.Add(show);
             Stoel stoel = await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID);
             stoelen.Add(stoel);
         }
-        shows = shows.Distinct().ToList();
-        List<ShowStoelen> showStoelenList = new List<ShowStoelen>();
+        shows = shows.Distinct().ToList(); //Duplicate shows verwijderen
+        List<ShowStoelen> showStoelenList = new List<ShowStoelen>(); //Object wat ik return met de benodigde data voor frontend
         foreach(var show in shows){
             Voorstelling voorstelling = await _context.Voorstellingen.FirstAsync(v => v.VoorstellingId == show.VoorstellingId);
             List<Stoel> StoelenToAddToShowStoelen = new List<Stoel>();
             foreach(var besteldeStoel in besteldeStoelen){
-                if(besteldeStoel.Datum == show.Datum) StoelenToAddToShowStoelen.Add(await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID));
+                if(besteldeStoel.Datum == show.Datum) StoelenToAddToShowStoelen.Add(await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID)); //Alle stoelen die specifiek bij deze show horen
             }
-            ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen, Datum = show.Datum};
+            ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen, Datum = show.Datum}; //Info over show met naam x, en aantal stoelen x, info over de stoelen
             showStoelenList.Add(showStoelen);
         }
         return showStoelenList;

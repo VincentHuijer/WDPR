@@ -156,7 +156,7 @@ public class GebruikerContext : DbContext
         // .HasKey(b => new {b.BestellingId, b.Stoelen});
 
         modelBuilder.Entity<BesteldeStoel>()
-            .HasKey(b => new { b.StoelID, b.BestellingId });
+            .HasKey(b => new { b.StoelID, b.BestellingId, b.Datum });
 
         modelBuilder.Entity<BesteldeStoel>()
             .HasOne(b => b.Stoel)

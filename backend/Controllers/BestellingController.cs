@@ -97,7 +97,7 @@ public class BestellingController : ControllerBase
             foreach(var besteldeStoel in besteldeStoelen){
                 if(besteldeStoel.Datum == show.Datum) StoelenToAddToShowStoelen.Add(await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID)); //Alle stoelen die specifiek bij deze show horen
             }
-            ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen, Datum = show.Datum}; //Info over show met naam x, en aantal stoelen x, info over de stoelen
+            ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen, Datum = show.Datum, ShowImage = voorstelling.Image}; //Info over show met naam x, en aantal stoelen x, info over de stoelen
             showStoelenList.Add(showStoelen);
         }
         return showStoelenList;
@@ -162,6 +162,7 @@ public class BestelInfo{
 public class ShowStoelen{
     public int ShowId {set; get;}
     public string ShowNaam {set; get;}
+    public string ShowImage {set; get;}
     public DateTime Datum {set; get;}
     public List<Stoel> Stoelen {set; get;}
 }

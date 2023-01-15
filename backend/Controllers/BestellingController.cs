@@ -25,24 +25,7 @@ public class BestellingController : ControllerBase
     public async Task<ActionResult<string>> NieuweBestelling([FromBody] BestelInfo bestelInfo){
 
         //Clean up old inactive and unpaid bestellingen
-        bool anyOldActive = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).AnyAsync(b => b.IsActive);
-        if(anyOldActive){
-            var OldActiveBestellingen = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).Where(b => b.IsActive).ToListAsync();
-            foreach (var b in OldActiveBestellingen){
-                b.IsActive = false;
-            }
-            await _context.SaveChangesAsync();
-        }
-        bool anyUnpaidInactive = await _context.Bestellingen.Where(b => b.IsActive == false).AnyAsync(b => b.isBetaald == false);
-        if(anyUnpaidInactive){
-            var UnpaidInativeBestellingen = await _context.Bestellingen.Where(b => b.IsActive == false).Where(b => b.isBetaald == false).ToListAsync();
-            foreach (var b in UnpaidInativeBestellingen){
-                var SeatsToBeRemoved = await _context.BesteldeStoelen.Where(s => s.BestellingId == b.BestellingId).ToListAsync();
-                _context.RemoveRange(SeatsToBeRemoved);
-                _context.Remove(b);
-            }
-            await _context.SaveChangesAsync();
-        }
+        await BestellingCleaner.Clean(_context);
 
         //Create new bestelling/add to existing bestelling
         Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == bestelInfo.AccessToken);
@@ -165,4 +148,27 @@ public class ShowStoelen{
     public string ShowImage {set; get;}
     public DateTime Datum {set; get;}
     public List<Stoel> Stoelen {set; get;}
+}
+public class BestellingCleaner{
+    public static async Task Clean(GebruikerContext _context){
+                //Clean up old inactive and unpaid bestellingen
+        bool anyOldActive = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).AnyAsync(b => b.IsActive);
+        if(anyOldActive){
+            var OldActiveBestellingen = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).Where(b => b.IsActive).ToListAsync();
+            foreach (var b in OldActiveBestellingen){
+                b.IsActive = false;
+            }
+            await _context.SaveChangesAsync();
+        }
+        bool anyUnpaidInactive = await _context.Bestellingen.Where(b => b.IsActive == false).AnyAsync(b => b.isBetaald == false);
+        if(anyUnpaidInactive){
+            var UnpaidInativeBestellingen = await _context.Bestellingen.Where(b => b.IsActive == false).Where(b => b.isBetaald == false).ToListAsync();
+            foreach (var b in UnpaidInativeBestellingen){
+                var SeatsToBeRemoved = await _context.BesteldeStoelen.Where(s => s.BestellingId == b.BestellingId).ToListAsync();
+                _context.RemoveRange(SeatsToBeRemoved);
+                _context.Remove(b);
+            }
+            await _context.SaveChangesAsync();
+        }
+    }
 }

@@ -24,6 +24,7 @@ public class ZaalController : ControllerBase
     [HttpGet("GetShowStoelen/{id}")]
     public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
     {
+        await BestellingCleaner.Clean(_context);
         Show s = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
 
         List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == s.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN

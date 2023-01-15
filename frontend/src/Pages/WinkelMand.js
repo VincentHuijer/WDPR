@@ -13,6 +13,8 @@ export default function WinkelMand() {
 
     const [totaalPrijs, setTotaalPrijs] = useState(0)
 
+    const [redirect, setRedirect] = useState()
+
     useEffect(() => {
         getBestelling()
     }, [])
@@ -47,7 +49,37 @@ export default function WinkelMand() {
     }
 
     async function Betaal() {
-        fetch("")
+        await fetch("https://localhost:7253/api/Betaling/bestelling", {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                "Accept-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "AccessToken": atCookie.acces_token
+            })
+        }).then(response => response.json()).then(data =>{
+            console.log(data)
+            let bestelInfo = {
+                "id": data.bestellingId,
+                "prijs": data.totaalbedrag
+            }
+            const formData = new URLSearchParams();
+            formData.append("amount", bestelInfo.prijs)
+            formData.append("reference", bestelInfo.id)
+            formData.append("url", "https://localhost:7253/api/Betaling")
+            fetch("https://fakepay.azurewebsites.net",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData
+            }).then(response => response.json()).then(data =>{
+                setRedirect(data)
+                console.log(data)
+            })
+        })
     }
 
 

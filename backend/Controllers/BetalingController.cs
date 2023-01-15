@@ -21,7 +21,7 @@ public class BetalingController : ControllerBase
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
         bestelling.isBetaald = betaling.succes;
-        bestelling.IsActive = false;
+        if(bestelling.isBetaald) bestelling.IsActive = false;
         await _context.SaveChangesAsync();
         return Ok();
     }

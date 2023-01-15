@@ -20,7 +20,7 @@ public class BetalingController : ControllerBase
     {
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
-        bestelling.isBetaald = betaling.isBetaald;
+        bestelling.isBetaald = betaling.succes;
         await _context.SaveChangesAsync();
         return Ok();
     }
@@ -34,10 +34,19 @@ public class BetalingController : ControllerBase
         return bestelling;
     }
 
+    [HttpPost("bestelling")]
+    public async Task<ActionResult<Bestelling>> GetBestellingWithAccessToken([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == accessTokenObject.AccessToken);
+        if(klant == null) return NotFound();
+        Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive == true).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
+        if(bestelling == null) return NotFound();
+        return bestelling;
+    }
+
 }
 
 public class Betaling
 {
-    public bool isBetaald { get; set; }
+    public bool succes { get; set; }
     public int reference { get; set; }
 }

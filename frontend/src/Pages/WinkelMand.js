@@ -75,16 +75,19 @@ export default function WinkelMand() {
                     "Accept-Type": "application/x-www-form-urlencoded"
                 },
                 body: formData
-            }).then(response => response.json()).then(data =>{
+            }).then(response => response.text()).then(data =>{
                 setRedirect(data)
-                console.log(data)
+                var newWindow = window.open("", "_blank");
+                newWindow.document.write(data);
+                newWindow.document.close();
+                window.location.replace(newWindow.location);
             })
         })
     }
 
 
     return (
-        <>
+        <div id="main-winkelmand">
             {!isLoading ? <div>
                 <div className="w-full mt-40">
                     <div className="w-11/12 m-auto">
@@ -125,6 +128,6 @@ export default function WinkelMand() {
                     </div>
                 </div>
             </div> : <Loading text={"WINKELMAND LADEN"} />}
-        </>
+        </div>
     )
 }

@@ -15,12 +15,12 @@ public class VoorstellingController : ControllerBase
         _context = context;
     }
 
-    //dit is alleen om het printen van tickets te
-    // [HttpGet("Gettest")]
-    // public async Task<string> Gettest()
-    // {
-    //     return _printBestelling.ticketPrinten();
-    // }
+    //dit is alleen om het printen van tickets te testen
+    [HttpGet("Gettest")]
+    public async Task<string> Gettest(Bestelling bestellinginformatie)
+    {
+        return _printBestelling.ticketPrinten(bestellinginformatie);
+    }
 
     [HttpGet("GetVoorstellingen/leeftijd/{age}")]
     public async Task<List<Voorstelling>> GetVoorstellingen(int age, [FromQuery] string sortOrder = "ascending")

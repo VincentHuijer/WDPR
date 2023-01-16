@@ -34,11 +34,16 @@ public class GebruikerService : IGebruikerService{
         } 
         else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
+                await context.SaveChangesAsync();
                 return "Success";
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
-                if(klant.Inlogpoging >= 3) klant.IsBlocked = true;
+                await context.SaveChangesAsync();
+                if(klant.Inlogpoging >= 3){
+                    klant.IsBlocked = true;
+                    await context.SaveChangesAsync();
+                } 
         }
         return "InvalidCredentialsError";
     }

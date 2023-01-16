@@ -23,7 +23,7 @@ public class BetalingController : ControllerBase
         bestelling.isBetaald = betaling.succes;
         if(bestelling.isBetaald) bestelling.IsActive = false;
         await _context.SaveChangesAsync();
-        return Ok();
+        return Redirect("http://localhost:3000/bedankt");
     }
 
 

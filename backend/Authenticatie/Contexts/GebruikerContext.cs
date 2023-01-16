@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 namespace backend.Authenticatie;
-public class GebruikerContext : DbContext{
+public class GebruikerContext : DbContext
+{
 
-    public GebruikerContext(DbContextOptions<GebruikerContext> options) : base(options){
+    public GebruikerContext(DbContextOptions<GebruikerContext> options) : base(options)
+    {
         //DB nog toevoegen. Kunnen kiezen voor Supabase of SQLserver. Nog overleggen.
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
@@ -74,6 +76,12 @@ public class GebruikerContext : DbContext{
             .HasForeignKey(m => m.RolNaam)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder.Entity<Bestelling>()
+            .HasOne(b => b.Klant)
+            .WithMany(k => k.Bestellingen)
+            .HasForeignKey(b => b.KlantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         // modelBuilder.Entity<Klant>()
         //     .HasOne(k => k.VerificatieToken)
         //     .WithOne(vt => vt.Klant)
@@ -87,27 +95,28 @@ public class GebruikerContext : DbContext{
         //     .HasForeignKey(k => k.VoorstellingId)
         //     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Voorstelling>()
+        modelBuilder.Entity<Show>()
             .HasOne(v => v.Kalender)
-            .WithMany(k => k.Voorstellingen)
+            .WithMany(k => k.Shows)
             .HasForeignKey(v => v.KalenderId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Zaal>()
-            .HasMany(z => z.Voorstellingen)
-            .WithOne(v => v.Zaal)
-            .HasForeignKey(v => v.Zaalnummer)
+        //zaal - voorstelling
+        modelBuilder.Entity<Show>()
+            .HasOne(s => s.Zaal)
+            .WithMany(z => z.Shows)
+            .HasForeignKey(s => s.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Zaal>()
-            .HasMany(z => z.Stoelen)
-            .WithOne(s => s.Zaal)
-            .HasForeignKey(z => z.StoelID)
+        modelBuilder.Entity<Stoel>()
+            .HasOne(s => s.Zaal)
+            .WithMany(z => z.Stoelen)
+            .HasForeignKey(s => s.Zaalnummer)
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (acteur)
         modelBuilder.Entity<ActeurVoorstelling>()
-            .HasKey(av => new { av.ActeurId, av.voorstellingTitel });
+            .HasKey(av => new { av.ActeurId, av.ShowId });
 
         modelBuilder.Entity<ActeurVoorstelling>()
             .HasOne(av => av.Acteur)
@@ -116,14 +125,14 @@ public class GebruikerContext : DbContext{
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<ActeurVoorstelling>()
-            .HasOne(av => av.Voorstelling)
+            .HasOne(av => av.Show)
             .WithMany(v => v.Acteur)
-            .HasForeignKey(av => av.voorstellingTitel)
+            .HasForeignKey(av => av.ShowId)
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (kaartjeshouder)
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasKey(kh => new { kh.KlantId, kh.VoorstellingTitel });
+            .HasKey(kh => new { kh.KlantId, kh.ShowId });
 
         modelBuilder.Entity<Kaartjeshouders>()
             .HasOne(kh => kh.Klant)
@@ -132,28 +141,102 @@ public class GebruikerContext : DbContext{
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Kaartjeshouders>()
-            .HasOne(v => v.voorstelling)
+            .HasOne(v => v.Show)
             .WithMany(kh => kh.Kaartjeshouder)
-            .HasForeignKey(v => v.VoorstellingTitel)
+            .HasForeignKey(v => v.ShowId)
             .OnDelete(DeleteBehavior.SetNull);
-        
-    
-        modelBuilder.Entity<Voorstelling>().Ignore(v => v.BetrokkenPersonen);
-        modelBuilder.Entity<Voorstelling>().Ignore(v => v.Datum);
+
+
+        //modelBuilder.Entity<Show>().Ignore(v => v.Datum);
+
+
+        //bestelling - stoel
+
+        // modelBuilder.Entity<Bestelling>()
+        // .HasKey(b => new {b.BestellingId, b.Stoelen});
+
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasKey(b => new { b.StoelID, b.BestellingId, b.Datum });
+
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasOne(b => b.Stoel)
+            .WithMany(s => s.BesteldeStoelen)
+            .HasForeignKey(b => b.StoelID)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<BesteldeStoel>()
+            .HasOne(b => b.Bestelling)
+            .WithMany(b => b.BesteldeStoelen)
+            .HasForeignKey(b => b.BestellingId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        //stoel - zaal (zaal stoel bestaat al boven)
+        // modelBuilder.Entity<Stoel>()
+        // .HasKey(s => new {s.StoelID, s.Zaalnummer});
+
+        // modelBuilder.Entity<Stoel>()
+        // .HasOne(s => s.Zaal)
+        // .WithMany(z => z.Stoelen)
+        // .HasForeignKey(s => s.Zaal)
+        // .OnDelete(DeleteBehavior.SetNull);
+
+
+
+
+
+
+        // //Zaal - voorstelling (veel op veel) (Voorstellingregel)
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasKey(vr => new {vr.Zaalnummer, vr.VoorstellingTitel});
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(vr => vr.voorstelling)
+        //     .WithMany(v => v.VoorstellingRegels)
+        //     .HasForeignKey(vr => vr.voorstelling)
+        //     .OnDelete(DeleteBehavior.SetNull);
+
+        // modelBuilder.Entity<VoorstellingRegel>()
+        //     .HasOne(z => z.Zaal)
+        //     .WithMany(vr => vr.VoorstellingRegels)
+        //     .HasForeignKey(v => v.VoorstellingTitel)
+        //     .OnDelete(DeleteBehavior.SetNull);
+
+        //Groepen
+        modelBuilder.Entity<Klant>()
+            .HasOne(k => k.ArtiestGroep)
+            .WithMany(a => a.Leden)
+            .HasForeignKey(k => k.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Show>()
+            .HasOne(v => v.ArtiestGroep)
+            .WithMany(a => a.Shows)
+            .HasForeignKey(v => v.ArtiestGroepId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
-    public DbSet<Klant> Klanten {set; get;}
-    public DbSet<Medewerker> Medewerkers {set; get;}
-    public DbSet<Rol> Rollen {set; get;}
-    public DbSet<VerificatieToken> VerificatieTokens {set; get;}
-    public DbSet<AccessToken> AccessTokens {set; get;}
-    public DbSet<AuthenticatieToken> AuthenticatieTokens {set; get;}
+    public DbSet<Klant> Klanten { set; get; }
+    public DbSet<Medewerker> Medewerkers { set; get; }
+    public DbSet<Rol> Rollen { set; get; }
+    public DbSet<VerificatieToken> VerificatieTokens { set; get; }
+    public DbSet<AccessToken> AccessTokens { set; get; }
+    public DbSet<AuthenticatieToken> AuthenticatieTokens { set; get; }
 
 
     // roostersysteem
-    public DbSet<Kalender> Kalenders {set; get;}
-    public DbSet<Voorstelling> Voorstellingen {set; get;}
-    public DbSet<Zaal> Zalen {set; get;}
-    public DbSet<Stoel> Stoelen {set; get;}
-    public DbSet<Kaartjeshouders> Kaartjeshouders {set; get;}
-    public DbSet<ActeurVoorstelling> ActeurVoorstellingen {set; get;}
-}   
+    public DbSet<Kalender> Kalenders { set; get; }
+    public DbSet<Voorstelling> Voorstellingen { set; get; }
+    public DbSet<Zaal> Zalen { set; get; }
+    public DbSet<Stoel> Stoelen { set; get; }
+    public DbSet<Kaartjeshouders> Kaartjeshouders { set; get; }
+    public DbSet<ActeurVoorstelling> ActeurVoorstellingen { set; get; }
+    public DbSet<Show> Shows { get; set; }
+
+
+    //Bestelling
+    public DbSet<Bestelling> Bestellingen { get; set; }
+    public DbSet<BesteldeStoel> BesteldeStoelen { get; set; }
+
+
+    //Groepen
+    public DbSet<ArtiestGroep> ArtiestGroepen { set; get; }
+}

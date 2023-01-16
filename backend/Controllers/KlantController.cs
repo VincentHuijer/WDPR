@@ -119,7 +119,14 @@ public class KlantController : ControllerBase
         Klant klant = await GetKlantByEmailAsync(email);
         if(klant == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(klant, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
-    }   
+    }
+
+    [HttpPost("rol/by/at")]
+    public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
+        string rol = klant.RolNaam;
+        return rol;
+    }
 
     public ActionResult HandleResponse(string response){ 
         var responses = ResponseList.Responses;

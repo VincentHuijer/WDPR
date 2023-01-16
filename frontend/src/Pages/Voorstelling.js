@@ -1,242 +1,255 @@
 import Row from "../Components/Zaal/Row";
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment';
 
 import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import Seat from "../Components/Zaal/Seat";
 
 import ArtiestProfile from "../Components/ArtiestProfile";
 
 import { useAccesToken } from "../Authentication/AuthContext";
+import Loading from "../Components/Loading";
+import StoelenLoading from "../Components/StoelenLoading";
 
 export default function Voorstelling() {
-  const [zaalLayout, setZaalLayout] = useState()
-  //1 = VIP
-  //2 = GEHANDICAPT
-  //3 = EERSTERANGS
-  //4 = GESELECTEERD
-  //5 = GERESERVEERD
-  //6 = TWEEDERANGS
-  //7 = DERDERANGS
+  const { id } = useParams();
+
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const accesToken = useAccesToken();
   const [seats, setSeats] = useState([]);
 
   const [types, setTypes] = useState([])
 
+  const [kaartjes, setKaartjes] = useState([])
+
+  const [startDate, setStartDate] = useState();
+  const [allowedDates, setAllowedDate] = useState();
+
+  const [showList, setShowList] = useState([])
+  const [showId, setShowId] = useState()
+
+  const [stoelenLoading, setStoelenLoading] = useState(true)
+
+  const [lowest, setLowest] = useState(100)
+  const [highest, setHighest] = useState(-100)
+
+  const [totaalPrijs, setTotaalPrijs] = useState(0)
+
+  const [bestelLoading, setBestelLoading] = useState(false)
+
   useEffect(() => {
-    setZaalLayout(1)
+    getVoorstellingData()
   }, [])
 
+  //fetch STOEL DATA
   useEffect(() => {
-    if (zaalLayout == 1) { //240 stoelen.
-      setSeats([
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
-        [7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
-        [7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
-        [7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7,7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [6, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ]);
+
+    let showId;
+    showList.map(showLink => {
+      if (moment(showLink.datum).format("DD-MM-YYYY") == moment(startDate).format("DD-MM-YYYY")) showId = showLink.showID
+    })
+
+    if (!showId) {
+      console.log("something went wrong");
+      return
     }
 
-    else if (zaalLayout == 2) { //180 stoelen.
-      setSeats([
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ]);
+    setStoelenLoading(true)
+    setKaartjes(oldArr => [])
+    setBestelLoading(false)
+
+    fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
+
+      let seatsList = []
+      data.map(row => {
+        let seats = []
+        row.map(async seat => {
+          seats.push(seat)
+
+          await setPrice(true, seat.prijs)
+          await setPrice(false, seat.prijs)
+        })
+
+        seatsList.push(seats)
+      })
+
+      setStoelenLoading(false)
+      setSeats(seatsList)
+      setShowId(showId)
+    })
+  }, [startDate])
+
+  async function setPrice(type, price) {
+    return new Promise((resolve, reject) => {
+      if (type) {
+        if (price < lowest) {
+          setLowest(price)
+        }
+      } else {
+        if (price > highest) {
+          setHighest(price)
+        }
+      }
+      resolve(true)
+    })
+  }
+
+
+  async function getVoorstellingData() {
+    await fetch(`https://localhost:7253/api/show/GetShows/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 404) return
+
+        let showLinks = data.shows.map(show => {
+          return {
+            "datum": show.datum,
+            "showID": show.showId
+          }
+
+        })
+
+        setShowList(showLinks)
+
+        let allowedDates = []
+
+        data.shows.sort(function(a,b){return new Date(a.datum).getTime() - new Date(b.datum).getTime()});
+        data.shows.map(show => {
+          let newDate =  moment(new Date(show.datum)).format("DD-MM-YYYY")
+          allowedDates.push(newDate.toString())
+        })
+
+        setData(data)
+        setStartDate(data.shows[0].datum)
+        setStartDate(new Date(data.shows[0].datum))
+        setAllowedDate(allowedDates)
+        setLoading(false)
+      })
+  }
+
+  function Bestel() {
+    if (accesToken == "none") {
+      window.location.href = "/login";
     }
 
-    else if (zaalLayout == 3) { //90 stoelen.
-      setSeats([
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ]);
-    }
-    else if (zaalLayout == 4) { //440 stoelen.
-      setSeats([
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3],
-      ]);
+    let bestelBody = {
+      "ShowId": showId,
+      "StoelIds": kaartjes.map(kaart => { return kaart.stoelID.toString() }),
+      "AccessToken": accesToken
     }
 
-    else if (zaalLayout == 5) { //30 stoelen. ruimte layout voor kleine voorstellingen/workshops
-      setSeats([
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-      ])
-    }
+    fetch("https://localhost:7253/api/Bestelling/nieuwebestelling", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept-Type": "application/json"
+      },
+      body: JSON.stringify(bestelBody)
+    }).then(response => {
+      console.log(response.text);
+      window.location.href = "/winkelmand"
+    })
+    setBestelLoading(true)
+  }
 
-    else { //geen zaal. Mockup
-      setSeats([
-        [7, 7, 6, 6, 6, 6, 7, 7],
-        [7, 6, 6, 3, 3, 3, 6, 7],
-        [3, 3, 3, 0, 3, 3, 0, 0],
-        [3, 0, 0, 0, 0, 0, 3, 3],
-        [2, 5, 3, 3, 5, 3, 3, 2],
-        [2, 1, 1, 1, 1, 1, 2],
-        [1, 1, 5, 5, 5, 1, 1],
-      ]);
-    }
-  }, [zaalLayout]);
 
   useEffect(() => {
     let newArr = []
 
     seats.map(row => {
-      // console.log([...new Set(row)]);
       newArr = [...newArr, ...[...new Set(row)]]
     })
 
     setTypes([...new Set(newArr)])
   }, [seats])
 
+  useEffect(() => {
+    let count = 0;
+    kaartjes.map(kaart => {
+      count += kaart.prijs
+    })
+    setTotaalPrijs(count)
+  }, [kaartjes])
 
-  function addToCart() {
-    if (accesToken == "none") {
-      window.location.href = "/login";
-    }
+
+  function addStoel(stoelData) {
+    setKaartjes(oldArray => [...oldArray, stoelData])
   }
 
-  //FETCH THE MATRIX AND SAVE IT WITH THE setSeats FUNCTION
+  function deleteStoel(stoelData) {
+    let id = stoelData.stoelID
+    let arr = kaartjes.filter(kaart => kaart.stoelID != id)
+    setKaartjes([...arr])
+  }
 
   return (
     <div className="w-full mt-40">
-      <div className="w-11/12 m-auto">
-        <div className="flex justify-between h-1/5">
-          <div className="w-full xl:w-2/5 h-fit">
+      {!loading ? <div className="w-11/12 m-auto">
+        <section className="flex justify-between h-1/7">
+          <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <p className="text-4xl font-extrabold">SOME VOORSTELLING NAAM</p>
+              <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
-                20-12-2022 tot 03-04-2023
+                {allowedDates[0]} tot {allowedDates[allowedDates.length - 1]}
               </p>
             </div>
 
             <div className="mt-3">
               <p className="text-black font-bold">Leeftijd</p>
-              <p className="text-appLightBlack font-bold">7+</p>
+              <p className="text-appLightBlack font-bold">{data.voorstelling.leeftijd}+</p>
             </div>
 
             <div className="mt-2">
               <p className="text-black font-bold">Prijs</p>
-              <p className="text-appLightBlack font-bold">€ 55, -</p>
+              {!stoelenLoading ? <p className="text-appLightBlack font-bold">€{lowest} - €{highest}</p> : <p className="text-appLightBlack font-bold">Prijs Laden...</p>}
             </div>
 
-            <div className="mt-4">
+            <div className="mt-6">
               <p className="text-black font-bold">Beschrijving</p>
               <p className="text-appLightBlack font-bold">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore.
+                {data.voorstelling.omschrijving}
               </p>
             </div>
-
-            {/* {!bestelPopup && <div onClick={() => setbestelPopup(true)} className='hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4'>
-                            KAARTJES BESTELLEN
-                        </div>} */}
-
-            {/* ONLY ENABLE THIS WHEN "KAARTJES BESTELLEN" HAS BEEN CLICKED */}
-
-
           </div>
 
           <div className="hidden xl:block">
             <div className="flex flex-col gap-8 items-end  overflow-hidden">
               <img
                 className="border-2 border-black h-96 bg-black rounded-2xl"
-                src="/media/AladinShow.png"
-                alt="AladinFoto"
+                src={data.voorstelling.image}
+                alt="Aladin Poster Disney"
               />
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="mt-8">
+        <section className="mt-8">
           <div>
-            <p className="text-4xl font-extrabold">KAARTJES BESTELLEN</p>
+            <h2 className="text-4xl font-extrabold">KAARTJES BESTELLEN</h2>
           </div>
 
-          <div className="flex gap-8 items-center mt-4">
-            <p className="font-bold text-lg text-black">
+          <div className="flex gap-8 items-center mt-6">
+            <p className="font-bold text-lg text-black w-56">
               SELECTEER UW DATUM
             </p>
-            <input
-              className="border-2 border-appSuperLightWhite bg-appSuperLightWhite text-appLightBlack px-3 py-1 rounded-xl font-extrabold"
-              type={"date"}
-            />
+            <div>
+              <DatePicker
+                className="bg-appSuperLightWhite h-9 text-center rounded-2xl"
+                filterDate={(d) => allowedDates.includes(moment(d).format('DD-MM-YYYY'))}
+                placeholderText={"DD-MM-YYYY"}
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+            </div>
           </div>
 
-          <div className="mt-4">
-            <div>
-              <p className="font-bold text-lg text-black">
-                KIES UW PLEKKEN (2x Tickets)
-              </p>
-            </div>
+          <div className="mt-6">
 
-            <div className="w-96 flex flex-col lg:flex-row lg:mt-4 lg:mb-5 gap-2 pointer-events-none">
-              {types.includes(1) && <div className="flex min-w-max items-center gap-2 ">
-                <Seat type={1} />
-                <p className="font-bold">= VIP</p>
-              </div>}
-
-              {types.includes(2) && <div className="flex min-w-max items-center gap-2">
-                <Seat type={2} />
-                <p className="font-bold">= GEHANDICAPT</p>
-              </div>}
-
+            {!stoelenLoading && <div className="w-96 flex flex-col lg:flex-row lg:mt-6 lg:mb-7 gap-2 pointer-events-none">
               {types.includes(3) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={3} />
                 <p className="font-bold">= 1ᵉ RANG</p>
@@ -244,57 +257,75 @@ export default function Voorstelling() {
 
               {types.includes(4) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={4} />
-                <p className="font-bold">= GESELECTEERD</p>
+                <p className="font-bold">= 2ᵉ RANG</p>
               </div>}
 
               {types.includes(5) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={5} />
-                <p className="font-bold">= GERESERVEERD</p>
+                <p className="font-bold">= 3ᵉ RANG</p>
+              </div>}
+
+              {types.includes(2) && <div className="flex min-w-max items-center gap-2">
+                <Seat type={2} />
+                <p className="font-bold">= GEHANDICAPT</p>
               </div>}
 
               {types.includes(6) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={6} />
-                <p className="font-bold">= 2ᵉ RANG</p>
+                <p className="font-bold">= GESELECTEERD</p>
               </div>}
 
               {types.includes(7) && <div className="flex min-w-max items-center gap-2">
                 <Seat type={7} />
-                <p className="font-bold">= 3ᵉ RANG</p>
+                <p className="font-bold">= GERESERVEERD</p>
               </div>}
-            </div>
+            </div>}
 
             {/* ZAAL MATRIX */}
-            <div className="mt-4 w-full overflow-x-scroll md:overflow-x-hidden md:w-fit flex flex-col h-min gap-8 items-start">
+            <div className={"mt-6 w-full md:w-fit flex flex-col h-min gap-8 items-start " + (!stoelenLoading && "overflow-x-scroll md:overflow-x-hidden")}>
               <div className="flex flex-col w-fit gap-2 text-center">
-                {seats.map((row, i) => {
-                  return <Row bg={i % 2 == 0} key={Math.random()} nmr={i} seats={row} />;
-                })}
+                {!stoelenLoading ? <>
+                  {seats.map((row, i) => {
+                    return <Row addStoel={addStoel} deleteStoel={deleteStoel} bg={i % 2 == 0} key={`${i}-${showId}`} nmr={i} seats={row} />;
+                  })}
+                </> : <StoelenLoading />}
 
                 <div className="flex w-full justify-center">
-                  <p className="ml-20 mt-2 font-bold text-appLightBlack">
+                  {!stoelenLoading && <p className="ml-20 mt-2 font-bold text-appLightBlack">
                     PODIUM
-                  </p>
+                  </p>}
                 </div>
               </div>
             </div>
+
+            {kaartjes.length > 0 && <div className="flex flex-col gap-2">
+              <p className="font-bold text-2xl mt-4">Tickets:</p>
+              {kaartjes.map(kaart => {
+                return (
+                  <div className="bg-appLight rounded-full text-center py-1 px-3 w-fit" key={`Kaartje: Stoel ${kaart.x + 1} Rij ${kaart.y + 1} ${Math.random()}`}>
+                    <p>Prijs: <b>€{kaart.prijs}</b> Stoel: <b>{kaart.x + 1}</b> Rij: <b>{kaart.y + 1}</b></p>
+                  </div>
+                )
+              })}
+
+              <p><span className="font-bold">Totaal:</span> €{totaalPrijs}</p>
+            </div>}
           </div>
 
-          <div
-            onClick={() => {
-              addToCart();
-            }}
-            className="hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-4"
+          {(!stoelenLoading && kaartjes.length > 0) && <button
+            onClick={() => { if (!bestelLoading) Bestel() }}
+            className={"hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6 " + (bestelLoading && "opacity-50 hover:cursor-wait")}
           >
             TOEVOEGEN AAN WINKELMAND
-          </div>
-        </div>
+          </button>}
+        </section>
 
-        <div className="mt-20 h-fit">
+        <section className="mt-20 h-fit">
           <div>
-            <p className="text-4xl font-extrabold">ARTIESTEN</p>
+            <h2 className="text-4xl font-extrabold">ARTIESTEN</h2>
           </div>
 
-          <div className="flex flex-wrap justify-between md:justify-start gap-y-4 md:gap-12 w-full mt-4">
+          <div className="flex flex-wrap justify-between md:justify-start gap-y-6 md:gap-12 w-full mt-6">
             <ArtiestProfile
               name={"Will Smith"}
               picture={"/media/WillSmith.png"}
@@ -326,8 +357,8 @@ export default function Voorstelling() {
               role={"Bijfiguur"}
             />
           </div>
-        </div>
-      </div>
+        </section>
+      </div> : <Loading text={"VOORSTELLING LADEN"} />}
     </div>
   );
 }

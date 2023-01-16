@@ -86,7 +86,7 @@ public class KlantController : ControllerBase
         return klanten;
     }
 
-    [HttpGet("klant/by/at")] //Get klant by accesstoken
+    [HttpPost("klant/by/at")] //Get klant by accesstoken
     public async Task<ActionResult<KlantInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
         KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),

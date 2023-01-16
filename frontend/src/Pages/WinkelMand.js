@@ -41,7 +41,6 @@ export default function WinkelMand() {
             })
 
             setTotaalPrijs(total)
-
             setBestelObject(data)
         })
     }

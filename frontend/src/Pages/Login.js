@@ -50,9 +50,11 @@ export default function Login() {
 
         if (!email || !wachtwoord) return;
 
+        let hashedPassword = await sha256(wachtwoord)
+
         let loginBody = {
             "Email": email.toLowerCase(),
-            "Wachtwoord": wachtwoord
+            "Wachtwoord": hashedPassword
         }
 
 
@@ -103,6 +105,17 @@ export default function Login() {
             setErrorMessage(errorMessage)
         });
     };
+
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);                    
+    
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+    
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
 
 
     return (

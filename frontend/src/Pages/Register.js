@@ -6,6 +6,7 @@ import CheckGegevens from "../scripts/CheckGegevens";
 import useSound from 'use-sound'
 import mySound from '../mario.mp3'
 
+
 export default function Register() {
     const [playSound] = useSound(mySound)
 
@@ -33,9 +34,11 @@ export default function Register() {
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 
 
+        let hashedPassword = await sha256(password)
+
         let loginBody = {
             "Email": email.toLowerCase(),
-            "Wachtwoord": password,
+            "Wachtwoord": hashedPassword,
             "Voornaam": firstName,
             "Achternaam": lastName,
         }
@@ -58,6 +61,21 @@ export default function Register() {
             setErrorMessage(errorMessage)
         });
 
+    }
+
+    async function sha256(message) {
+        // encode as UTF-8
+        const msgBuffer = new TextEncoder().encode(message);                    
+    
+        // hash the message
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    
+        // convert ArrayBuffer to Array
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+    
+        // convert bytes to hex string                  
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
     }
 
     return (

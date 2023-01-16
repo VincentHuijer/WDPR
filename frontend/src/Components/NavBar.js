@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Link
 } from 'react-router-dom';
@@ -13,6 +13,40 @@ export function NavBar() {
     const [openSettings, setOpenSettings] = useState()
 
     const [openMobileNav, setOpenMobileNav] = useState(false)
+
+    const [userData, setUserData] = useState()
+
+    const [mijnAccountTab, setMijnAccountTab] = useState(false)
+
+    useEffect(() => {
+        getUserData()
+    }, [accesToken])
+
+    async function getUserData() {
+
+        if (!accesToken) return;
+        if (accesToken == "none") return;
+
+
+        await fetch("https://localhost:7253/api/klant/klant/by/at", {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "AccessToken": accesToken
+            }),
+        }).then(response => response.json()).then(data => {
+            console.log(data);
+            setUserData(data)
+        })
+    }
+
+    async function overalUitloggen(){
+        
+    }
 
     return (
         <header className='w-full bg-white pt-2 fixed top-0 z-50' >
@@ -44,13 +78,23 @@ export function NavBar() {
                                     </svg>
                                     {openSettings && <div className='absolute mt-3 py-2 pb-4 bg-white border-black border-2 rounded-2xl w-72 float-right right-0'>
                                         <div className='text-left px-4'>
-                                            <p className='font-bold'>Welkom GEBRUIKERNAAM</p>
+                                            <p className='font-bold'>Welkom {userData.voornaam} {userData.achternaam}</p>
                                         </div>
 
-                                        <div className='flex flex-col divide-y-2 px-4 mt-4 divide-black'>
-                                            <p>Mijn Account</p>
-                                            <p>Bestellingen</p>
-                                            <p>Winkelmand</p>
+                                        <div className='flex flex-col divide-y-2 px-4 mt-4 divide-black font-semibold'>
+                                            <div onClick={() => { setMijnAccountTab(!mijnAccountTab) }}>
+                                                <p className='cursor-pointer'>Mijn Account</p>
+                                                {mijnAccountTab && <div className='text-sm'>
+                                                    <Link to="/wachtwoordreset" className='cursor-pointer'>Wachtwoord Resetten</Link>
+                                                    <br />
+                                                    <p onClick={() => {overalUitloggen()}} className='cursor-pointer'>Overal Uitloggen</p>
+                                                </div>}
+                                            </div>
+
+                                            {userData.rolNaam == "Admin" && <Link className='cursor-pointer' to="/admin">Admin Page</Link>}
+                                            {userData.rolNaam == "Artiest" && <Link className='cursor-pointer' to="/mijngroep">Mijn Groep</Link>}
+                                            <Link className='cursor-pointer' to="/bestellingen">Bestellingen</Link>
+                                            <Link className='cursor-pointer' to="/winkelmand">Winkelmand</Link>
                                         </div>
 
                                         <div className='px-4 text-center mt-6'>

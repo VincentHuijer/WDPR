@@ -58,7 +58,7 @@ public class MedewerkerController : ControllerBase
         return responses;
     }
 
-    [HttpPost("klant/by/at")] //Get medewerkerinfo by accesstoken
+    [HttpPost("medewerker/by/at")] //Get medewerkerinfo by accesstoken
     public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
         Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
         MedewerkerInfo medewerkerInfo = new MedewerkerInfo(){TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete, IsBlocked = medewerker.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),

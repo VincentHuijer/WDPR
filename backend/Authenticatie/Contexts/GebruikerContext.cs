@@ -213,6 +213,13 @@ public class GebruikerContext : DbContext
             .WithMany(a => a.Shows)
             .HasForeignKey(v => v.ArtiestGroepId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        //Donatie
+        modelBuilder.Entity<Donatie>()
+            .HasOne(d => d.Klant)
+            .WithMany(k => k.Donaties)
+            .HasForeignKey(d => d.KlantId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
     public DbSet<Klant> Klanten { set; get; }
     public DbSet<Medewerker> Medewerkers { set; get; }
@@ -239,4 +246,7 @@ public class GebruikerContext : DbContext
 
     //Groepen
     public DbSet<ArtiestGroep> ArtiestGroepen { set; get; }
+
+    //Donaties
+    public DbSet<Donatie> Donaties {set; get;}
 }

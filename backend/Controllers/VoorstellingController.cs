@@ -40,6 +40,31 @@ public class VoorstellingController : ControllerBase
         return voorstellingen;
     }
 
+    [HttpGet("getvoorstellingen/order")]
+    public async Task<List<Voorstelling>> GetVoorstellingen([FromQuery] string order){
+        List<Voorstelling> voorstellingen = await _context.Voorstellingen.ToListAsync();
+        if(voorstellingen.Count() == 0) return voorstellingen;
+        if(order == "leeftijd") voorstellingen = voorstellingen.OrderBy(v => v.leeftijd).ToList();
+        else if(order == "prijs"){
+        List<KeyValuePair<double, Voorstelling>> VoorstellingPair = new List<KeyValuePair<double, Voorstelling>>();
+            foreach(var voorstelling in voorstellingen){
+                List<Show> shows = await _context.Shows.Where(s => s.VoorstellingId == voorstelling.VoorstellingId).ToListAsync();
+                double lowest = 999;
+                foreach(var show in shows){
+                    double prijs = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).MinAsync(s => s.Prijs);
+                    if(prijs < lowest) lowest = prijs;
+                }
+                VoorstellingPair.Add(new KeyValuePair<double, Voorstelling>(lowest, voorstelling));
+            }
+            VoorstellingPair.OrderBy(v => v.Key);
+            List<Voorstelling> toReturn = new List<Voorstelling>();
+            foreach(var item in VoorstellingPair) toReturn.Add(item.Value);
+            voorstellingen = toReturn;
+            voorstellingen.Reverse();
+        }
+        return voorstellingen;
+    }
+
     [HttpGet("GetVoorstellingen")]
     public async Task<List<Voorstelling>> GetVoorstellingen()
     {

@@ -40,4 +40,6 @@ public class Klant{
     public int? ArtiestGroepId {set; get;}
     [JsonIgnore]
     public List<Bestelling> Bestellingen {set; get;}
+    [JsonIgnore]
+    public List<Donatie> Donaties {set; get;}
 }

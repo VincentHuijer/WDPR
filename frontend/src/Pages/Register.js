@@ -24,12 +24,12 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let checkResponse = CheckGegevens(firstName, lastName)
+        let checkResponse = CheckGegevens(firstName, lastName, password, passwordAgain)
 
-        if(checkResponse.split("").length > 0){
+        if (checkResponse !== true ) {
             console.log("Check response: " + checkResponse);
-            return
-        } 
+            return;
+        }
 
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 
@@ -41,7 +41,7 @@ export default function Register() {
             "Wachtwoord": hashedPassword,
             "Voornaam": firstName,
             "Achternaam": lastName,
-        }
+        } 
 
         await fetch("https://localhost:7253/api/klant/registreer", {
             method: 'POST',

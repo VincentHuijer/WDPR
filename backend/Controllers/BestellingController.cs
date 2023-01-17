@@ -21,6 +21,38 @@ public class BestellingController : ControllerBase
         return bestellingen;
     }
 
+    [HttpPost("getbestelling/by/at")]
+    public async Task<ActionResult<List<ShowStoelen>>> GetBestellingenByAccessToken([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken); 
+        if(klant == null) return NotFound();
+        List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).ToListAsync();
+        if(bestellingen.Count() == 0) return NotFound();
+        List<ShowStoelen> showStoelenList = new List<ShowStoelen>(); //Object wat ik return met de benodigde data voor frontend
+        foreach(var bestelling in bestellingen){
+            List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync(); //Alle bestelde stoelen die bij deze bestelling horen.
+            List<Show> shows = new List<Show>(); //Alle shows die in de bestelling zitten
+            List<Stoel> stoelen = new List<Stoel>(); //Alle stoelen die in de bestelling zitten
+            foreach(var besteldeStoel in besteldeStoelen){
+                Show show = await _context.Shows.FirstAsync(s => s.Datum == besteldeStoel.Datum);
+                shows.Add(show);
+                Stoel stoel = await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID);
+                stoelen.Add(stoel);
+            }
+            shows = shows.Distinct().ToList(); //Duplicate shows verwijderen
+
+            foreach(var show in shows){
+                Voorstelling voorstelling = await _context.Voorstellingen.FirstAsync(v => v.VoorstellingId == show.VoorstellingId);
+                List<Stoel> StoelenToAddToShowStoelen = new List<Stoel>();
+                foreach(var besteldeStoel in besteldeStoelen){
+                    if(besteldeStoel.Datum == show.Datum) StoelenToAddToShowStoelen.Add(await _context.Stoelen.FirstAsync(s => s.StoelID == besteldeStoel.StoelID)); //Alle stoelen die specifiek bij deze show horen
+                }
+                ShowStoelen showStoelen = new ShowStoelen(){ShowId = show.ShowId, ShowNaam = voorstelling.VoorstellingTitel, Stoelen = StoelenToAddToShowStoelen, Datum = show.Datum, ShowImage = voorstelling.Image}; //Info over show met naam x, en aantal stoelen x, info over de stoelen
+                showStoelenList.Add(showStoelen);
+            }
+        }
+        return showStoelenList;
+    }
+
     [HttpPost("nieuwebestelling")]
     public async Task<ActionResult<string>> NieuweBestelling([FromBody] BestelInfo bestelInfo){
 
@@ -122,7 +154,14 @@ public class BestellingController : ControllerBase
             return BadRequest();
         }
     }
-
+    public async Task<Klant> GetKlantByAccessToken(string AccessToken){
+        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
+        if(accessToken == null) return null;
+        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessToken == accessToken);
+        if(k == null) return null; 
+        else if(accessToken.VerloopDatum < DateTime.Now) return null;
+        return k;
+    }
 }
 
 public class BestellingBody

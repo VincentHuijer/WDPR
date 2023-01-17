@@ -58,6 +58,14 @@ public class MedewerkerController : ControllerBase
         return responses;
     }
 
+    [HttpPost("klant/by/at")] //Get medewerkerinfo by accesstoken
+    public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
+        Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
+        MedewerkerInfo medewerkerInfo = new MedewerkerInfo(){TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete, IsBlocked = medewerker.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),
+        Voornaam = medewerker.Voornaam, Achternaam = medewerker.Achternaam, Email = medewerker.Email, Afbeelding = medewerker.Afbeelding, GeboorteDatum = medewerker.GeboorteDatum, RolNaam = medewerker.RolNaam};
+        return medewerkerInfo;
+    }
+
     [HttpPost("use2fa")]
     public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey)
     { //Nog fixen dat hij deze 2 params accepteert.
@@ -148,4 +156,10 @@ public class MedewerkerInfo
     public bool TwoFactorAuthSetupComplete { set; get; }
     public bool IsBlocked { set; get; }
     public AccessToken AccessToken { set; get; }
+    public string Voornaam {set; get;}
+    public string Achternaam {set; get;}
+    public string Email {set; get;}
+    public string Afbeelding {set; get;}
+    public DateTime GeboorteDatum {set; get;}
+    public string RolNaam {set; get;}
 }

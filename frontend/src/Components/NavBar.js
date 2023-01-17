@@ -27,8 +27,16 @@ export function NavBar() {
         if (!accesToken) return;
         if (accesToken == "none") return;
 
+        try {
+            await fetchData("https://localhost:7253/api/klant/klant/by/at")
+        } catch {
+            await fetchData("https://localhost:7253/api/medewerker/medewerker/by/at")
+        }
+    }
 
-        await fetch("https://localhost:7253/api/klant/klant/by/at", {
+    async function fetchData(url) {
+        console.log(url);
+        await fetch(url, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -44,8 +52,8 @@ export function NavBar() {
         })
     }
 
-    async function overalUitloggen(){
-        
+    async function overalUitloggen() {
+
     }
 
     return (
@@ -87,14 +95,19 @@ export function NavBar() {
                                                 {mijnAccountTab && <div className='text-sm'>
                                                     <Link to="/wachtwoordreset" className='cursor-pointer'>Wachtwoord Resetten</Link>
                                                     <br />
-                                                    <p onClick={() => {overalUitloggen()}} className='cursor-pointer'>Overal Uitloggen</p>
+                                                    <p onClick={() => { overalUitloggen() }} className='cursor-pointer'>Overal Uitloggen</p>
                                                 </div>}
                                             </div>
 
                                             {userData.rolNaam == "Admin" && <Link className='cursor-pointer' to="/admin">Admin Page</Link>}
                                             {userData.rolNaam == "Artiest" && <Link className='cursor-pointer' to="/mijngroep">Mijn Groep</Link>}
-                                            <Link className='cursor-pointer' to="/bestellingen">Bestellingen</Link>
-                                            <Link className='cursor-pointer' to="/winkelmand">Winkelmand</Link>
+                                            {userData.rolNaam == "Medewerker" && <Link className='cursor-pointer' to="/mijngroep">Medewerker Portaal</Link>}
+
+                                            {["Klant", "Artiest", "Donateur"].includes(userData.rolNaam) &&
+                                                <>
+                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/user/bestellingen">Bestellingen</Link>
+                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/winkelmand">Winkelmand</Link>
+                                                </>}
                                         </div>
 
                                         <div className='px-4 text-center mt-6'>

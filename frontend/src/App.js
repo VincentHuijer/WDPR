@@ -18,6 +18,10 @@ import Register from './Pages/Register';
 import Betalen from './Pages/Betalen';
 import { AuthProvider } from './Authentication/AuthContext';
 import Verify from './Pages/auth/Verify';
+import Bedankt from './Pages/Bedankt';
+import Bestellingen from './Pages/user/Bestellingen';
+import FourOOOFour from './Components/FourOOOFour';
+import Ticket from './Pages/Ticket';
 
 export default function App() {
 
@@ -27,23 +31,38 @@ export default function App() {
             <div className='flex flex-col '>
 
                 <Router>
-                    <NavBar />
+
 
                     <Routes>
-                        <Route exact path='/' element={<HomePage />} />
-                        <Route path='/overons' element={<OverOns />} />
-                        <Route path='/voorstelling/:id' element={<Voorstelling />} />
-                        <Route path='/winkelmand' element={<WinkelMand />} />
-                        <Route path='/voorstellingen' element={<Voorstellingen />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/register' element={<Register />} />
-                        <Route path='/verify' element={<Verify />} />
-                        <Route path='betalen' element={<Betalen />} />
+                        <Route exact path='/' element={<Wrapper><HomePage /></Wrapper>} />
+                        <Route path='/overons' element={<Wrapper><OverOns /></Wrapper>} />
+                        <Route path='/voorstelling/:id' element={<Wrapper><Voorstelling /></Wrapper>} />
+                        <Route path='/winkelmand' element={<Wrapper><WinkelMand /> </Wrapper>} />
+                        <Route path='/voorstellingen' element={<Wrapper><Voorstellingen /> </Wrapper>} />
+                        <Route path='/login' element={<Wrapper><Login /> </Wrapper>} />
+                        <Route path='/register' element={<Wrapper><Register /> </Wrapper>} />
+                        <Route path='/verify' element={<Wrapper><Verify /> </Wrapper>} />
+                        <Route path='/betalen' element={<Wrapper><Betalen /> </Wrapper>} />
+                        <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
+
+                        <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
+
+                        <Route path='/ticket/:data' element={<Ticket />} />
+                        <Route path='*' element={<FourOOOFour />} />
                     </Routes>
 
-                    <Footer />
                 </Router>
             </div>
         </AuthProvider>
+    )
+}
+
+const Wrapper = ({ children }) => {
+    return (
+        <>
+            <NavBar />
+            {children}
+            <Footer />
+        </>
     )
 }

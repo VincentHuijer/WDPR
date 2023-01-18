@@ -89,7 +89,7 @@ public class VoorstellingController : ControllerBase
     }
 
     [HttpPost("VerwijderVoorstelling/{id}")]
-    public async Task<ActionResult> VerwijderVoorstellingDatum(int id)
+    public async Task<ActionResult> VerwijderVoorstelling(int id)
     {
         Voorstelling voorstelling = _context.Voorstellingen.Find(id);
         _context.Voorstellingen.Remove(voorstelling);

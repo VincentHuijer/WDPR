@@ -59,10 +59,21 @@ public class MedewerkerController : ControllerBase
     }
 
     [HttpPost("medewerker/by/at")] //Get medewerkerinfo by accesstoken
-    public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
+    public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject)
+    {
         Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
-        MedewerkerInfo medewerkerInfo = new MedewerkerInfo(){TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete, IsBlocked = medewerker.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),
-        Voornaam = medewerker.Voornaam, Achternaam = medewerker.Achternaam, Email = medewerker.Email, Afbeelding = medewerker.Afbeelding, GeboorteDatum = medewerker.GeboorteDatum, RolNaam = medewerker.RolNaam};
+        MedewerkerInfo medewerkerInfo = new MedewerkerInfo()
+        {
+            TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
+            IsBlocked = medewerker.IsBlocked,
+            AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),
+            Voornaam = medewerker.Voornaam,
+            Achternaam = medewerker.Achternaam,
+            Email = medewerker.Email,
+            Afbeelding = medewerker.Afbeelding,
+            GeboorteDatum = medewerker.GeboorteDatum,
+            RolNaam = medewerker.RolNaam
+        };
         return medewerkerInfo;
     }
 
@@ -95,21 +106,24 @@ public class MedewerkerController : ControllerBase
     }
 
     [HttpPost("request/passwordreset/{email}")]
-    public async Task<ActionResult> InitiatePasswordReset(string email){
+    public async Task<ActionResult> InitiatePasswordReset(string email)
+    {
         Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
-        if(medewerker == null) return BadRequest();
+        if (medewerker == null) return BadRequest();
         return HandleResponse(await _service.InitiatePasswordReset(medewerker, _context));
     }
 
     [HttpPost("complete/passwordreset/{email}")]
-    public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email){
+    public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email)
+    {
         Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
-        if(medewerker == null) return BadRequest();
+        if (medewerker == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
-    } 
-    
+    }
+
     [HttpPost("rol/by/at")]
-    public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject){
+    public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject)
+    {
         Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
         string rol = medewerker.RolNaam;
         return rol;
@@ -149,40 +163,41 @@ public class MedewerkerController : ControllerBase
         return m;
     }
 
-    [HttpPost("AddMedewerker")]
-    public async Task<ActionResult> AddMedewerker([FromBody] MedewerkerInfo nieuweMedewerker)
+    //     [HttpPost("AddMedewerker")]
+    //     public async Task<ActionResult> AddMedewerker([FromBody] nieuweMedewerker nieuweMedewerker)
+    //     {
+    //         Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord);
+    //         _context.Medewerkers.Add(medewerker);
+    //         if (await _context.SaveChangesAsync() > 0)
+    //         {
+    //             return Ok();
+
+    //         }
+    //         else
+    //         {
+    //             return BadRequest();
+    //         }
+    //     }
+    // }
+
+    // public class nieuweMedewerker
+    // {
+    //     public string Voornaam { set; get; }
+    //     public string Achternaam { set; get; }
+    //     public string Email { set; get; }
+    //     public string Wachtwoord { set; get; }
+    // }
+
+    public class MedewerkerInfo
     {
-        Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord, nieuweMedewerker.Functie);
-        _context.Medewerkers.Add(medewerker);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
+        public bool TwoFactorAuthSetupComplete { set; get; }
+        public bool IsBlocked { set; get; }
+        public AccessToken AccessToken { set; get; }
+        public string Voornaam { set; get; }
+        public string Achternaam { set; get; }
+        public string Email { set; get; }
+        public string Afbeelding { set; get; }
+        public DateTime GeboorteDatum { set; get; }
+        public string RolNaam { set; get; }
     }
-}
-
-public class nieuweMedewerker
-{
-    public string Voornaam { set; get; }
-    public string Achternaam { set; get; }
-    public string Email { set; get; }
-    public string Wachtwoord { set; get; }
-    public string Functie { set; get; }
-}
-
-public class MedewerkerInfo
-{
-    public bool TwoFactorAuthSetupComplete { set; get; }
-    public bool IsBlocked { set; get; }
-    public AccessToken AccessToken { set; get; }
-    public string Voornaam {set; get;}
-    public string Achternaam {set; get;}
-    public string Email {set; get;}
-    public string Afbeelding {set; get;}
-    public DateTime GeboorteDatum {set; get;}
-    public string RolNaam {set; get;}
 }

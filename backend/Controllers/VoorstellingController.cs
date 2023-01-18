@@ -22,53 +22,32 @@ public class VoorstellingController : ControllerBase
         return _printBestelling.ticketPrinten(bestellinginformatie);
     }
 
-    [HttpGet("GetVoorstellingen/leeftijd/{age}")]
-    public async Task<List<Voorstelling>> GetVoorstellingen(int age, [FromQuery] string sortOrder = "ascending")
+    [HttpGet("getvoorstellingen/leeftijd/{age}")]
+    public async Task<ActionResult<List<Voorstelling>>> GetVoorstellingenByAge(int age, [FromQuery] string? order)
     {
         List<Voorstelling> voorstellingen = await _context.Voorstellingen
                                            .Where(v => v.leeftijd <= age)
                                            .ToListAsync();
 
-        if (sortOrder == "ascending")
-        {
-            voorstellingen = voorstellingen.OrderBy(v => v.leeftijd).ToList();
-        }
-        else if (sortOrder == "descending")
-        {
-            voorstellingen = voorstellingen.OrderByDescending(v => v.leeftijd).ToList();
-        }
-        return voorstellingen;
+        if(order == null || (order.ToLower() != "prijs" && order.ToLower() != "leeftijd")) return voorstellingen;
+        if(order == "prijs" || order == "leeftijd") return voorstellingen = await OrderVoorstellingen(voorstellingen, order);
+        return StatusCode(500);
     }
 
-    [HttpGet("getvoorstellingen/order")]
+    [HttpGet("getvoorstellingen/titel/{titel}")]
+    public async Task<ActionResult<List<Voorstelling>>> GetVoorstellingenByTitel(string titel, [FromQuery] string? order){
+        List<Voorstelling> voorstellingen = await _context.Voorstellingen.Where(v => (v.VoorstellingTitel.ToLower()).Contains(titel.ToLower())).ToListAsync();
+        if(order == null || (order.ToLower() != "prijs" && order.ToLower() != "leeftijd")) return voorstellingen;
+        if(order.ToLower() == "prijs" || order.ToLower() == "leeftijd") return await OrderVoorstellingen(voorstellingen, order);
+        return StatusCode(500);    
+    }
+
+    [HttpGet("getvoorstellingen")]
     public async Task<List<Voorstelling>> GetVoorstellingen([FromQuery] string order){
         List<Voorstelling> voorstellingen = await _context.Voorstellingen.ToListAsync();
+        if(order == null || (order.ToLower() != "prijs" && order.ToLower() != "leeftijd")) return voorstellingen;
         if(voorstellingen.Count() == 0) return voorstellingen;
-        if(order == "leeftijd") voorstellingen = voorstellingen.OrderBy(v => v.leeftijd).ToList();
-        else if(order == "prijs"){
-        List<KeyValuePair<double, Voorstelling>> VoorstellingPair = new List<KeyValuePair<double, Voorstelling>>();
-            foreach(var voorstelling in voorstellingen){
-                List<Show> shows = await _context.Shows.Where(s => s.VoorstellingId == voorstelling.VoorstellingId).ToListAsync();
-                double lowest = 999;
-                foreach(var show in shows){
-                    double prijs = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).MinAsync(s => s.Prijs);
-                    if(prijs < lowest) lowest = prijs;
-                }
-                VoorstellingPair.Add(new KeyValuePair<double, Voorstelling>(lowest, voorstelling));
-            }
-            VoorstellingPair.OrderBy(v => v.Key);
-            List<Voorstelling> toReturn = new List<Voorstelling>();
-            foreach(var item in VoorstellingPair) toReturn.Add(item.Value);
-            voorstellingen = toReturn;
-            voorstellingen.Reverse();
-        }
-        return voorstellingen;
-    }
-
-    [HttpGet("GetVoorstellingen")]
-    public async Task<List<Voorstelling>> GetVoorstellingen()
-    {
-        List<Voorstelling> voorstellingen = await _context.Voorstellingen.ToListAsync();
+        voorstellingen = await OrderVoorstellingen(voorstellingen, order);
         return voorstellingen;
     }
 
@@ -121,6 +100,28 @@ public class VoorstellingController : ControllerBase
         {
             return BadRequest();
         }
+    }
+
+    public async Task<List<Voorstelling>> OrderVoorstellingen(List<Voorstelling> voorstellingen, string order){
+        if(order == "leeftijd") voorstellingen = voorstellingen.OrderBy(v => v.leeftijd).ToList();
+        else if(order == "prijs"){
+        List<KeyValuePair<double, Voorstelling>> VoorstellingPair = new List<KeyValuePair<double, Voorstelling>>();
+            foreach(var voorstelling in voorstellingen){
+                List<Show> shows = await _context.Shows.Where(s => s.VoorstellingId == voorstelling.VoorstellingId).ToListAsync();
+                double lowest = 999;
+                foreach(var show in shows){
+                    double prijs = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).MinAsync(s => s.Prijs);
+                    if(prijs < lowest) lowest = prijs;
+                }
+                VoorstellingPair.Add(new KeyValuePair<double, Voorstelling>(lowest, voorstelling));
+            }
+            VoorstellingPair.OrderBy(v => v.Key);
+            List<Voorstelling> toReturn = new List<Voorstelling>();
+            foreach(var item in VoorstellingPair) toReturn.Add(item.Value);
+            voorstellingen = toReturn;
+            voorstellingen.Reverse();
+        }
+        return voorstellingen;
     }
 
 }

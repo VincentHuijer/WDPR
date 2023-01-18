@@ -86,7 +86,29 @@ public class BestellingController : ControllerBase
         return showStoelenList;
     }
 
- 
+    [HttpPost("kaartjeshouders/{show_id}")]
+    public async Task<ActionResult<List<Kaartjeshouder>>> GetKaartjesHouders([FromBody] AccessTokenObject accessTokenObject, int show_id){
+        //Authorisatie
+        Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == show_id);
+        if(show == null) return NotFound();
+        List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.Datum == show.Datum).ToListAsync();
+        List<int> bestelling_ids = besteldeStoelen.Select(b => b.BestellingId).Distinct().ToList();
+        List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => bestelling_ids.Contains(b.BestellingId)).ToListAsync();
+        List<Klant> klanten = await _context.Klanten.Where(k => bestellingen.Select(b => b.KlantId).Contains(k.Id)).ToListAsync();
+        List<Kaartjeshouder> kaartjeshouders = new List<Kaartjeshouder>();
+        foreach (var klant in klanten){
+            kaartjeshouders.Add(new Kaartjeshouder(){Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Stoelen = await GetStoelDataByEmailAndShow(show_id, klant.Email)});
+        }
+        return kaartjeshouders;
+    }
+
+    [HttpPost("besteldestoelen/{show_id}/{email}")]
+    public async Task<ActionResult<List<StoelData>>> GetBesteldeStoelen([FromBody] AccessTokenObject AccessTokenObject, int show_id, string email){
+        //Authorisatie
+        List<StoelData> stoelData = await GetStoelDataByEmailAndShow(show_id, email);
+        if(stoelData == null) return NotFound();
+        return stoelData;
+    }
 
     // [HttpPost("AddBestelling")]
     // public async Task<ActionResult> AddBestelling([FromBody] BestellingBody bestellingBody)
@@ -154,6 +176,19 @@ public class BestellingController : ControllerBase
         }
         return showStoelenList;
     }
+    public async Task<List<StoelData>> GetStoelDataByEmailAndShow(int show_id, string email){
+        Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == show_id);
+        if(show == null) return null;
+        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
+        if(klant == null) return null;
+        List<int> besteldeStoelen_ids = await _context.BesteldeStoelen.Where(b => b.Datum == show.Datum).Select(b => b.StoelID).ToListAsync();
+        List<Stoel> stoelen = await _context.Stoelen.Where(s => besteldeStoelen_ids.Contains(s.StoelID)).ToListAsync();
+        List<StoelData> stoelData = new List<StoelData>();
+        foreach(var stoel in stoelen){
+            stoelData.Add(new StoelData(){X = stoel.X, Y = stoel.Y, Prijs = stoel.Prijs, Rang = stoel.Rang, StoelID = stoel.StoelID, IsGereserveerd = true}); 
+        }
+        return stoelData;
+    }
 }
 
 public class BestellingBody
@@ -179,6 +214,12 @@ public class ShowStoelen{
     public string ShowImage {set; get;}
     public DateTime Datum {set; get;}
     public List<Stoel> Stoelen {set; get;}
+}
+public class Kaartjeshouder{
+    public string Voornaam {set; get;}
+    public string Achternaam {set; get;}
+    public string Email {set; get;}
+    public List<StoelData> Stoelen {set; get;}
 }
 public class BestellingCleaner{
     public static async Task Clean(GebruikerContext _context){

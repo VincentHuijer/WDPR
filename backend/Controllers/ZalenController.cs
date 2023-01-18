@@ -25,15 +25,15 @@ public class ZaalController : ControllerBase
     public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
     {
         await BestellingCleaner.Clean(_context);
-        Show s = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
+        Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
 
-        List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == s.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN
+        List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN
 
         List<StoelData> stoelDataList = new List<StoelData>();
 
         foreach (var Stoel in stoelen)
         {
-            var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == s.Datum);
+            var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == show.Datum);
             bool isGereserveerd = (besteldeStoel != null);
 
             StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID };

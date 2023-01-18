@@ -53,8 +53,10 @@ export function NavBar() {
     async function overalUitloggen() {
         try {
             await fetchData("https://localhost:7253/api/klant/logoutall")
+            logout("none")
         } catch {
             await fetchData("https://localhost:7253/api/medewerker/logoutall")
+            logout("none")
         }
     }
 

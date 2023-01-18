@@ -13,6 +13,7 @@ export function NavBar() {
     const [openSettings, setOpenSettings] = useState()
 
     const [openMobileNav, setOpenMobileNav] = useState(false)
+    const [resetState, setResetState] = useState(false)
 
     const [userData, setUserData] = useState()
 
@@ -48,6 +49,11 @@ export function NavBar() {
         }).then(response => response.json()).then(data => {
             setUserData(data)
         })
+    }
+
+    async function resetRequest() {
+        setResetState(true)
+        await fetchData(`https://localhost:7253/api/klant/request/passwordreset/${userData.email}`)
     }
 
     async function overalUitloggen() {
@@ -94,10 +100,10 @@ export function NavBar() {
                                         </div>
 
                                         <div className='flex flex-col divide-y-2 px-4 mt-4 divide-black font-semibold'>
-                                            <div onClick={() => { setMijnAccountTab(!mijnAccountTab) }}>
-                                                <p className='cursor-pointer'>Mijn Account</p>
+                                            <div >
+                                                <p onClick={() => { setMijnAccountTab(!mijnAccountTab) }} className='cursor-pointer'>Mijn Account</p>
                                                 {mijnAccountTab && <div className='text-sm'>
-                                                    <Link to="/wachtwoordreset" className='cursor-pointer'>Wachtwoord Resetten</Link>
+                                                    <button onClick={() => resetRequest()} className='cursor-pointer'>{!resetState ? "Wachtwoord Resetten" : "Email Verzonden"}</button>
                                                     <br />
                                                     <p onClick={() => { overalUitloggen() }} className='cursor-pointer'>Overal Uitloggen</p>
                                                 </div>}

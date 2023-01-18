@@ -23,6 +23,7 @@ import Bestellingen from './Pages/user/Bestellingen';
 import FourOOOFour from './Components/FourOOOFour';
 import Ticket from './Pages/Ticket';
 import DoneerPagina from './Pages/DoneerPagina';
+import WachtwoordResetten from './Pages/user/WachtwoordResetten';
 
 export default function App() {
 
@@ -46,6 +47,7 @@ export default function App() {
                         <Route path='/betalen' element={<Wrapper><Betalen /> </Wrapper>} />
                         <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
                         <Route path='/donatie' element={<Wrapper><DoneerPagina /></Wrapper>} />
+                        <Route path='/user/resetwachtwoord' element={<Wrapper><WachtwoordResetten /></Wrapper>} />
 
                         <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
 

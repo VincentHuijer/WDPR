@@ -51,7 +51,11 @@ export function NavBar() {
     }
 
     async function overalUitloggen() {
-
+        try {
+            await fetchData("https://localhost:7253/api/klant/logoutall")
+        } catch {
+            await fetchData("https://localhost:7253/api/medewerker/logoutall")
+        }
     }
 
     return (

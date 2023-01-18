@@ -36,19 +36,23 @@ export function NavBar() {
     }
 
     async function fetchData(url) {
-        await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "AccessToken": accesToken
-            }),
-        }).then(response => response.json()).then(data => {
-            setUserData(data)
-        })
+        try {
+            await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "AccessToken": accesToken
+                }),
+            }).then(response => response.json()).then(data => {
+                setUserData(data)
+            })
+        } catch {
+
+        }
     }
 
     async function resetRequest() {

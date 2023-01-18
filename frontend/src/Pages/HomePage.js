@@ -14,7 +14,7 @@ export default function HomePage() {
     }, [])
 
     async function getVoorstellingData() {
-        await fetch(`https://localhost:7253/api/voorstelling/getVoorstellingen`)
+        await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen?order=homepage`)
             .then(res => res.json())
             .then(data => {
                 setData(data)

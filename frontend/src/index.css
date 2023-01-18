@@ -86,3 +86,8 @@ body {
   -o-animation: rotating 7500s linear infinite;
   animation: rotating 7500s linear infinite;
 }
+
+#account{
+  border: 2px solid black;
+  border-radius: 8px
+}

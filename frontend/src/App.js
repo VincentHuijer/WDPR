@@ -24,6 +24,7 @@ import FourOOOFour from './Components/FourOOOFour';
 import Ticket from './Pages/Ticket';
 import DoneerPagina from './Pages/DoneerPagina';
 import WachtwoordResetten from './Pages/user/WachtwoordResetten';
+import ShowInzien from './Pages/medewerker/ShowInzien';
 
 export default function App() {
 
@@ -48,7 +49,7 @@ export default function App() {
                         <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
                         <Route path='/donatie' element={<Wrapper><DoneerPagina /></Wrapper>} />
                         <Route path='/user/resetwachtwoord' element={<Wrapper><WachtwoordResetten /></Wrapper>} />
-
+                        <Route path='/medewerker' element={<Wrapper><ShowInzien/></Wrapper>}/>
                         <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
 
                         <Route path='/ticket/:data' element={<Ticket />} />

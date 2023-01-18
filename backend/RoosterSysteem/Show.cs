@@ -22,6 +22,7 @@ public class Show{
     public int KalenderId {set; get;}
     public Kalender? Kalender { get; set; }
     public DateTime Datum { get; set; }
+    [JsonIgnore]
     public ArtiestGroep? ArtiestGroep {set; get;}
     public int? ArtiestGroepId {set; get;}
 }

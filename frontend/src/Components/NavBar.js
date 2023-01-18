@@ -28,6 +28,7 @@ export function NavBar() {
         if (!accesToken) return;
         if (accesToken == "none") return;
 
+
         try {
             await fetchData("https://localhost:7253/api/klant/klant/by/at")
         } catch {
@@ -36,23 +37,19 @@ export function NavBar() {
     }
 
     async function fetchData(url) {
-        try {
-            await fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "AccessToken": accesToken
-                }),
-            }).then(response => response.json()).then(data => {
-                setUserData(data)
-            })
-        } catch {
-
-        }
+        await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "AccessToken": accesToken
+            }),
+        }).then(response => response.json()).then(data => {
+            setUserData(data)
+        })
     }
 
     async function resetRequest() {

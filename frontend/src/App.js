@@ -48,6 +48,7 @@ export default function App() {
                         <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
                         <Route path='/donatie' element={<Wrapper><DoneerPagina /></Wrapper>} />
                         <Route path='/user/resetwachtwoord' element={<Wrapper><WachtwoordResetten /></Wrapper>} />
+                        <Route path='/provider/betalen' element={<Wrapper></Wrapper>} />
 
                         <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
 

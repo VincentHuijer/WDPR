@@ -14,12 +14,12 @@ import Loading from "../Components/Loading";
 import StoelenLoading from "../Components/StoelenLoading";
 
 export default function Voorstelling() {
+  const accesToken = useAccesToken();
   const { id } = useParams();
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const accesToken = useAccesToken();
   const [seats, setSeats] = useState([]);
 
   const [types, setTypes] = useState([])
@@ -41,9 +41,16 @@ export default function Voorstelling() {
 
   const [bestelLoading, setBestelLoading] = useState(false)
 
+
+  const [userData, setUserData] = useState()
+  const [role, setRole] = useState()
+
+
   useEffect(() => {
     getVoorstellingData()
   }, [])
+
+
 
   //fetch STOEL DATA
   useEffect(() => {
@@ -117,9 +124,9 @@ export default function Voorstelling() {
 
         let allowedDates = []
 
-        data.shows.sort(function(a,b){return new Date(a.datum).getTime() - new Date(b.datum).getTime()});
+        data.shows.sort(function (a, b) { return new Date(a.datum).getTime() - new Date(b.datum).getTime() });
         data.shows.map(show => {
-          let newDate =  moment(new Date(show.datum)).format("DD-MM-YYYY")
+          let newDate = moment(new Date(show.datum)).format("DD-MM-YYYY")
           allowedDates.push(newDate.toString())
         })
 
@@ -243,6 +250,7 @@ export default function Voorstelling() {
                 placeholderText={"DD-MM-YYYY"}
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
+
               />
             </div>
           </div>

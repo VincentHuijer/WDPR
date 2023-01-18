@@ -13,7 +13,7 @@ export default function WinkelMand() {
 
     const [totaalPrijs, setTotaalPrijs] = useState(0)
 
-    const [redirect, setRedirect] = useState()
+    const [betalingPage, setBetalingPage] = useState()
 
     useEffect(() => {
         getBestelling()
@@ -30,8 +30,8 @@ export default function WinkelMand() {
             body: JSON.stringify({
                 "AccessToken": atCookie.acces_token
             })
-        }).then(response => response.json()).then(data => {            
-            if(data.status == 404 || !data || data.length <= 0 ) return
+        }).then(response => response.json()).then(data => {
+            if (data.status == 404 || !data || data.length <= 0) return
 
 
             setIsLoading(false)
@@ -50,14 +50,14 @@ export default function WinkelMand() {
     async function Betaal() {
         await fetch("https://localhost:7253/api/Betaling/bestelling", {
             method: "POST",
-            headers:{
+            headers: {
                 "Content-Type": "application/json",
                 "Accept-Type": "application/json"
             },
             body: JSON.stringify({
                 "AccessToken": atCookie.acces_token
             })
-        }).then(response => response.json()).then(data =>{
+        }).then(response => response.json()).then(data => {
             console.log(data)
             let bestelInfo = {
                 "id": data.bestellingId,
@@ -67,19 +67,15 @@ export default function WinkelMand() {
             formData.append("amount", bestelInfo.prijs)
             formData.append("reference", bestelInfo.id)
             formData.append("url", "https://localhost:7253/api/Betaling")
-            fetch("https://fakepay.azurewebsites.net",{
+            fetch("https://fakepay.azurewebsites.net", {
                 method: "POST",
-                headers:{
+                headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Accept-Type": "application/x-www-form-urlencoded"
                 },
                 body: formData
-            }).then(response => response.text()).then(data =>{
-                setRedirect(data)
-                var newWindow = window.open("", "_blank");
-                newWindow.document.write(data);
-                newWindow.document.close();
-                window.location.replace(newWindow.location);
+            }).then(response => response.text()).then(data => {
+                setBetalingPage(data)
             })
         })
     }
@@ -92,6 +88,9 @@ export default function WinkelMand() {
                     <div className="w-11/12 m-auto">
                         <p className="text-4xl font-extrabold">MIJN WINKELMAND</p>
                     </div>
+
+
+                    {betalingPage && <div className="h-screen w-screen bg-white absolute m-auto z-50 top-0" dangerouslySetInnerHTML={{ __html: betalingPage }}></div>}
 
                     <div className="w-11/12 m-auto h-fit mt-8">
                         <div className="flex gap-12">
@@ -126,7 +125,8 @@ export default function WinkelMand() {
                         </div>
                     </div>
                 </div>
-            </div> : <Loading text={"WINKELMAND LADEN"} />}
-        </div>
+            </div> : <Loading text={"WINKELMAND LADEN"} />
+            }
+        </div >
     )
 }

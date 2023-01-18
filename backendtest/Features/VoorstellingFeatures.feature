@@ -9,5 +9,3 @@ Scenario: VoorstellingOphalenMetSortering
     Given GetVoorstellingen/leeftijd/{age} bestaat
     When sortering is ascending
     Then moet de voorstellingen in de database opgehaald worden in de juiste volgorde
-
-Scenario:

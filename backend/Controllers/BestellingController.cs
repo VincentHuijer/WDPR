@@ -25,7 +25,7 @@ public class BestellingController : ControllerBase
     public async Task<ActionResult<List<ShowStoelen>>> GetBestellingenByAccessToken([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken); 
         if(klant == null) return NotFound();
-        List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).ToListAsync();
+        List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).Where(b => b.isBetaald == true).ToListAsync();
         if(bestellingen.Count() == 0) return NotFound();
         List<List<ShowStoelen>> showStoelenList = new List<List<ShowStoelen>>(); //Object wat ik return met de benodigde data voor frontend
         foreach(var bestelling in bestellingen){

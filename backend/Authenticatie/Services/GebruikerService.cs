@@ -89,7 +89,7 @@ public class GebruikerService : IGebruikerService{
         }
         klant.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(klant.Email, klant.AuthenticatieTokenId!, "Password Reset");
+        await _emailService.Send(klant.Email, "http://localhost:3000/user/resetwachtwoord?token=" + klant.AuthenticatieTokenId!, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){

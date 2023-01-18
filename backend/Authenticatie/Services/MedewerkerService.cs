@@ -56,7 +56,7 @@ public class MedewerkerService : IMedewerkerService
         }
         medewerker.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(medewerker.Email, medewerker.AuthenticatieTokenId!);
+        await _emailService.Send(medewerker.Email, medewerker.AuthenticatieTokenId!, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Medewerker medewerker, string token, string wachtwoord, GebruikerContext context){

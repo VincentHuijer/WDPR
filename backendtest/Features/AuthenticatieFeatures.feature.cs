@@ -284,7 +284,7 @@ this.ScenarioInitialize(scenarioInfo);
     testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 39
-    testRunner.And("gebruiker met emailadres lucad2811@gmail.com vult de logingegevens incorrect in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com vult de logingegevens correct in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 40
     testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft geverifieerd", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -324,7 +324,7 @@ this.ScenarioInitialize(scenarioInfo);
     testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 47
-    testRunner.And("gebruiker met emailadres lucad2811@gmail.com vult de logingegevens incorrect in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com vult de logingegevens correct in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 48
     testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft niet geverifieerd", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -337,6 +337,241 @@ this.ScenarioInitialize(scenarioInfo);
 #line hidden
 #line 51
     testRunner.Then("moet NotVerifiedError teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="VerifieerCorrect")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "VerifieerCorrect")]
+        public void VerifieerCorrect()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("VerifieerCorrect", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 53
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 54
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 55
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit de juiste token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 56
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft een niet verlopen token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 57
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com bevestigt verificatie", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 58
+    testRunner.Then("moet Success teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="VerifieerExpiredToken")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "VerifieerExpiredToken")]
+        public void VerifieerExpiredToken()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("VerifieerExpiredToken", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 60
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 61
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 62
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit de juiste token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 63
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft een verlopen token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 64
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com bevestigt verificatie", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 65
+    testRunner.Then("moet ExpiredTokenError teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="VerifieerAlreadyVerified")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "VerifieerAlreadyVerified")]
+        public void VerifieerAlreadyVerified()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("VerifieerAlreadyVerified", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 67
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 68
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 69
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit geen token meer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 70
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com bevestigt verificatie", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 71
+    testRunner.Then("moet AlreadyVerifiedError teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="ResetWachtwoordSucces")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "ResetWachtwoordSucces")]
+        public void ResetWachtwoordSucces()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("ResetWachtwoordSucces", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 73
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 74
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 75
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com geeft aan zijn wachtwoord te zijn ve" +
+                        "rgeten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 76
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit de juiste authenticatietoken", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 77
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft een niet verlopen authenticati" +
+                        "etoken", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 78
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com de wachtwoordreset bevestigt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 79
+    testRunner.Then("moet Success teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="ResetWachtwoordInvalidToken")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "ResetWachtwoordInvalidToken")]
+        public void ResetWachtwoordInvalidToken()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("ResetWachtwoordInvalidToken", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 81
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 82
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 83
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com geeft aan zijn wachtwoord te zijn ve" +
+                        "rgeten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 84
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit niet de juiste authenticatieto" +
+                        "ken", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 85
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft een niet verlopen authenticati" +
+                        "etoken", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 86
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com de wachtwoordreset bevestigt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 87
+    testRunner.Then("moet InvalidTokenError teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="ResetWachtwoordExpiredToken")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticatie")]
+        [Xunit.TraitAttribute("Description", "ResetWachtwoordExpiredToken")]
+        public void ResetWachtwoordExpiredToken()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("ResetWachtwoordExpiredToken", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 89
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 90
+    testRunner.Given("Een gebruiker met emailadres lucad2811@gmail.com heeft al een account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 91
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com geeft aan zijn wachtwoord te zijn ve" +
+                        "rgeten", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 92
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com bezit de juiste authenticatietoken", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 93
+    testRunner.And("gebruiker met emailadres lucad2811@gmail.com heeft een verlopen authenticatietoke" +
+                        "n", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 94
+    testRunner.When("gebruiker met emailadres lucad2811@gmail.com de wachtwoordreset bevestigt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 95
+    testRunner.Then("moet ExpiredTokenError teruggeven worden als response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

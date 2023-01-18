@@ -12,7 +12,9 @@ const Bestellingen = () => {
 
 
     useEffect(() => {
-        fetchData()
+        if (accesToken != "none") {
+            fetchData()
+        }
     }, [accesToken])
 
     async function fetchData() {
@@ -42,7 +44,6 @@ const Bestellingen = () => {
                     "AccessToken": accesToken
                 }),
             }).then(response => response.json()).then(data => {
-                console.log(data);
                 setUserData(data)
                 setLoading(false)
             })
@@ -56,7 +57,7 @@ const Bestellingen = () => {
                 {/* CART CONTAINER */}
                 <div className="flex flex-col gap-6 mt-5">
                     {!loading && data.map(bestelObject => {
-                        return <div className="bg-appSuperLightWhite rounded-2xl p-3"><WinkelMandItem user={userData} toPageButton={true} bestelObject={bestelObject} /></div>
+                        return <div key={Math.random()} className="bg-appSuperLightWhite rounded-2xl p-3"><WinkelMandItem user={userData} toPageButton={true} bestelObject={bestelObject} /></div>
                     })}
                 </div>
             </div>

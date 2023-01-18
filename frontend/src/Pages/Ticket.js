@@ -65,9 +65,6 @@ const Ticket = () => {
           <Link to="/user/bestellingen" className='border-2 border-appRed bg-appRed text-white px-3 py-1 text-sm rounded-xl font-extrabold mt-4 mb-4'>TERUG NAAR MIJN BESTELLINGEN</Link>
         </div>}
       </div>
-
-
-
     </div>
   )
 }

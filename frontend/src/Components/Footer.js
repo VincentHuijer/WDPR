@@ -41,22 +41,22 @@ export default function Footer() {
                     </div>
                 </div> */}
 
-                <div className = "mb-auto mt-2" >
+                <div className="mb-auto mt-2" >
                     <p className="font-bold text-xl">DONEER</p>
                     <div className="flex flex-col mt-0 text-appLight">
-                    <a href="http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"> Ondersteun het Theater door te doneren</a>
-                    <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold' onClick={"http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"}> Klik hier om te doneren!</button>
+                        <a href="http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"> Ondersteun het Theater door te doneren</a>
+                        <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold' onClick={() => window.location.href = "http://localhost:3000/Toegang?url=https%3A%2F%2Ftheater-laak.netlify.appl%2F"}> Klik hier om te doneren!</button>
 
                     </div>
-                    </div>
-                    
+                </div>
+
 
                 <div className="mb-auto mt-2">
                     <h3 className="font-bold text-xl">NIEUWSBRIEF</h3>
                     <div className="mt-2 flex flex-col gap-2 text-appLight">
                         <p>Meld je aan voor onze nieuwsbrief!</p>
                         <input className='border-2 border-White bg-appInputBlack text-white px-3 py-1 rounded-xl font-extrabold' type="email" placeholder="Vul hier uw E-mailadres in" />
-                        <button className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>Meld je hier aan voor de nieuwsbrief!</button>
+                        <button onClick={() => { }} className='border-2 w-fit mt-2 border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold'>Meld je hier aan voor de nieuwsbrief!</button>
                     </div>
                 </div>
             </div>

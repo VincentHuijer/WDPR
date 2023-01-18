@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Link } from "react-router-dom";
 
-export default function WinkelMandItem({ bestelObject, toPageButton = false, user }) {
+export default function WinkelMandItem({ bestelObject, toPageButton = false, user = {} }) {
 
     let plekken = bestelObject.stoelen.map(stoel => {
         return `${stoel.y + 1} - ${stoel.x + 1}`
@@ -13,14 +13,17 @@ export default function WinkelMandItem({ bestelObject, toPageButton = false, use
         totaalPrijs += stoel.prijs
     })
 
-    let dataString = {
-        voornaam: user.voornaam,
-        achternaam: user.achternaam,
-        stoelen: bestelObject.stoelen,
-        totaalPrijs: totaalPrijs,
-        showNaam: bestelObject.showNaam.toString(),
-        image: bestelObject.showImage,
-        datum: moment(bestelObject.datum).format("DD-MM-YYYY HH:MM")
+    let dataString;
+    if (user == {}) {
+        dataString = {
+            voornaam: user.voornaam,
+            achternaam: user.achternaam,
+            stoelen: bestelObject.stoelen,
+            totaalPrijs: totaalPrijs,
+            showNaam: bestelObject.showNaam.toString(),
+            image: bestelObject.showImage,
+            datum: moment(bestelObject.datum).format("DD-MM-YYYY HH:MM")
+        }
     }
 
     return (

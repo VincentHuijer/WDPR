@@ -35,7 +35,6 @@ export function NavBar() {
     }
 
     async function fetchData(url) {
-        console.log(url);
         await fetch(url, {
             method: 'POST',
             mode: 'cors',
@@ -47,7 +46,6 @@ export function NavBar() {
                 "AccessToken": accesToken
             }),
         }).then(response => response.json()).then(data => {
-            console.log(data);
             setUserData(data)
         })
     }

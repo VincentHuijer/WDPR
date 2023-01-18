@@ -22,6 +22,7 @@ import Bedankt from './Pages/Bedankt';
 import Bestellingen from './Pages/user/Bestellingen';
 import FourOOOFour from './Components/FourOOOFour';
 import Ticket from './Pages/Ticket';
+import DoneerPagina from './Pages/DoneerPagina';
 
 export default function App() {
 
@@ -44,6 +45,7 @@ export default function App() {
                         <Route path='/verify' element={<Wrapper><Verify /> </Wrapper>} />
                         <Route path='/betalen' element={<Wrapper><Betalen /> </Wrapper>} />
                         <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
+                        <Route path='/donatie' element={<Wrapper><DoneerPagina /></Wrapper>} />
 
                         <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
 

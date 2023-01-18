@@ -14,7 +14,7 @@ export default function WinkelMandItem({ bestelObject, toPageButton = false, use
     })
 
     let dataString;
-    if (user == {}) {
+    if (user != {}) {
         dataString = {
             voornaam: user.voornaam,
             achternaam: user.achternaam,

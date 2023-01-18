@@ -18,6 +18,7 @@ public class BetalingController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Betaling([FromForm] Betaling betaling)
     {
+        if(!betaling.succes) return Redirect("http://localhost:3000/winkelmand");
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
         bestelling.isBetaald = betaling.succes;

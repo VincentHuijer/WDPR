@@ -4,9 +4,11 @@ public class Show{
     public Show(){
         
     }
-    public Show(int zaalnummer, DateTime datumEnTijd){
+    public Show(int zaalnummer, DateTime datumEnTijd, int voorstellingId, int kalenderId){
         Zaalnummer = zaalnummer;
         Datum = datumEnTijd;
+        VoorstellingId = voorstellingId;
+        KalenderId = kalenderId;
     }
     public int ShowId {set; get;}
     public Zaal Zaal {set; get;}

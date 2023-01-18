@@ -148,8 +148,31 @@ public class MedewerkerController : ControllerBase
         Medewerker m = await _context.Medewerkers.FirstOrDefaultAsync(m => m.Email == email);
         return m;
     }
+
+    [HttpPost("AddMedewerker")]
+    public async Task<ActionResult> AddMedewerker([FromBody] MedewerkerInfo nieuweMedewerker)
+    {
+        Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord, nieuweMedewerker.Functie);
+        _context.Medewerkers.Add(medewerker);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
 }
 
+public class nieuweMedewerker
+{
+    public string Voornaam { set; get; }
+    public string Achternaam { set; get; }
+    public string Email { set; get; }
+    public string Wachtwoord { set; get; }
+    public string Functie { set; get; }
+}
 
 public class MedewerkerInfo
 {

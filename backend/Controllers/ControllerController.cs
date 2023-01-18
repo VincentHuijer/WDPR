@@ -46,41 +46,4 @@ public class ControllerController : ControllerBase
             return BadRequest();
         }
     }
-
-    // [HttpPost("AddShow")]
-    // public async Task<ActionResult> AddShow([FromBody] HerhaalbareShow HerhaalShow)
-    // {
-    //     Show show = new Show(HerhaalShow.Zaalnummer, HerhaalShow.StartDatum, HerhaalShow.VoorstellingId, _kalender.KalenderId);
-        
-    //     _context.Shows.Add(show);
-    //     List<Show> showlist = _kalender.HerhaalOptie(HerhaalShow.Interval, HerhaalShow.AantalKeer, show);
-    //     foreach (Show s in showlist)
-    //     {
-    //         _context.Shows.Add(s);
-    //     }
-
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
-
-    // [HttpPost("VerwijderShow/{id}")]
-    // public async Task<ActionResult> VerwijderShow(int id)
-    // {
-    //     Show show = _context.Shows.Find(id);
-    //     _context.Shows.Remove(show);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
 }

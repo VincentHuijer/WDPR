@@ -8,8 +8,14 @@ describe("test inloggen", () => {
     cy.visit("http://localhost:3000/login");
   });
 
-  it("logt succesvol in", () => {   
+  it("logt succesvol in met de juiste email en wachtwoord combinatie", () => {   
     cy.get("input[name=email]").type(emailSuccesvol);
+    cy.get("input[name=wachtwoord]").type(wachtwoord);
+    cy.get("button[type=submit]").click();
+  });
+
+  it("probeert met niet bestaand account in te loggen", () => {
+    cy.get("input[name=email]").type("ikbestaniet@gmail.com");
     cy.get("input[name=wachtwoord]").type(wachtwoord);
     cy.get("button[type=submit]").click();
   });

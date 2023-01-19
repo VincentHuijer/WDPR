@@ -163,30 +163,64 @@ public class MedewerkerController : ControllerBase
         return m;
     }
 
-    //     [HttpPost("AddMedewerker")]
-    //     public async Task<ActionResult> AddMedewerker([FromBody] nieuweMedewerker nieuweMedewerker)
-    //     {
-    //         Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord);
-    //         _context.Medewerkers.Add(medewerker);
-    //         if (await _context.SaveChangesAsync() > 0)
-    //         {
-    //             return Ok();
+        [HttpPost("AddMedewerker")]
+        public async Task<ActionResult> AddMedewerker([FromBody] nieuweMedewerker nieuweMedewerker)
+        {
+            Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord);
+            _context.Medewerkers.Add(medewerker);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
-    //         }
-    //         else
-    //         {
-    //             return BadRequest();
-    //         }
-    //     }
-    // }
+        [HttpPost("VerwijderMedewerker/{id}")]
+        public async Task<ActionResult> VerwijderMedewerker(int id)
+        {
+            Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == id);
+            if (medewerker == null) return BadRequest();
+            _context.Medewerkers.Remove(medewerker);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
-    // public class nieuweMedewerker
-    // {
-    //     public string Voornaam { set; get; }
-    //     public string Achternaam { set; get; }
-    //     public string Email { set; get; }
-    //     public string Wachtwoord { set; get; }
-    // }
+        // [HttpPost("UpdateMedewerkerRole/{id}/{rolNaam}")]
+        // public async Task<ActionResult> UpdateMedewerkerRol(int id, string rolNaam)
+        // {
+        //     Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == id);
+        //     if (medewerker == null) return BadRequest();
+        //     Rol rol = new Rol();
+        //     medewerker.Rol = rol.CheckRol(rolNaam);
+        //     medewerker.RolNaam = rolNaam;
+        //     if (medewerker.Rol.ToString() != rolNaam) return BadRequest();
+        //     if (await _context.SaveChangesAsync() > 0)
+        //     {
+        //         return Ok();
+        //     }
+        //     else
+        //     {
+        //         return BadRequest();
+        //     }
+        // }
+    }
+
+    public class nieuweMedewerker
+    {
+        public string Voornaam { set; get; }
+        public string Achternaam { set; get; }
+        public string Email { set; get; }
+        public string Wachtwoord { set; get; }
+    }
 
     public class MedewerkerInfo
     {
@@ -200,4 +234,3 @@ public class MedewerkerController : ControllerBase
         public DateTime GeboorteDatum { set; get; }
         public string RolNaam { set; get; }
     }
-}

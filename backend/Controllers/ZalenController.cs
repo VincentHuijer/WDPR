@@ -79,7 +79,7 @@ public class ZaalController : ControllerBase
 
         List<List<StoelData>> matrix = new List<List<StoelData>>();
 
-        List<int> Rows = stoelDataList.DistinctBy(stoel => stoel.Y).Select(s => s.Y).ToList();
+        List<int> Rows = stoelDataList.DistinctBy(stoel => stoel.Y).OrderBy(s => s.Y).Select(s => s.Y).ToList();
 
         foreach (int row in Rows)
         {

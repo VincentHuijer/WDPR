@@ -39,8 +39,11 @@ export default function CheckGegevens(
   if (!lastName.match(/^[A-Za-z]+$/)) {
     return "Achternaam mag geen bijzondere tekens bevatten";
   }
+  if (password.length === 0) {
+    return "Voer een wachtwoord in";
+  }
 
-  if (password.length < 8) {
+  if (password.length > 0 && password.length < 8) {
     return "Wachtwoord te kort";
   }
   if(password.length > 20){

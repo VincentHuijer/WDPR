@@ -51,6 +51,14 @@ describe("test register form", () => {
     }
       );
 
+      it("vult het registratieformulier zonder wachtwoord in", () => { 
+        cy.get("input[name=firstName]").type(firstName);
+        cy.get("input[name=name]").type(lastName);
+        cy.get("input[name=email]").type(email);
+        cy.get("button[type=submit]").click();
+      
+        cy.get("p").contains("Voer een wachtwoord in");
+      });
 
     it("vult het registratieformulier met een disposable email", () => {
       cy.get("input[name=firstName]").type(firstName);

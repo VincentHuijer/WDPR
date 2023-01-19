@@ -1,33 +1,61 @@
-using TechTalk.SpecFlow;
+// using TechTalk.SpecFlow;
 
-[Binding]
-public sealed class Hooks{
-    private GebruikerContext _context;
+// [Binding]
+// public sealed class Hooks{
+//     public GebruikerContext _context {set; get;}
+//     // public static GebruikerContext Context{
+//     //     get{
+//     //         if(_context == null){
+//     //             var options = new DbContextOptionsBuilder<GebruikerContext>()
+//     //                             .UseInMemoryDatabase("MyInMemoryDb").Options;
 
-    public Hooks(){
-        var options = new DbContextOptionsBuilder<GebruikerContext>()
-                            .UseInMemoryDatabase("MyInMemoryDb").Options;
+//     //             var context = new GebruikerContext(options);
+//     //             _context = context;
+//     //         }
+//     //         return _context;
+//     //     }
+//     // }
 
-        var context = new GebruikerContext(options);
-        _context = context;
-    }
+//     public Hooks(){
+//         var options = new DbContextOptionsBuilder<GebruikerContext>()
+//                             .UseInMemoryDatabase("MyInMemoryDb").Options;
 
-    [BeforeScenario]
-    public async Task BeforeScenario(){
-        _context.AccessTokens.RemoveRange(_context.AccessTokens);
-        _context.VerificatieTokens.RemoveRange(_context.VerificatieTokens);
-        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
-        _context.Klanten.RemoveRange(_context.Klanten);
-        _context.Medewerkers.RemoveRange(_context.Medewerkers);
-        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
-        _context.Rollen.RemoveRange(_context.Rollen);
-        await _context.SaveChangesAsync();
-        // _context.Database.EnsureDeleted();
-        // _context.Database.EnsureCreated();
-    }
+//         var context = new GebruikerContext(options);
+//         _context = context;
+//     }
+
+//     [BeforeScenario]
+//     public async Task BeforeScenario(){
+//         _context.AccessTokens.RemoveRange(_context.AccessTokens);
+//         _context.VerificatieTokens.RemoveRange(_context.VerificatieTokens);
+//         _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
+//         _context.Klanten.RemoveRange(_context.Klanten);
+//         _context.Medewerkers.RemoveRange(_context.Medewerkers);
+//         _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
+//         _context.Rollen.RemoveRange(_context.Rollen);
+//         await _context.SaveChangesAsync();
+//     }
+    // [AfterFeature]
+    // public static void AfterFeature(){
+    //     // _context = null;
+    //     // var options = new DbContextOptionsBuilder<GebruikerContext>()
+    //     //                         .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+    //     // var context = new GebruikerContext(options);
+    //     // _context = context;
+    //     if(_context != null) _context.Dispose();
+    // }
+    // [BeforeFeature]
+    // public static void BeforeFeature(){
+    //             var options = new DbContextOptionsBuilder<GebruikerContext>()
+    //                             .UseInMemoryDatabase("MyInMemoryDb").Options;
+
+    //     var context = new GebruikerContext(options);
+    //     _context = context;
+    // }
 
     // [AfterScenario]
     // public async Task AfterScenario(){
     //     if(_context != null) _context.Dispose();
     // }
-}
+//}

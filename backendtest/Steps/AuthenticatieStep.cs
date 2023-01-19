@@ -24,6 +24,17 @@ public sealed class AuthenticatieStep
         _service = service;
     }
 
+    [BeforeScenario]
+    public async Task BeforeScenario(){
+        _context.AccessTokens.RemoveRange(_context.AccessTokens);
+        _context.VerificatieTokens.RemoveRange(_context.VerificatieTokens);
+        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
+        _context.Klanten.RemoveRange(_context.Klanten);
+        _context.Medewerkers.RemoveRange(_context.Medewerkers);
+        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
+        _context.Rollen.RemoveRange(_context.Rollen);
+        await _context.SaveChangesAsync();
+    }
 
     [Given("Een gebruiker met emailadres (.*) heeft nog geen account")]
     public async Task GebruikerGeenAccount(string emailadres){
@@ -56,7 +67,7 @@ public sealed class AuthenticatieStep
         VerificatieToken token = new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)};
         _token = token;
         await _service.Registreer(_nieuweKlant.Voornaam, _nieuweKlant.Achternaam, _nieuweKlant.Email, _nieuweKlant.Wachtwoord, _token, _context);
-        Klant klant = _context.Klanten.First(k => k.Email == _nieuweKlant.Email);
+        Klant klant = await _context.Klanten.FirstAsync(k => k.Email == _nieuweKlant.Email);
         klant.VerificatieToken = token;
         klant.TokenId = token.Token;
         await _context.SaveChangesAsync();

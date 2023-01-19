@@ -23,6 +23,20 @@ public class MedewerkerService : IMedewerkerService
         return "InvalidCredentialsError";
     }
 
+    public async Task<string> NieuweMedewerker(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context)
+    {
+        Medewerker medewerker = new Medewerker(voornaam, achternaam, email, wachtwoord);
+        if(context.Medewerkers.Any(k => k.Email == email)) return "EmailInUseError"; 
+        if(await context.Rollen.FirstOrDefaultAsync(r => r.Naam == "Medewerker") != null){
+            medewerker.Rol = await context.Rollen.FirstAsync(r => r.Naam == "Medewerker");
+        }else{
+            medewerker.Rol = Rol.MedewerkerRol;
+        }
+        await context.Medewerkers.AddAsync(medewerker);
+        await context.SaveChangesAsync();
+        return "Success";
+    }
+
     public async Task<(string, string)> Setup2FA(Medewerker medewerker, GebruikerContext context)
     {
         if(medewerker.TwoFactorAuthSetupComplete) return ("", "");

@@ -1,6 +1,7 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { useAccesToken } from '../../Authentication/AuthContext'
+import { Link } from 'react-router-dom'
 
 
 const ShowEditContainer = ({ voorstelingData }) => {
@@ -23,8 +24,8 @@ const ShowEditContainer = ({ voorstelingData }) => {
     }, [reload])
 
     useEffect(() => {
-        if(AccessToken=="none") return
-      }, [AccessToken])
+        if (AccessToken == "none") return
+    }, [AccessToken])
 
     async function getVoorstellingData() {
         setLoading(true)
@@ -57,14 +58,14 @@ const ShowEditContainer = ({ voorstelingData }) => {
             }, 500);
         })
     }
-    
-    async function verwijderShow(){
+
+    async function verwijderShow() {
         await fetch(`https://localhost:7253/api/voorstelling/verwijdervoorstelling/${Number(data.voorstellingId)}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({"AccessToken": AccessToken})
+            body: JSON.stringify({ "AccessToken": AccessToken })
         })
     }
 
@@ -81,9 +82,9 @@ const ShowEditContainer = ({ voorstelingData }) => {
                 {(data.shows || data.shows.length > 0) && <p className='text-xl font-bold'>Shows:</p>}
                 <div className='w-full flex flex-wrap gap-2 mt-2'>
                     {(data.shows || data.shows.length > 0) && data.shows.map(show => {
-                        return <div className='flex gap-2'>
+                        return <Link to={`/medewerker/show/${show.showId}`} className='flex gap-2'>
                             <button className='bg-appLight px-2 py-1 rounded-full'>Zaal: <b>{show.zaalnummer}</b> Datum: <b>{moment(show.datum).format("DD-MM-YYYY HH:MM")}</b></button>
-                        </div>
+                        </Link>
                     })}
                 </div>
             </div>

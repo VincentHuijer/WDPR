@@ -26,6 +26,7 @@ import DoneerPagina from './Pages/DoneerPagina';
 import WachtwoordResetten from './Pages/user/WachtwoordResetten';
 import ShowInzien from './Pages/medewerker/ShowInzien';
 import MijnGroep from './Pages/MijnGroep';
+import ShowId from './Pages/medewerker/showInzien/ShowId';
 
 export default function App() {
 
@@ -49,11 +50,14 @@ export default function App() {
                         <Route path='/betalen' element={<Wrapper><Betalen /> </Wrapper>} />
                         <Route path='/bedankt' element={<Wrapper><Bedankt /> </Wrapper>} />
                         <Route path='/donatie' element={<Wrapper><DoneerPagina /></Wrapper>} />
-                        <Route path='/user/resetwachtwoord' element={<Wrapper><WachtwoordResetten /></Wrapper>} />
-                        <Route path='/medewerker' element={<Wrapper><ShowInzien/></Wrapper>}/>
                         <Route path='/provider/betalen' element={<Wrapper></Wrapper>} />
-                        <Route path='/mijngroep' element={<Wrapper><MijnGroep/></Wrapper>} />
+                        <Route path='/mijngroep' element={<Wrapper><MijnGroep /></Wrapper>} />
+
+                        <Route path='/user/resetwachtwoord' element={<Wrapper><WachtwoordResetten /></Wrapper>} />
                         <Route path='/user/bestellingen' element={<Wrapper><Bestellingen /> </Wrapper>} />
+
+                        <Route path='/medewerker' element={<Wrapper><ShowInzien /></Wrapper>} />
+                        <Route path='/medewerker/show/:showId' element={<Wrapper><ShowId /> </Wrapper>} />
 
                         <Route path='/ticket/:data' element={<Ticket />} />
                         <Route path='*' element={<FourOOOFour />} />

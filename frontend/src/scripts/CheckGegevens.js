@@ -8,11 +8,15 @@ export default function CheckGegevens(
 
   console.log(password);
   console.log(passwordAgain);
-  if (firstName.length < 2) {
+  if (firstName.length > 0 && firstName.length< 2) {
     return "Voornaam te kort";
   }
 
-  if (firstName.length > 15) {
+  if (firstName.length === 0) {
+    return "Voer een voornaam in";
+  }
+
+  if (firstName.length > 20) {
     return "Voornaam te lang";
   }
 
@@ -20,11 +24,15 @@ export default function CheckGegevens(
     return "voornaam mag geen bijzondere tekens bevatten";
   }
 
-  if (lastName.length < 2) {
+  if (lastName.length > 0 && lastName.length < 2) {
     return "Achternaam te kort";
   }
 
-  if (lastName.length > 15) {
+  if (lastName.length === 0) {
+    return "Voer een achternaam in";
+  }
+
+  if (lastName.length > 20) {
     return "Achternaam te lang";
   }
 
@@ -34,6 +42,9 @@ export default function CheckGegevens(
 
   if (password.length < 8) {
     return "Wachtwoord te kort";
+  }
+  if(password.length > 20){
+    return "Wachtwoord te lang";
   }
   if (password !== passwordAgain) {
     return "Wachtwoorden komt niet overeen";

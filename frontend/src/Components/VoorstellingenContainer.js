@@ -15,7 +15,7 @@ export default function VoorstellingenContainer({ data, states, userRole }) {
                 <div className="font-bold">
                     <p>Search</p>
                     <div className="flex h-10 gap-2">
-                        <input value={search} onChange={(e) => setsearch(e.target.value)} className="border-appLight border-2 w-fit h-10 px-2 py-1 rounded-md" />
+                        <input name="voorstellingInputveld" value={search} onChange={(e) => setsearch(e.target.value)} className="border-appLight border-2 w-fit h-10 px-2 py-1 rounded-md" />
                         <div onClick={() => { states[1](`/titel/${search ? search : ""}`) }} className="bg-appLight w-fit px-2 ml-auto mr-0 h-10 rounded-md font-bold flex items-center cursor-pointer">
                             ZOEKEN
                         </div>

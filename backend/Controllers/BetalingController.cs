@@ -18,6 +18,7 @@ public class BetalingController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Betaling([FromForm] Betaling betaling)
     {
+        //Authorisatie toevoegen, alleen ip van betaling mag deze request
         if(!betaling.succes) return Redirect("http://localhost:3000/winkelmand");
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
@@ -31,6 +32,7 @@ public class BetalingController : ControllerBase
     [HttpGet("bestelling/{id}")]
     public async Task<ActionResult<Bestelling>> GetBestelling(int id)
     {
+        //Authorisatie toevoegen
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == id);
         if (bestelling == null) return NotFound();
         return bestelling;

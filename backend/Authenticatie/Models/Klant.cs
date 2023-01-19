@@ -20,7 +20,6 @@ public class Klant{
     public bool Donateur {set; get;}
     public bool Artiest {set; get;}
     public ICollection<ActeurVoorstelling>? ActeurVoorstelling { get; set; }
-    public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public Rol Rol {set; get;}
     public string RolNaam {set; get;}
     public VerificatieToken? VerificatieToken {set; get;}

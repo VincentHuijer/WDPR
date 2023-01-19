@@ -18,7 +18,6 @@ public class Show{
     public Voorstelling Voorstelling {set; get;}
     public int VoorstellingId {set; get;}
     public List<ActeurVoorstelling>? Acteur { get; set; }
-    public List<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public int KalenderId {set; get;}
     public Kalender? Kalender { get; set; }
     public DateTime Datum { get; set; }

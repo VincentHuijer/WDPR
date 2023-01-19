@@ -29,6 +29,7 @@ public class ShowController : ControllerBase
     [HttpPost("AddShow")]
     public async Task<ActionResult> AddShow([FromBody] HerhaalbareShow HerhaalShow)
     {
+        //Authorisatie toevoegen
         Show show = new Show(HerhaalShow.Zaalnummer, HerhaalShow.StartDatum, HerhaalShow.VoorstellingId, _kalender.KalenderId);
 
         _context.Shows.Add(show);
@@ -51,6 +52,7 @@ public class ShowController : ControllerBase
     [HttpPost("VerwijderShow/{id}")]
     public async Task<ActionResult> VerwijderShow(int id)
     {
+        //Authorisatie toevoegen
         Show show = _context.Shows.Find(id);
         _context.Shows.Remove(show);
         if (await _context.SaveChangesAsync() > 0)

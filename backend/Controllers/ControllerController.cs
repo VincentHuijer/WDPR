@@ -7,7 +7,6 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class ControllerController : ControllerBase
 {
-    private PrintBestelling _printBestelling = new PrintBestelling();
     private readonly GebruikerContext _context;
     private Kalender _kalender = new Kalender();
     public ControllerController(GebruikerContext context)
@@ -19,7 +18,7 @@ public class ControllerController : ControllerBase
     [HttpPost("AddVoorstelling")]
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
-        
+        //Authorisatie toevoegen
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Image);
         _context.Voorstellingen.Add(voorstelling);
         if (await _context.SaveChangesAsync() > 0)
@@ -35,6 +34,7 @@ public class ControllerController : ControllerBase
     [HttpPost("VerwijderVoorstelling/{id}")]
     public async Task<ActionResult> VerwijderVoorstellingDatum(int id)
     {
+        //Authorisatie toevoegen
         Voorstelling voorstelling = _context.Voorstellingen.Find(id);
         _context.Voorstellingen.Remove(voorstelling);
         if (await _context.SaveChangesAsync() > 0)

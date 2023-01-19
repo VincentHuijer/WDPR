@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Authenticatie;
@@ -11,9 +12,11 @@ using backend.Authenticatie;
 namespace backend.Migrations
 {
     [DbContext(typeof(GebruikerContext))]
-    partial class GebruikerContextModelSnapshot : ModelSnapshot
+    [Migration("20230119120640_Auth10-Rooster14-Bestellingen3-Donaties1")]
+    partial class Auth10Rooster14Bestellingen3Donaties1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

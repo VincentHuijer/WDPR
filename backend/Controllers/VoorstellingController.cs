@@ -7,7 +7,6 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class VoorstellingController : ControllerBase
 {
-    private PrintBestelling _printBestelling = new PrintBestelling();
     private readonly GebruikerContext _context;
     private Kalender _kalender = new Kalender();
     public VoorstellingController(GebruikerContext context)
@@ -15,12 +14,6 @@ public class VoorstellingController : ControllerBase
         _context = context;
     }
 
-    //dit is alleen om het printen van tickets te testen
-    [HttpGet("Gettest")]
-    public async Task<string> Gettest(Bestelling bestellinginformatie)
-    {
-        return _printBestelling.ticketPrinten(bestellinginformatie);
-    }
 
     [HttpGet("getvoorstellingen/leeftijd/{age}")]
     public async Task<ActionResult<List<Voorstelling>>> GetVoorstellingenByAge(int age, [FromQuery] string? order)

@@ -22,7 +22,7 @@ public class GroepController : ControllerBase{
 
     [HttpPost("groep/by/at")]
     public async Task<ActionResult<ArtiestGroep>> GetGroepByUser([FromBody] AccessTokenObject accessToken){
-        if(!await IsAllowed(accessToken, "Artiest", false)) return StatusCode(403, "No permissions!");
+        if(!await IsAllowed(accessToken, "Artiest", false) && !await IsAllowed(accessToken, "Medewerker", true)) return StatusCode(403, "No permissions!");
         Klant klant = await GetKlantByAccessToken(accessToken.AccessToken);
         if(klant == null) return NotFound();
         ArtiestGroep artiestGroep = await _context.ArtiestGroepen.FirstOrDefaultAsync(a => a.GroepsId == klant.ArtiestGroepId);
@@ -31,7 +31,8 @@ public class GroepController : ControllerBase{
     }
 
     [HttpPost("get/{id}/leden")]
-    public async Task<ActionResult<List<KlantInfoShort>>> GetLeden([FromBody] AccessTokenObject accessTokenObject, int id){
+    public async Task<ActionResult<List<KlantInfoShort>>> GetLeden([FromBody] AccessTokenObject accessToken, int id){
+        if(!await IsAllowed(accessToken, "Artiest", false) && !await IsAllowed(accessToken, "Medewerker", true)) return StatusCode(403, "No permissions!");
         ArtiestGroep groep = await _context.ArtiestGroepen.FirstOrDefaultAsync(a => a.GroepsId == id);
         if (groep == null) return NotFound();
         List<Klant> groepsleden = await _context.Klanten.Where(k => k.ArtiestGroepId == groep.GroepsId).ToListAsync();

@@ -131,20 +131,20 @@ public class GebruikerContext : DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         // voorstelling - klant (kaartjeshouder)
-        modelBuilder.Entity<Kaartjeshouders>()
-            .HasKey(kh => new { kh.KlantId, kh.ShowId });
+        // modelBuilder.Entity<Kaartjeshouders>()
+        //     .HasKey(kh => new { kh.KlantId, kh.ShowId });
 
-        modelBuilder.Entity<Kaartjeshouders>()
-            .HasOne(kh => kh.Klant)
-            .WithMany(k => k.Kaartjeshouder)
-            .HasForeignKey(kh => kh.KlantId)
-            .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Kaartjeshouders>()
+        //     .HasOne(kh => kh.Klant)
+        //     .WithMany(k => k.Kaartjeshouder)
+        //     .HasForeignKey(kh => kh.KlantId)
+        //     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Kaartjeshouders>()
-            .HasOne(v => v.Show)
-            .WithMany(kh => kh.Kaartjeshouder)
-            .HasForeignKey(v => v.ShowId)
-            .OnDelete(DeleteBehavior.SetNull);
+        // modelBuilder.Entity<Kaartjeshouders>()
+        //     .HasOne(v => v.Show)
+        //     .WithMany(kh => kh.Kaartjeshouder)
+        //     .HasForeignKey(v => v.ShowId)
+        //     .OnDelete(DeleteBehavior.SetNull);
 
 
         //modelBuilder.Entity<Show>().Ignore(v => v.Datum);
@@ -234,7 +234,6 @@ public class GebruikerContext : DbContext
     public DbSet<Voorstelling> Voorstellingen { set; get; }
     public DbSet<Zaal> Zalen { set; get; }
     public DbSet<Stoel> Stoelen { set; get; }
-    public DbSet<Kaartjeshouders> Kaartjeshouders { set; get; }
     public DbSet<ActeurVoorstelling> ActeurVoorstellingen { set; get; }
     public DbSet<Show> Shows { get; set; }
 

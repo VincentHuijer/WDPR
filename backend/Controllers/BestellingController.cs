@@ -8,6 +8,7 @@ namespace backend.Controllers;
 public class BestellingController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     public BestellingController(GebruikerContext context)
     {
         _context = context;
@@ -24,7 +25,7 @@ public class BestellingController : ControllerBase
 
     [HttpPost("getbestelling/by/at")]
     public async Task<ActionResult<List<ShowStoelen>>> GetBestellingenByAccessToken([FromBody] AccessTokenObject accessTokenObject){
-        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken); 
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context); 
         if(klant == null) return NotFound();
         List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).Where(b => b.isBetaald == true).ToListAsync();
         if(bestellingen.Count() == 0) return NotFound();
@@ -90,7 +91,7 @@ public class BestellingController : ControllerBase
     [HttpPost("kaartjeshouders/{show_id}")]
     public async Task<ActionResult<List<Kaartjeshouder>>> GetKaartjesHouders([FromBody] AccessTokenObject accessTokenObject, int show_id){
         //Authorisatie
-        if(!await IsAllowed(accessTokenObject, "Medewerker", true)) return StatusCode(403, "No permissions!");
+        if(!await _permissionService.IsAllowed(accessTokenObject, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
         Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == show_id);
         if(show == null) return NotFound();
         List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.Datum == show.Datum).ToListAsync();
@@ -105,9 +106,9 @@ public class BestellingController : ControllerBase
     }
 
     [HttpPost("besteldestoelen/{show_id}/{email}")]
-    public async Task<ActionResult<List<StoelData>>> GetBesteldeStoelen([FromBody] AccessTokenObject AccessTokenObject, int show_id, string email){
+    public async Task<ActionResult<List<StoelData>>> GetBesteldeStoelen([FromBody] AccessTokenObject accessTokenObject, int show_id, string email){
         //Authorisatie
-        if(!await IsAllowed(AccessTokenObject, "Medewerker", true)) return StatusCode(403, "No permissions!");
+        if(!await _permissionService.IsAllowed(accessTokenObject, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
         List<StoelData> stoelData = await GetStoelDataByEmailAndShow(show_id, email);
         if(stoelData == null) return NotFound();
         return stoelData;
@@ -147,14 +148,6 @@ public class BestellingController : ControllerBase
             return BadRequest();
         }
     }
-    public async Task<Klant> GetKlantByAccessToken(string AccessToken){
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
-        if(accessToken == null) return null;
-        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessToken == accessToken);
-        if(k == null) return null; 
-        else if(accessToken.VerloopDatum < DateTime.Now) return null;
-        return k;
-    }
 
     public async Task<List<ShowStoelen>> GetShowStoelensAsync(Bestelling bestelling){
         List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync(); //Alle bestelde stoelen die bij deze bestelling horen.
@@ -191,30 +184,6 @@ public class BestellingController : ControllerBase
             stoelData.Add(new StoelData(){X = stoel.X, Y = stoel.Y, Prijs = stoel.Prijs, Rang = stoel.Rang, StoelID = stoel.StoelID, IsGereserveerd = true}); 
         }
         return stoelData;
-    }
-
-    public async Task<bool> IsAllowed(AccessTokenObject AccessToken, string BenodigdeRol, bool isMedewerker){
-        if(isMedewerker){
-            Medewerker medewerker = await GetMedewerkerByAccessToken(AccessToken.AccessToken);
-            if(medewerker == null) return false;
-            if(medewerker.RolNaam == BenodigdeRol) return true;
-            return false;
-        }else{
-            Klant klant = await GetKlantByAccessToken(AccessToken.AccessToken);
-            if(klant == null) return false;
-            if(klant.RolNaam == BenodigdeRol) return true;
-            return false;
-        }
-    }
-
-    public async Task<Medewerker> GetMedewerkerByAccessToken(string AccessToken)
-    {
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
-        if (accessToken == null) return null;
-        Medewerker m = await _context.Medewerkers.FirstOrDefaultAsync(m => m.AccessToken == accessToken);
-        if (m == null) return null; // error message weghalen, is voor debugging.
-        else if (accessToken.VerloopDatum < DateTime.Now) return null;
-        return m;
     }
 }
 

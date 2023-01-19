@@ -1,5 +1,7 @@
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
+import { useAccesToken } from '../../Authentication/AuthContext'
+
 
 const ShowEditContainer = ({ voorstelingData }) => {
 
@@ -8,7 +10,7 @@ const ShowEditContainer = ({ voorstelingData }) => {
 
     const [reload, setReload] = useState(0)
 
-
+    const AccessToken = useAccesToken();
     const [date, setdate] = useState()
     const [zaalNummer, setZaalNummer] = useState()
 
@@ -19,6 +21,10 @@ const ShowEditContainer = ({ voorstelingData }) => {
     useEffect(() => {
         getVoorstellingData()
     }, [reload])
+
+    useEffect(() => {
+        if(AccessToken=="none") return
+      }, [AccessToken])
 
     async function getVoorstellingData() {
         setLoading(true)
@@ -57,7 +63,8 @@ const ShowEditContainer = ({ voorstelingData }) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            body: JSON.stringify({"AccessToken": AccessToken})
         })
     }
 

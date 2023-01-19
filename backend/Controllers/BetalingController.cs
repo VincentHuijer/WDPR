@@ -10,6 +10,7 @@ namespace backend.Controllers;
 public class BetalingController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     public BetalingController(GebruikerContext context)
     {
         _context = context;

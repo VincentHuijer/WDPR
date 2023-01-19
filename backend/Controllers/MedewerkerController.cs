@@ -8,6 +8,7 @@ namespace backend.Controllers;
 public class MedewerkerController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
 
     private IMedewerkerService _service = new MedewerkerService();
 
@@ -23,7 +24,7 @@ public class MedewerkerController : ControllerBase
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
         if (responseString == "Success")
         {
-            Medewerker medewerker = await GetMedewerkerByEmailAsync(emailWachtwoord.Email);
+            Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(emailWachtwoord.Email, _context);
             if (medewerker == null) return HandleResponse("Error");
             if (medewerker.AccessTokenId == null)
             {
@@ -35,7 +36,7 @@ public class MedewerkerController : ControllerBase
             {
                 TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
                 IsBlocked = medewerker.IsBlocked,
-                AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),
+                AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
             };
             return medewerkerInfo;
         }
@@ -48,7 +49,7 @@ public class MedewerkerController : ControllerBase
     public async Task<ActionResult<List<string>>> Setup2FA([FromBody] AccessTokenObject AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
 
-        Medewerker m = await GetMedewerkerByAccessToken(AccessToken.AccessToken);
+        Medewerker m = await _permissionService.GetMedewerkerByAccessToken(AccessToken.AccessToken, _context);
         if (m == null) HandleResponse("UserNotFoundError");
         var res = await _service.Setup2FA(m, _context);
         if (res.Item1 == "" && res.Item2 == "") return HandleResponse("AlreadySetup2FA");
@@ -61,12 +62,12 @@ public class MedewerkerController : ControllerBase
     [HttpPost("medewerker/by/at")] //Get medewerkerinfo by accesstoken
     public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject)
     {
-        Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
+        Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
         MedewerkerInfo medewerkerInfo = new MedewerkerInfo()
         {
             TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
             IsBlocked = medewerker.IsBlocked,
-            AccessToken = await GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId),
+            AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
             Voornaam = medewerker.Voornaam,
             Achternaam = medewerker.Achternaam,
             Email = medewerker.Email,
@@ -80,7 +81,7 @@ public class MedewerkerController : ControllerBase
     [HttpPost("use2fa")]
     public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey)
     { //Nog fixen dat hij deze 2 params accepteert.
-        Medewerker m = await GetMedewerkerByAccessToken(accessTokenKey.AccessToken);
+        Medewerker m = await _permissionService.GetMedewerkerByAccessToken(accessTokenKey.AccessToken, _context);
         if (m == null) HandleResponse("UserNotFoundError");
         var responseString = await _service.Use2FA(m, accessTokenKey.Key);
         if (responseString == "Success")
@@ -94,7 +95,7 @@ public class MedewerkerController : ControllerBase
     [HttpPost("logoutall")]
     public async Task<ActionResult> LogoutAll([FromBody] AccessTokenObject accessTokenObject)
     {
-        Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
+        Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
         if (medewerker == null) return HandleResponse("Error");
         AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == accessTokenObject.AccessToken);
         if (accessToken == null) return HandleResponse("Error");
@@ -108,7 +109,7 @@ public class MedewerkerController : ControllerBase
     [HttpPost("request/passwordreset/{email}")]
     public async Task<ActionResult> InitiatePasswordReset(string email)
     {
-        Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
+        Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(email, _context);
         if (medewerker == null) return BadRequest();
         return HandleResponse(await _service.InitiatePasswordReset(medewerker, _context));
     }
@@ -116,7 +117,7 @@ public class MedewerkerController : ControllerBase
     [HttpPost("complete/passwordreset/{email}")]
     public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email)
     {
-        Medewerker medewerker = await GetMedewerkerByEmailAsync(email);
+        Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(email, _context);
         if (medewerker == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     }
@@ -124,28 +125,13 @@ public class MedewerkerController : ControllerBase
     [HttpPost("rol/by/at")]
     public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject)
     {
-        Medewerker medewerker = await GetMedewerkerByAccessToken(accessTokenObject.AccessToken);
+        Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
         string rol = medewerker.RolNaam;
         return rol;
     }
 
     // FUNCTIONS
 
-    public async Task<Medewerker> GetMedewerkerByAccessToken(string AccessToken)
-    {
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
-        if (accessToken == null) return null;
-        Medewerker m = await _context.Medewerkers.FirstOrDefaultAsync(m => m.AccessToken == accessToken);
-        if (m == null) return null; // error message weghalen, is voor debugging.
-        else if (accessToken.VerloopDatum < DateTime.Now) return null;
-        return m;
-    }
-
-    public async Task<AccessToken> GetAccessTokenByTokenIdAsync(string AccessTokenId)
-    {
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessTokenId);
-        return accessToken;
-    }
 
     public ActionResult HandleResponse(string response)
     {
@@ -157,15 +143,12 @@ public class MedewerkerController : ControllerBase
         return StatusCode(500);
     }
 
-    public async Task<Medewerker> GetMedewerkerByEmailAsync(string email)
-    {
-        Medewerker m = await _context.Medewerkers.FirstOrDefaultAsync(m => m.Email == email);
-        return m;
-    }
+
 
         [HttpPost("AddMedewerker")]
         public async Task<ActionResult> AddMedewerker([FromBody] nieuweMedewerker nieuweMedewerker)
         {
+            if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = nieuweMedewerker.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
             Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord);
             _context.Medewerkers.Add(medewerker);
             if (await _context.SaveChangesAsync() > 0)
@@ -179,8 +162,9 @@ public class MedewerkerController : ControllerBase
         }
 
         [HttpPost("VerwijderMedewerker/{id}")]
-        public async Task<ActionResult> VerwijderMedewerker(int id)
+        public async Task<ActionResult> VerwijderMedewerker([FromBody] AccessTokenObject accessToken, int id)
         {
+            if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
             Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == id);
             if (medewerker == null) return BadRequest();
             _context.Medewerkers.Remove(medewerker);
@@ -220,6 +204,7 @@ public class MedewerkerController : ControllerBase
         public string Achternaam { set; get; }
         public string Email { set; get; }
         public string Wachtwoord { set; get; }
+        public string AccessToken {set; get;}
     }
 
     public class MedewerkerInfo

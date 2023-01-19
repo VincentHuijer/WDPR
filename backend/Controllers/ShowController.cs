@@ -8,6 +8,7 @@ namespace backend.Controllers;
 public class ShowController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     private Kalender _kalender = new Kalender();
     public ShowController(GebruikerContext context)
     {

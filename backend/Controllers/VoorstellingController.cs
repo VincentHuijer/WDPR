@@ -8,6 +8,7 @@ namespace backend.Controllers;
 public class VoorstellingController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     private Kalender _kalender = new Kalender();
     public VoorstellingController(GebruikerContext context)
     {
@@ -58,6 +59,8 @@ public class VoorstellingController : ControllerBase
     [HttpPost("AddVoorstelling")]
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
+        AccessTokenObject accessToken = new AccessTokenObject(){AccessToken = nieuweVoorstelling.AccessToken};
+        if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context) && !await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
         _kalender = _context.Kalenders.Find(0);
         Console.WriteLine("parameters:" + nieuweVoorstelling.Titel + nieuweVoorstelling.Omschrijving);
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Image);
@@ -82,8 +85,9 @@ public class VoorstellingController : ControllerBase
     }
 
     [HttpPost("VerwijderVoorstelling/{id}")]
-    public async Task<ActionResult> VerwijderVoorstelling(int id)
+    public async Task<ActionResult> VerwijderVoorstelling(int id, [FromBody] AccessTokenObject accessToken)
     {
+        if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context) && !await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
         Voorstelling voorstelling = _context.Voorstellingen.Find(id);
         _context.Voorstellingen.Remove(voorstelling);
         if (await _context.SaveChangesAsync() > 0)
@@ -117,7 +121,6 @@ public class VoorstellingController : ControllerBase
         }
         return voorstellingen;
     }
-
 }
 
 public class VoorstellingIdObject
@@ -130,4 +133,5 @@ public class NieuweVoorstelling
     public string Titel { get; set; }
     public string Omschrijving { get; set; }
     public string Image { get; set; }
+    public string AccessToken {set; get;}
 }

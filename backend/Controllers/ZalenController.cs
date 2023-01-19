@@ -8,6 +8,7 @@ namespace backend.Controllers;
 public class ZaalController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     public ZaalController(GebruikerContext context)
     {
         _context = context;

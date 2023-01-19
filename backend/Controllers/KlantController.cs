@@ -11,6 +11,7 @@ public class KlantController : ControllerBase
     //WILLEN WE GEBRUIK MAKEN VAN DOTNET IDENTITY? IS DIT WEL NODIG? 
     //WE KUNNEN EIGEN HASHING MAKEN
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     private IGebruikerService _service = new GebruikerService(new EmailService()); //Is er een andere manier om dit te doen?
 
     public KlantController(GebruikerContext context)
@@ -31,13 +32,13 @@ public class KlantController : ControllerBase
     {
         var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
         if(responseString == "Success"){
-            Klant klant = await GetKlantByEmailAsync(emailWachtwoord.Email);
+            Klant klant = await _permissionService.GetKlantByEmailAsync(emailWachtwoord.Email, _context);
             if(klant == null) return HandleResponse("Error");
             if(klant.AccessTokenId == null){
                 klant.AccessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(7)};
                 await _context.SaveChangesAsync();
             }
-            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),
+            KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(klant.AccessTokenId, _context),
             Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
             return klantInfo;
         }
@@ -49,7 +50,7 @@ public class KlantController : ControllerBase
     public async Task<ActionResult<List<string>>> Setup2FA([FromBody] AccessTokenObject AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
     {
         
-        Klant k = await GetKlantByAccessToken(AccessToken.AccessToken);
+        Klant k = await _permissionService.GetKlantByAccessToken(AccessToken.AccessToken, _context);
         if(k == null) HandleResponse("UserNotFoundError");
         var res = await _service.Setup2FA(k, _context);
         if(res.Item1 == "" && res.Item2 == "") return HandleResponse("AlreadySetup2FA");
@@ -61,7 +62,7 @@ public class KlantController : ControllerBase
 
     [HttpPost("use2fa")]
     public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey){
-        Klant k = await GetKlantByAccessToken(accessTokenKey.AccessToken);
+        Klant k = await _permissionService.GetKlantByAccessToken(accessTokenKey.AccessToken, _context);
         if(k == null) HandleResponse("UserNotFoundError");
         var responseString = await _service.Use2FA(k, accessTokenKey.Key);
 
@@ -88,15 +89,15 @@ public class KlantController : ControllerBase
 
     [HttpPost("klant/by/at")] //Get klant by accesstoken
     public async Task<ActionResult<KlantInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
-        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
-        KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await GetAccessTokenByTokenIdAsync(klant.AccessTokenId),
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context);
+        KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(klant.AccessTokenId, _context),
         Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
         return klantInfo;
     }
 
     [HttpPost("logoutall")]
     public async Task<ActionResult> LogoutAll([FromBody] AccessTokenObject accessTokenObject){
-        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context);
         if(klant == null) return HandleResponse("Error");
         AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == accessTokenObject.AccessToken);
         if(accessToken == null) return HandleResponse("Error");
@@ -109,21 +110,21 @@ public class KlantController : ControllerBase
 
     [HttpPost("request/passwordreset/{email}")]
     public async Task<ActionResult> InitiatePasswordReset(string email){
-        Klant klant = await GetKlantByEmailAsync(email);
+        Klant klant = await _permissionService.GetKlantByEmailAsync(email, _context);
         if(klant == null) return BadRequest();
         return HandleResponse(await _service.InitiatePasswordReset(klant, _context));
     }
 
     [HttpPost("complete/passwordreset/{email}")]
     public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email){
-        Klant klant = await GetKlantByEmailAsync(email);
+        Klant klant = await _permissionService.GetKlantByEmailAsync(email, _context);
         if(klant == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(klant, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     }
 
     [HttpPost("rol/by/at")]
     public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject){
-        Klant klant = await GetKlantByAccessToken(accessTokenObject.AccessToken);
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context);
         string rol = klant.RolNaam;
         return rol;
     }
@@ -134,22 +135,6 @@ public class KlantController : ControllerBase
             return StatusCode(responses[response].StatusCode, responses[response].Message);
         }
         return StatusCode(500);
-    }
-    public async Task<Klant> GetKlantByEmailAsync(string email){
-        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-        return k;
-    }
-    public async Task<Klant> GetKlantByAccessToken(string AccessToken){
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
-        if(accessToken == null) return null;
-        Klant k = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessToken == accessToken);
-        if(k == null) return null; 
-        else if(accessToken.VerloopDatum < DateTime.Now) return null;
-        return k;
-    }
-    public async Task<AccessToken> GetAccessTokenByTokenIdAsync(string AccessTokenId){
-        AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessTokenId);
-        return accessToken;
     }
 
 }

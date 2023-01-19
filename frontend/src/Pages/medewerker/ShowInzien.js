@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useAccesToken } from '../../Authentication/AuthContext'
 import Loading from '../../Components/Loading'
 import VoorstellingenContainer from '../../Components/VoorstellingenContainer'
 import ShowEditContainer from './ShowEditContainer'
@@ -13,7 +14,7 @@ const ShowInzien = () => {
     const [titel, setTitel] = useState()
     const [omschrijving, setOmschrijving] = useState()
     const [image, setImage] = useState()
-
+    const AccessToken = useAccesToken();
     async function getVoorstellingen() {
         await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen?order=prijs`)
             .then(res => res.json())
@@ -32,7 +33,8 @@ const ShowInzien = () => {
             body: JSON.stringify({
                 Titel: titel,
                 Omschrijving: omschrijving,
-                Image: image
+                Image: image,
+                AccessToken: AccessToken 
             })
         }).then(() => {
             setTimeout(() => {
@@ -50,6 +52,9 @@ const ShowInzien = () => {
         getVoorstellingen()
     }, [reload])
 
+    useEffect(() => {
+        if(AccessToken=="none") return
+      }, [AccessToken])
 
     if (loading) {
         return <div className='mt-40 font-bold text-center w-full'>VOORSTELLINGEN LADEN</div>

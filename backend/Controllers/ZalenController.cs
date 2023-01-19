@@ -36,8 +36,13 @@ public class ZaalController : ControllerBase
         {
             var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == show.Datum);
             bool isGereserveerd = (besteldeStoel != null);
-
-            StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID };
+            KlantInfoShort klantInfo = null;
+            if(isGereserveerd){
+                Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == besteldeStoel.BestellingId);
+                Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Id == bestelling.KlantId);
+                klantInfo = new KlantInfoShort(){Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email};
+            }
+            StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID, KlantInfo = klantInfo};
             stoelDataList.Add(stoelData);
         }
 
@@ -94,4 +99,5 @@ public class StoelData
     public int Rang { get; set; }
     public bool IsGereserveerd { get; set; }
     public int StoelID { get; set; }
+    public KlantInfoShort KlantInfo {set; get;}
 }

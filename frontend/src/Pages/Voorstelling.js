@@ -69,7 +69,7 @@ export default function Voorstelling() {
     setKaartjes(oldArr => [])
     setBestelLoading(false)
 
-    fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
+    fetch(`https://localhost:7253/api/zaal/GetShowStoelenVoorstelling/${showId}`).then(response => response.json()).then(data => {
 
       let seatsList = []
       data.map(row => {

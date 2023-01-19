@@ -58,7 +58,15 @@ export default function Login() {
         }
 
 
-        await fetch("https://localhost:7253/api/klant/login", {
+        try {
+            await klantLogin(loginBody)
+        } catch {
+            await medewerkerLogin(loginBody)
+        }
+    };
+
+    async function medewerkerLogin(loginBody) {
+        await fetch("https://localhost:7253/api/medewerker/login", {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -78,12 +86,9 @@ export default function Login() {
                 }
 
                 setIsAuth(true)
+                setIsVerified(true)
+                setdidSetup2FA(true)
 
-                if (!userData.isVerified) {
-                    //SHOW EMAIL VERIFY
-                    setIsVerified(false)
-                    console.log("EMAIL IS NOT VERIFIED");
-                }
 
                 if (!userData.twoFactorAuthSetupComplete) {
                     //SHOW 2FA VERIFY
@@ -104,15 +109,69 @@ export default function Login() {
 
             setErrorMessage(errorMessage)
         });
-    };
+    }
+
+    async function klantLogin(loginBody) {
+        return new Promise(async (resolve, reject) => {
+            await fetch("https://localhost:7253/api/klant/login", {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginBody),
+            }).then(async res => {
+
+                if (res.status == 200) {
+                    let userData = await res.json();
+                    console.log(userData);
+
+                    if (userData.accessToken.token) {
+                        saveAuthCookie(userData.accessToken.token.toString(), rememberMe)
+                        setAt(userData.accessToken.token.toString())
+                    }
+
+                    setIsAuth(true)
+
+                    if (!userData.isVerified) {
+                        //SHOW EMAIL VERIFY
+                        setIsVerified(false)
+                        console.log("EMAIL IS NOT VERIFIED");
+                    }
+
+                    if (!userData.twoFactorAuthSetupComplete) {
+                        //SHOW 2FA VERIFY
+                        setdidSetup2FA(false)
+                        console.log("2FA IS NOT SETUP");
+                    }
+
+                    resolve()
+                    return
+                }
+
+                reject()
+
+
+                let errorMessage = await res.text()
+
+                if (errorMessage.toLowerCase() == "user not verified!") {
+                    setIsVerified(false)
+
+                }
+
+                setErrorMessage(errorMessage)
+            });
+        })
+    }
 
     async function sha256(message) {
-        const msgBuffer = new TextEncoder().encode(message);                    
-    
+        const msgBuffer = new TextEncoder().encode(message);
+
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    
+
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-    
+
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         return hashHex;
     }

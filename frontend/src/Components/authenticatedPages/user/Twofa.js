@@ -8,18 +8,33 @@ export default function Twofa({ at, didSetup }) {
 
   useEffect(() => {
     const getData = async () => {
-      await fetch("https://localhost:7253/api/Klant/setup2fa", {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "AccessToken": at }),
-      }).then(async res => {
-        let response = await res.json()
-        setresponseData(response)
-      });
+      try {
+        await fetch("https://localhost:7253/api/Klant/setup2fa", {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "AccessToken": at }),
+        }).then(async res => {
+          let response = await res.json()
+          setresponseData(response)
+        });
+      } catch {
+        await fetch("https://localhost:7253/api/Medewerker/setup2fa", {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "AccessToken": at }),
+        }).then(async res => {
+          let response = await res.json()
+          setresponseData(response)
+        });
+      }
     }
 
     getData()
@@ -41,7 +56,21 @@ export default function Twofa({ at, didSetup }) {
         },
         body: JSON.stringify({ "AccessToken": at, "key": code }),
       }).then(async res => {
-        if(res.status == 200){
+        if (res.status == 200) {
+          window.location.href = "/"
+        }
+      });
+
+      await fetch("https://localhost:7253/api/Medewerker/use2fa", {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "AccessToken": at, "key": code }),
+      }).then(async res => {
+        if (res.status == 200) {
           window.location.href = "/"
         }
       });

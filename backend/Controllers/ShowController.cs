@@ -67,16 +67,3 @@ public class ShowController : ControllerBase
     }
 }
 
-public class VoorstellingData
-{
-    public Voorstelling voorstelling { get; set; }
-    public List<Show> shows { get; set; }
-}
-
-public class HerhaalbareShow{
-    public int Zaalnummer { get; set; }
-    public DateTime StartDatum { get; set; }
-    public int VoorstellingId { get; set; }
-    public string? Interval { get; set; }
-    public int? AantalKeer { get; set; }
-}

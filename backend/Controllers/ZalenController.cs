@@ -121,13 +121,3 @@ public class ZaalController : ControllerBase
     }
 }
 
-public class StoelData
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-    public double Prijs { get; set; }
-    public int Rang { get; set; }
-    public bool IsGereserveerd { get; set; }
-    public int StoelID { get; set; }
-    public KlantInfoShort KlantInfo {set; get;}
-}

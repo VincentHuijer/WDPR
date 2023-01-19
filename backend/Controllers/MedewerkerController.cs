@@ -202,24 +202,3 @@ public class MedewerkerController : ControllerBase
         // }
     }
 
-    public class nieuweMedewerker
-    {
-        public string Voornaam { set; get; }
-        public string Achternaam { set; get; }
-        public string Email { set; get; }
-        public string Wachtwoord { set; get; }
-        public string AccessToken {set; get;}
-    }
-
-    public class MedewerkerInfo
-    {
-        public bool TwoFactorAuthSetupComplete { set; get; }
-        public bool IsBlocked { set; get; }
-        public AccessToken AccessToken { set; get; }
-        public string Voornaam { set; get; }
-        public string Achternaam { set; get; }
-        public string Email { set; get; }
-        public string Afbeelding { set; get; }
-        public DateTime GeboorteDatum { set; get; }
-        public string RolNaam { set; get; }
-    }

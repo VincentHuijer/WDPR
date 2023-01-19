@@ -123,15 +123,3 @@ public class VoorstellingController : ControllerBase
     }
 }
 
-public class VoorstellingIdObject
-{
-    public int Id { get; set; }
-}
-
-public class NieuweVoorstelling
-{
-    public string Titel { get; set; }
-    public string Omschrijving { get; set; }
-    public string Image { get; set; }
-    public string AccessToken {set; get;}
-}

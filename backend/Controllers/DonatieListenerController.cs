@@ -51,31 +51,3 @@ public class DonatieListenerController : ControllerBase
         return false;
     }
 }
-public class DonatieObject{
-    public string Naam {set; get;}
-    public string Email {set; get;}
-    public double Hoeveelheid {set; get;}
-}
-
-public class DonateurCheck{
-    public static async Task DonateurStatusCheck(Klant klant, GebruikerContext _context){
-        List<Donatie> DonatiesDitJaar = await _context.Donaties.Where(d => d.Datum > DateTime.Now.AddYears(-1)).Where(d => d.KlantId == klant.Id).ToListAsync();
-        double totaal = 0;
-        foreach(var Donatie in DonatiesDitJaar){
-            totaal += Donatie.Hoeveelheid;
-        }
-        if(totaal >= 1000){
-            if(klant.Donateur) return;
-            klant.Donateur = true;
-            klant.RolNaam = Rol.DonateurRol.Naam;
-            await _context.SaveChangesAsync();
-        }else{
-            if(!klant.Donateur) return;
-            klant.Donateur = false;
-            klant.RolNaam = Rol.KlantRol.Naam;
-            await _context.SaveChangesAsync();
-            return;
-        }
-        return;
-    }
-}

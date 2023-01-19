@@ -50,8 +50,3 @@ public class BetalingController : ControllerBase
 
 }
 
-public class Betaling
-{
-    public bool succes { get; set; }
-    public int reference { get; set; }
-}

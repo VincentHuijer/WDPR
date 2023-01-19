@@ -96,14 +96,4 @@ public class GroepController : ControllerBase{
     }
 }
 
-public class NieuweGroep{
-    public string Groepsnaam {set; get;}
-    public string Omschrijving {set; get;}
-    public string AccessToken {set; get;}
-}
 
-public class KlantInfoShort{
-    public string Voornaam {set; get;}
-    public string Achternaam {set; get;}
-    public string Email {set; get;}
-}

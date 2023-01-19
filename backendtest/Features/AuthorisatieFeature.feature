@@ -22,4 +22,4 @@ Scenario: AdminFunctieMetArtiestRol
     Given een klant met rol Artiest
     And een bepaalde functie vereist rol Admin
     When klant met rol Artiest deze functie probeert uit te voeren
-    Then moet false teruggeven worden als waarde    
+    Then moet false teruggeven worden als waarde

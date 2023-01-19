@@ -39,6 +39,13 @@ public sealed class AuthorisatieStep
         _context.Rollen.RemoveRange(_context.Rollen);
         await _context.SaveChangesAsync();
     }
+    [AfterScenario]
+    public async Task AfterScenario(){
+        _klant = null;
+        _medewerker = null;
+        _benodigdeRol = null;
+        _accessToken = null;
+    }
     [Given("een medewerker met rol (.*)")]
     public async Task MedewerkerMetRol(string rol){
         string randomemail = DateTime.Now.ToString() + "@gmail.com";
@@ -88,7 +95,7 @@ public sealed class AuthorisatieStep
     [When("klant met rol (.*) deze functie probeert uit te voeren")]
     public async Task KlantVoertFunctieUit(string rol){
         AccessTokenObject accessTokenObject = new AccessTokenObject(){AccessToken = _accessToken.Token};
-        var result = await _permissionService.IsAllowed(accessTokenObject, _benodigdeRol, true, _context);
+        var result = await _permissionService.IsAllowed(accessTokenObject, _benodigdeRol, false, _context);
         _result = result;
     }
 

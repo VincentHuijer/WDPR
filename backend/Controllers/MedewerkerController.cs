@@ -37,6 +37,10 @@ public class MedewerkerController : ControllerBase
                 TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
                 IsBlocked = medewerker.IsBlocked,
                 AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
+                Achternaam = medewerker.Email,
+                Voornaam = medewerker.Voornaam,
+                Email = medewerker.Email,
+                RolNaam = medewerker.RolNaam
             };
             return medewerkerInfo;
         }

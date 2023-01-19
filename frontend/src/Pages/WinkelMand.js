@@ -118,7 +118,7 @@ export default function WinkelMand() {
                                     {/* VOUCHER INPUT */}
                                     <div className="pt-2 pb-5">
                                         <p className="font-bold text-xl text-appLightBlack">TOTAAL: €{totaalPrijs}</p>
-                                        <button onClick={() => { Betaal() }} className='border-2 border-appRed bg-appRed text-white px-3 py-1 text-xl rounded-xl font-extrabold mt-3 w-full'>AFREKENEN</button>
+                                        <button name="afrekenKnop" onClick={() => { Betaal() }} className='border-2 border-appRed bg-appRed text-white px-3 py-1 text-xl rounded-xl font-extrabold mt-3 w-full'>AFREKENEN</button>
                                     </div>
                                 </div>
                             </div>

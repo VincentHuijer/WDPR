@@ -21,28 +21,28 @@ export default function CheckGegevens(
   }
 
   if (lastName.length < 2) {
-    return "achternaam te kort";
+    return "Achternaam te kort";
   }
 
   if (lastName.length > 15) {
-    return "achternaam te lang";
+    return "Achternaam te lang";
   }
 
   if (!lastName.match(/^[A-Za-z]+$/)) {
-    return "achternaam mag geen bijzondere tekens bevatten";
+    return "Achternaam mag geen bijzondere tekens bevatten";
   }
 
   if (password.length < 8) {
     return "Wachtwoord te kort";
   }
   if (password !== passwordAgain) {
-    return "wachtwoorden komt niet overeen";
+    return "Wachtwoorden komt niet overeen";
   }
   if (password.match(/^[!@#$%^&*]+$/)) {
-    return "wachtwoord moet een speciaal teken bevatten";
+    return "Wachtwoord moet een speciaal teken bevatten";
   }
   if (password.match([/0-9/] < 1)) {
-    return "wachtwoord moet een nummer bevatten";
+    return "Wachtwoord moet een nummer bevatten";
   }
   if (password.match([/A-Z/] < 1)) {
     return "Wachtwoord moet een hoofdletter bevatten";

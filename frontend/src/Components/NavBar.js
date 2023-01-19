@@ -115,8 +115,8 @@ export function NavBar() {
 
                                             {["Klant", "Artiest", "Donateur"].includes(userData.rolNaam) &&
                                                 <>
-                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/user/bestellingen">Bestellingen</Link>
-                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/winkelmand">Winkelmand</Link>
+                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/user/bestellingen" name="Bestellingen">Bestellingen</Link>
+                                                    <Link onClick={() => { setOpenSettings(!openSettings) }} className='cursor-pointer' to="/winkelmand" name="Winkelmand   ">Winkelmand</Link>
                                                 </>}
                                         </div>
 

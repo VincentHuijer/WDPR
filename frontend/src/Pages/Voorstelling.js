@@ -312,7 +312,7 @@ export default function Voorstelling() {
             </div>}
           </div>
 
-          {(!stoelenLoading && kaartjes.length > 0 && kaartjes.length <= 10) && <button
+          {(!stoelenLoading && kaartjes.length > 0 && kaartjes.length <= 10) && <button name="bestelButton"
             onClick={() => { if (!bestelLoading) Bestel() }}
             className={"hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6 " + (bestelLoading && "opacity-50 hover:cursor-wait")}
           >

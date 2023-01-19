@@ -17,14 +17,14 @@ export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
+    var [showMore, setShowMore] = useState(false);
 
     const [complete, setComplete] = useState(false)
 
+    var checkResponse = CheckGegevens(firstName, lastName, password, passwordAgain)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        let checkResponse = CheckGegevens(firstName, lastName, password, passwordAgain)
 
         if (checkResponse !== true ) {
             console.log("Check response: " + checkResponse);
@@ -141,9 +141,14 @@ export default function Register() {
                             {errorMessage !== "" && <div className="w-10/12 m-auto mt-4">
                                 <p className="font-bold text-appRed">{errorMessage}</p>
                             </div>}
-
+                            
+                                     <div className="w-10/12 m-auto mt-6 hover:cursor-default"> 
+                                     <p> {"probleem met inloggen: " + checkResponse}</p>
+                                        </div>
                             <div className="w-10/12 m-auto mt-6 hover:cursor-default">
-                                <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button>
+                                <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">Registreer</button>
+                                
+
                             </div>
                         </div>
                     </form>

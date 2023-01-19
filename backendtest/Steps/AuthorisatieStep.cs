@@ -29,22 +29,22 @@ public sealed class AuthorisatieStep
         var medewerkerService = new MedewerkerService();
         _medewerkerService = medewerkerService;
     }
-    [BeforeScenario]
+    [BeforeScenario (Order = 100)]
     public async Task BeforeScenario(){
         _context.AccessTokens.RemoveRange(_context.AccessTokens);
         _context.VerificatieTokens.RemoveRange(_context.VerificatieTokens);
         _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
         _context.Klanten.RemoveRange(_context.Klanten);
         _context.Medewerkers.RemoveRange(_context.Medewerkers);
-        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
         _context.Rollen.RemoveRange(_context.Rollen);
         await _context.SaveChangesAsync();
     }
     [Given("een medewerker met rol (.*)")]
     public async Task MedewerkerMetRol(string rol){
-        var response = await _medewerkerService.NieuweMedewerker("Test", "Test", "somethingrandom@gmail.com", "Test123!", _context);
+        string randomemail = DateTime.Now.ToString() + "@gmail.com";
+        var response = await _medewerkerService.NieuweMedewerker("Test", "Test",  randomemail, "Test123!", _context);
         Assert.Equal("Success", response);
-        Medewerker medewerker = await _context.Medewerkers.FirstAsync(m => m.Email == "somethingrandom@gmail.com");
+        Medewerker medewerker = await _context.Medewerkers.FirstAsync(m => m.Email == randomemail);
         AccessToken accessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await _context.AccessTokens.AddAsync(accessToken);
         await _context.SaveChangesAsync();
@@ -58,9 +58,10 @@ public sealed class AuthorisatieStep
 
     [Given("een klant met rol (.*)")]
     public async Task KlantMetRol(string rol){
-        var response = await _gebruikerService.Registreer("Test", "Test", "somethingrandom@gmail.com", "Test123!", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, _context);
+        string randomemail = DateTime.Now.ToString() + "@gmail.com";
+        var response = await _gebruikerService.Registreer("Test", "Test", randomemail, "Test123!", new VerificatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(3)}, _context);
         Assert.Equal("Success", response);
-        Klant klant = await _context.Klanten.FirstAsync(m => m.Email == "somethingrandom@gmail.com");
+        Klant klant = await _context.Klanten.FirstAsync(m => m.Email == randomemail);
         AccessToken accessToken = new AccessToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await _context.AccessTokens.AddAsync(accessToken);
         await _context.SaveChangesAsync();

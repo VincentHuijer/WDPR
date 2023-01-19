@@ -31,7 +31,6 @@ public sealed class AuthenticatieStep
         _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
         _context.Klanten.RemoveRange(_context.Klanten);
         _context.Medewerkers.RemoveRange(_context.Medewerkers);
-        _context.AuthenticatieTokens.RemoveRange(_context.AuthenticatieTokens);
         _context.Rollen.RemoveRange(_context.Rollen);
         await _context.SaveChangesAsync();
     }

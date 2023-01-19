@@ -22,8 +22,8 @@ public class ZaalController : ControllerBase
         return Zalen;
     }
 
-    [HttpGet("GetShowStoelen/{id}")]
-    public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
+    [HttpPost("GetShowStoelen/{id}")]
+    public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen([FromBody] AccessTokenObject accessToken, int id)
     {
         await BestellingCleaner.Clean(_context);
         Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);

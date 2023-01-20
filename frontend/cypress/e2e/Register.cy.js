@@ -89,7 +89,7 @@ describe("test register form", () => {
 
   });
 
-   it("vult het registratieformulier met een achternaam met maar 1 letter", () => { //voornaam/achternaam exact zelfde code
+   it("vult het registratieformulier met een achternaam met maar 1 karakter", () => { //voornaam/achternaam exact zelfde code
     cy.get("input[name=firstName]").type(firstName);
     cy.get("input[name=name]").type("a");
     cy.get("input[name=email]").type(email);
@@ -111,7 +111,7 @@ describe("test register form", () => {
 
 });
 
-it("vult het registratieformulier zonder voornaam", () => { //voornaam/achternaam exact zelfde code
+it("Test als je een invulveld mist. vult het registratieformulier zonder voornaam", () => { //voornaam/achternaam exact zelfde code
   cy.get("input[name=name]").type(lastName);
   cy.get("input[name=email]").type(email);
   cy.get("input[name=password]").type(wachtwoord);

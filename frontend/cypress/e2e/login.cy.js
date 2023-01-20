@@ -1,5 +1,4 @@
 describe("test inloggen", () => {
-  const emailBlokkeren = "3dvechterlol@gmail.com";
   const wachtwoord = "Test123!";
   const wachtwoordFout = "fout123!";
 
@@ -32,7 +31,7 @@ describe("test inloggen", () => {
   });
 
   it("probeert met verkeerd wachtwoord/email combinatie in te loggen totdat het geblokkeerd raakt (3 pogingen)", () => {
-    cy.get("input[name=email]").type(emailBlokkeren);
+    cy.get("input[name=email]").type("3dvechterlol@gmail.com");
     cy.get("input[name=wachtwoord]").type(wachtwoordFout);
     cy.get("button[type=submit]").click();
     cy.get("button[type=submit]").click();

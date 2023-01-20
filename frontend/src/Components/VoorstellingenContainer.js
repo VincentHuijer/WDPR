@@ -24,7 +24,7 @@ export default function VoorstellingenContainer({ data, states, userRole }) {
 
 
                 <div className="flex ml-auto mr-0 gap-3">
-                    <div className="bg-appLight w-fit px-2 py-1 ml-auto mr-0 rounded-md font-bold mt-4 flex items-center">
+                    <div className="bg-appLight w-fit px-2 py-1 ml-auto mr-0 rounded-md font-bold mt-4 flex items-center cursor-pointer">
                         <button onClick={() => states[1](states[0] == "?order=prijs" ? "?order=leeftijd" : "?order=prijs")}>{states[0] == "?order=prijs" ? "Prijs - laag naar hoog" : "Leeftijd - laag naar hoog"}</button>
                     </div>
                     <div className="bg-appLight w-fit px-2 py-1 ml-auto mr-0 rounded-md font-bold mt-4 flex items-center cursor-pointer">

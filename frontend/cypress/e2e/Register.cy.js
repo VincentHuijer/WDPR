@@ -72,7 +72,8 @@ describe("test register form", () => {
     });
 
     //in form zelf zitten al een aantal checks voor email. zoals karakters voor de ‘@’ en voor karakters daarna.
-    //verder zijn de mogelijkheden voor emails van mensen haast eindeloos in combinaties met letters en cijfers.
+    //stel je zou @gmail.com invullen of JanJannsen@ geeft de form je een melding dat het emailadres  niet klopt.
+    //verder zijn de mogelijkheden voor emails van mensen haast eindeloos in combinaties met letters, cijfers, tekens en lengte.
 
 
 
@@ -129,10 +130,10 @@ it("vult het registratieformulier succesvol in voor een nog niet bestaande gebru
   cy.get("input[name=repeatpassword]").type(wachtwoordOpnieuw);
   cy.get("button[type=submit]").click();
 
-  cy.get("p").contains("VERIFIEER UW ACCOUNT");
+  cy.get("p").contains("VERIFIEER UW ACCOUNT"); //Na succesvol registreren is verificatie de volgende stap. 
 });
 
-it("vult het registratieformulier fout in en vervolgens goed (succesvolle registratie)", () => { //voornaam/achternaam exact zelfde code
+it("vult het registratieformulier fout in en vervolgens goed (succesvolle registratie na een fout)", () => { //voornaam/achternaam exact zelfde code
   cy.get("input[name=name]").type(lastName);
   const randomEmail = `newuser+${Math.floor(Math.random() * 10000)}@example.com`;
   cy.get('input[name="email"]').type(randomEmail);
@@ -144,7 +145,7 @@ it("vult het registratieformulier fout in en vervolgens goed (succesvolle regist
   cy.get("input[name=firstName]").type(firstName);
   cy.get("button[type=submit]").click();
 
-  cy.get("p").contains("VERIFIEER UW ACCOUNT");
+  cy.get("p").contains("VERIFIEER UW ACCOUNT"); //Na succesvol registreren is verificatie de volgende stap. 
 
 });
 

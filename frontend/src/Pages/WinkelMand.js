@@ -68,7 +68,7 @@ export default function WinkelMand() {
             const formData = new URLSearchParams();
             formData.append("amount", bestelInfo.prijs)
             formData.append("reference", bestelInfo.id)
-            formData.append("url", `${host}/api/Betalin`)
+            formData.append("url", `${host}/api/Betaling`)
             fetch("https://fakepay.azurewebsites.net", {
                 method: "POST",
                 headers: {

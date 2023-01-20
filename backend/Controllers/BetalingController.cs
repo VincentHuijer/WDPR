@@ -20,13 +20,13 @@ public class BetalingController : ControllerBase
     public async Task<ActionResult> Betaling([FromForm] Betaling betaling)
     {
         //Authorisatie toevoegen, alleen ip van betaling mag deze request
-        if(!betaling.succes) return Redirect("http://localhost:3000/winkelmand");
+        if(!betaling.succes) return Redirect("https://theater-laak.netlify.app/winkelmand");
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
         bestelling.isBetaald = betaling.succes;
         if(bestelling.isBetaald) bestelling.IsActive = false;
         await _context.SaveChangesAsync();
-        return Redirect("http://localhost:3000/bedankt");
+        return Redirect("https://theater-laak.netlify.app/bedankt");
     }
 
 

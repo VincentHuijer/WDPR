@@ -16,7 +16,7 @@ public class DonatieController : ControllerBase
 
     [HttpPost("permission")]
     public async Task<ActionResult> NieuweDonatie([FromForm] string token){
-        return Redirect("http://localhost:3000/donatie?token=" + token);
+        return Redirect("https://theater-laak.netlify.app/donatie?token=" + token);
     }
 
 }

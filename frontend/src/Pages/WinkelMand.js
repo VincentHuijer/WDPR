@@ -4,6 +4,8 @@ import Loading from "../Components/Loading"
 import WinkelMandItem from "../Components/WinkelMandItem"
 import WinkelMandTekstItem from "../Components/WinkelMandTekstItem"
 import { useCookies } from "react-cookie"
+import host from "../Components/apiURL"
+
 
 export default function WinkelMand() {
     const [atCookie, setAtCookie] = useCookies(['acces_token', 'remember_me']);
@@ -21,7 +23,7 @@ export default function WinkelMand() {
 
     async function getBestelling() {
         setIsLoading(true)
-        fetch("https://localhost:7253/api/Bestelling/activebestelling", {
+        fetch(`${host}/api/Bestelling/activebestelling`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -48,7 +50,7 @@ export default function WinkelMand() {
     }
 
     async function Betaal() {
-        await fetch("https://localhost:7253/api/Betaling/bestelling", {
+        await fetch(`${host}/api/Betaling/bestelling`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,7 +68,7 @@ export default function WinkelMand() {
             const formData = new URLSearchParams();
             formData.append("amount", bestelInfo.prijs)
             formData.append("reference", bestelInfo.id)
-            formData.append("url", "https://localhost:7253/api/Betaling")
+            formData.append("url", `${host}/api/Betalin`)
             fetch("https://fakepay.azurewebsites.net", {
                 method: "POST",
                 headers: {

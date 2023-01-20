@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom";
 
+import host from "../../Components/apiURL";
+
 export default function Verify() {
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +25,7 @@ export default function Verify() {
         }
 
 
-        await fetch("https://localhost:7253/api/klant/verifieer", {
+        await fetch(`${host}/api/klant/verifieer`, {
             method: 'POST',
             mode: 'cors',
             headers: {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Loading from "../Components/Loading"
 import VoorstellingenContainer from "../Components/VoorstellingenContainer"
+import host from "../Components/apiURL"
 
 export default function Voorstellingen() {
     const [data, setData] = useState([])
@@ -10,7 +11,7 @@ export default function Voorstellingen() {
 
 
     async function getVoorstellingen() {
-        await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen${orderState}`)
+        await fetch(`${host}/api/voorstelling/getvoorstellingen${orderState}`)
             .then(res => res.json())
             .then(data => {
                 if (data.status == 404) return

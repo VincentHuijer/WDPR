@@ -5,6 +5,8 @@ import Loading from '../../Components/Loading'
 import VoorstellingenContainer from '../../Components/VoorstellingenContainer'
 import ShowEditContainer from './ShowEditContainer'
 
+import host from '../../Components/apiURL'
+
 const ShowInzien = () => {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
@@ -16,7 +18,7 @@ const ShowInzien = () => {
     const [image, setImage] = useState()
     const AccessToken = useAccesToken();
     async function getVoorstellingen() {
-        await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen?order=prijs`)
+        await fetch(`${host}/api/voorstelling/getvoorstellingen?order=prijs`)
             .then(res => res.json())
             .then(async data => {
                 setData(data)
@@ -25,7 +27,7 @@ const ShowInzien = () => {
     }
 
     async function addVoorstelling() {
-        await fetch(`https://localhost:7253/api/voorstelling/AddVoorstelling`, {
+        await fetch(`${host}/api/voorstelling/AddVoorstelling`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -6,6 +6,8 @@ import CheckGegevens from "../scripts/CheckGegevens";
 import useSound from 'use-sound'
 import mySound from '../mario.mp3'
 
+import host from "../Components/apiURL";
+
 
 export default function Register() {
     const [playSound] = useSound(mySound)
@@ -43,7 +45,7 @@ export default function Register() {
             "Achternaam": lastName,
         } 
 
-        await fetch("https://localhost:7253/api/klant/registreer", {
+        await fetch(`${host}/api/klant/registreer`, {
             method: 'POST',
             mode: 'cors',
             headers: {

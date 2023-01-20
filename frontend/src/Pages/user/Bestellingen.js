@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useAccesToken } from '../../Authentication/AuthContext'
 import WinkelMandItem from '../../Components/WinkelMandItem'
 
+import host from '../../Components/apiURL'
+
 const Bestellingen = () => {
     const accesToken = useAccesToken()
 
@@ -18,7 +20,7 @@ const Bestellingen = () => {
     }, [accesToken])
 
     async function fetchData() {
-        await fetch("https://localhost:7253/api/Bestelling/getbestelling/by/at", {
+        await fetch(`${host}/api/Bestelling/getbestelling/by/at`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,7 +35,7 @@ const Bestellingen = () => {
 
             setData(data.reverse())
 
-            await fetch("https://localhost:7253/api/klant/klant/by/at", {
+            await fetch(`${host}/api/klant/klant/by/at`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

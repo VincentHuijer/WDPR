@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+import host from '../../apiURL'
+
 export default function Twofa({ at, didSetup }) {
 
   const [code, setCode] = useState("")
@@ -9,7 +11,7 @@ export default function Twofa({ at, didSetup }) {
   useEffect(() => {
     const getData = async () => {
       try {
-        await fetch("https://localhost:7253/api/Klant/setup2fa", {
+        await fetch(`${host}/api/Klant/setup2fa`, {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -22,7 +24,7 @@ export default function Twofa({ at, didSetup }) {
           setresponseData(response)
         });
       } catch {
-        await fetch("https://localhost:7253/api/Medewerker/setup2fa", {
+        await fetch(`${host}/api/Medewerker/setup2fa`, {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -47,7 +49,7 @@ export default function Twofa({ at, didSetup }) {
     let codeLength = code.split("").length
 
     if (codeLength == 6) {
-      await fetch("https://localhost:7253/api/Klant/use2fa", {
+      await fetch(`${host}/api/Klant/use2fa`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -61,7 +63,7 @@ export default function Twofa({ at, didSetup }) {
         }
       });
 
-      await fetch("https://localhost:7253/api/Medewerker/use2fa", {
+      await fetch(`${host}/api/Medewerker/use2fa`, {
         method: 'POST',
         mode: 'cors',
         headers: {

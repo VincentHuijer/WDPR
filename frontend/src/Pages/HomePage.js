@@ -3,6 +3,7 @@ import Hero from "../Components/Hero";
 import VoorstellingenPreview from "../Components/VoorstellingenPreview";
 import { useState, useEffect } from "react";
 
+import host from "../Components/apiURL";
 
 export default function HomePage() {
 
@@ -14,7 +15,7 @@ export default function HomePage() {
     }, [])
 
     async function getVoorstellingData() {
-        await fetch(`https://localhost:7253/api/voorstelling/getvoorstellingen?order=homepage`)
+        await fetch(`${host}/api/voorstelling/getvoorstellingen?order=homepage`)
             .then(res => res.json())
             .then(data => {
                 setData(data)

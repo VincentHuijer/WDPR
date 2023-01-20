@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccesToken } from '../../../Authentication/AuthContext'
 
+import host from '../../../Components/apiURL'
+
 const ShowId = () => {
     const accesToken = useAccesToken()
     const { showId } = useParams()
@@ -19,7 +21,7 @@ const ShowId = () => {
     }, [accesToken])
 
     async function getKaartjes() {
-        await fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`, {
+        await fetch(`${host}/api/zaal/GetShowStoelen/${showId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

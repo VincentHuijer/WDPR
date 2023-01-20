@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { setCookie } from "../scripts/Cookies";
 
-
+import host from "../Components/apiURL";
 import Twofa from "../Components/authenticatedPages/user/Twofa";
 
 export default function Login() {
@@ -66,7 +66,7 @@ export default function Login() {
     };
 
     async function medewerkerLogin(loginBody) {
-        await fetch("https://localhost:7253/api/medewerker/login", {
+        await fetch(`${host}/api/medewerker/login`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -113,7 +113,7 @@ export default function Login() {
 
     async function klantLogin(loginBody) {
         return new Promise(async (resolve, reject) => {
-            await fetch("https://localhost:7253/api/klant/login", {
+            await fetch(`${host}/api/klant/login`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

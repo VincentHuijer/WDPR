@@ -13,6 +13,8 @@ import { useAccesToken } from "../Authentication/AuthContext";
 import Loading from "../Components/Loading";
 import StoelenLoading from "../Components/StoelenLoading";
 
+import host from "../Components/apiURL";
+
 export default function Voorstelling() {
   const accesToken = useAccesToken();
   const { id } = useParams();
@@ -69,7 +71,7 @@ export default function Voorstelling() {
     setKaartjes(oldArr => [])
     setBestelLoading(false)
 
-    fetch(`https://localhost:7253/api/zaal/GetShowStoelenVoorstelling/${showId}`).then(response => response.json()).then(data => {
+    fetch(`${host}/api/zaal/GetShowStoelenVoorstelling/${showId}`).then(response => response.json()).then(data => {
 
       let seatsList = []
       data.map(row => {
@@ -107,7 +109,7 @@ export default function Voorstelling() {
 
 
   async function getVoorstellingData() {
-    await fetch(`https://localhost:7253/api/show/GetShows/${id}`)
+    await fetch(`${host}/api/show/GetShows/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.status == 404) return
@@ -149,7 +151,7 @@ export default function Voorstelling() {
       "AccessToken": accesToken
     }
 
-    fetch("https://localhost:7253/api/Bestelling/nieuwebestelling", {
+    fetch(`${host}/api/Bestelling/nieuwebestelling`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

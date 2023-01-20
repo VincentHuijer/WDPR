@@ -6,6 +6,8 @@ import { useAccesToken, useUpdateAccesToken } from '../Authentication/AuthContex
 import Hero from './Hero';
 
 
+import host from './apiURL';
+
 export function NavBar() {
     const accesToken = useAccesToken()
     const logout = useUpdateAccesToken()
@@ -30,9 +32,9 @@ export function NavBar() {
 
 
         try {
-            await fetchData("https://localhost:7253/api/klant/klant/by/at")
+            await fetchData(`${host}/api/klant/klant/by/at`)
         } catch {
-            await fetchData("https://localhost:7253/api/medewerker/medewerker/by/at")
+            await fetchData(`${host}/api/medewerker/medewerker/by/at`)
         }
     }
 
@@ -54,15 +56,15 @@ export function NavBar() {
 
     async function resetRequest() {
         setResetState(true)
-        await fetchData(`https://localhost:7253/api/klant/request/passwordreset/${userData.email}`)
+        await fetchData(`${host}/api/klant/request/passwordreset/${userData.email}`)
     }
 
     async function overalUitloggen() {
         try {
-            await fetchData("https://localhost:7253/api/klant/logoutall")
+            await fetchData(`${host}/api/klant/logoutall`)
             logout("none")
         } catch {
-            await fetchData("https://localhost:7253/api/medewerker/logoutall")
+            await fetchData(`${host}/api/medewerker/logoutall`)
             logout("none")
         }
     }

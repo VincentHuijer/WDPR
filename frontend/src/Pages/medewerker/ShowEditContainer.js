@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useAccesToken } from '../../Authentication/AuthContext'
 import { Link } from 'react-router-dom'
 
+import host from '../../Components/apiURL'
+
 
 const ShowEditContainer = ({ voorstelingData }) => {
 
@@ -30,7 +32,7 @@ const ShowEditContainer = ({ voorstelingData }) => {
     async function getVoorstellingData() {
         setLoading(true)
         setData([])
-        await fetch(`https://localhost:7253/api/show/GetShows/${data.voorstellingId}`)
+        await fetch(`${host}/api/show/GetShows/${data.voorstellingId}`)
             .then(res => res.json())
             .then(voorstellingData => {
                 let tempObject = data
@@ -42,7 +44,7 @@ const ShowEditContainer = ({ voorstelingData }) => {
     }
 
     async function addShow() {
-        await fetch(`https://localhost:7253/api/show/AddShow`, {
+        await fetch(`${host}/api/show/AddShow`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -60,7 +62,7 @@ const ShowEditContainer = ({ voorstelingData }) => {
     }
 
     async function verwijderShow() {
-        await fetch(`https://localhost:7253/api/voorstelling/verwijdervoorstelling/${Number(data.voorstellingId)}`, {
+        await fetch(`${host}/api/voorstelling/verwijdervoorstelling/${Number(data.voorstellingId)}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

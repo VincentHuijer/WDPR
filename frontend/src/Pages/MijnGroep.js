@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAccesToken } from '../Authentication/AuthContext'
 
+import host from '../Components/apiURL'
 
 const MijnGroep = () => {
     const AccessToken = useAccesToken()
@@ -12,7 +13,7 @@ const MijnGroep = () => {
     }, [AccessToken])
     
     async function laadLeden(){ 
-        await fetch("https://localhost:7253/api/Groep/groep/by/at",{
+        await fetch(`${host}/api/Groep/groep/by/at`,{
             method: "POST",
             body: JSON.stringify({"AccessToken": AccessToken}),
             headers: {
@@ -20,7 +21,7 @@ const MijnGroep = () => {
             }
         }).then(async response => {
           let data = await response.json() 
-          await fetch(`https://localhost:7253/api/Groep/get/${data.groepsId}/leden`,{
+          await fetch(`${host}/api/Groep/get/${data.groepsId}/leden`,{
             method: "POST",
             body: JSON.stringify({"AccessToken": AccessToken}),
             headers:{

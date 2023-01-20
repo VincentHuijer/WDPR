@@ -69,8 +69,12 @@ describe("test register form", () => {
       cy.get("button[type=submit]").click();
 
       cy.get("p").contains("Disposable email used!");  
-    }
-      );
+    });
+
+    //in form zelf zitten al een aantal checks voor email. zoals karakters voor de ‘@’ en voor karakters daarna.
+    //verder zijn de mogelijkheden voor emails van mensen haast eindeloos in combinaties met letters en cijfers.
+
+
 
       it("vult het registratieformulier met een voornaam met nummers", () => { //voornaam/achternaam exact zelfde code
         cy.get("input[name=firstName]").type("23123213");

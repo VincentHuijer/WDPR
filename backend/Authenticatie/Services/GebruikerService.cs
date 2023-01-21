@@ -22,7 +22,7 @@ public class GebruikerService : IGebruikerService{
         }
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
-        await _emailService.Send(email, "http://localhost:3000/verify?token=" + klant.VerificatieToken.Token + "&email="+ email, "Email Verification"); //Hier nog juiste content toevoegen
+        await _emailService.Send(email, "https://theater-laak.netlify.app/verify?token=" + klant.VerificatieToken.Token + "&email="+ email, "Email Verification"); //Hier nog juiste content toevoegen
         return "Success";
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
@@ -89,7 +89,7 @@ public class GebruikerService : IGebruikerService{
         }
         klant.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(klant.Email, "http://localhost:3000/user/resetwachtwoord?token=" + klant.AuthenticatieTokenId! + "&email=" + klant.Email, "Password Reset");
+        await _emailService.Send(klant.Email, "https://theater-laak.netlify.app/user/resetwachtwoord?token=" + klant.AuthenticatieTokenId! + "&email=" + klant.Email, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){

@@ -70,7 +70,7 @@ public class MedewerkerService : IMedewerkerService
         }
         medewerker.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(medewerker.Email, medewerker.AuthenticatieTokenId!, "Password Reset");
+        await _emailService.Send(medewerker.Email, "https://theater-laak.netlify.app/user/resetwachtwoord?token=" + medewerker.AuthenticatieTokenId! + "&email=" + medewerker.Email, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Medewerker medewerker, string token, string wachtwoord, GebruikerContext context){

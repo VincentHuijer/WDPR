@@ -194,6 +194,16 @@ public class BestellingController : ControllerBase
     //     }
     //     return stoelData;
     // }
+    [HttpPost("verwijderbestelling")]
+    public async Task<ActionResult> VerwijderBestelling([FromBody] AccessTokenObject accessToken){
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessToken.AccessToken, _context);
+        Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive == true).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
+        if(bestelling == null) return NotFound();
+        bestelling.IsActive = false;
+        await BestellingCleaner.Clean(_context);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
 
     [HttpPost("UpdateBestelling")]
     public async Task<ActionResult> UpdateBestelling([FromBody] Bestelling bestelling)

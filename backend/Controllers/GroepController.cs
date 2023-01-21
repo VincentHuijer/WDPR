@@ -83,11 +83,11 @@ public class GroepController : ControllerBase{
     }
 
     [HttpPost("verwijderlid")] //DONE
-    public async Task<ActionResult> RemoveLid([FromBody] GroepsIdKlantAccess groepsIdKlantAccess){
-        if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = groepsIdKlantAccess.AccessToken}, "Medewerker", true, _context) && !await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = groepsIdKlantAccess.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
-        ArtiestGroep artiestGroep = await _context.ArtiestGroepen.FirstOrDefaultAsync(ag => ag.GroepsId == groepsIdKlantAccess.GroepsId);
+    public async Task<ActionResult> RemoveLid([FromBody] GroepsIdMailAccess groepsIdMailAccess){
+        if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = groepsIdMailAccess.AccessToken}, "Medewerker", true, _context) && !await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = groepsIdMailAccess.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
+        ArtiestGroep artiestGroep = await _context.ArtiestGroepen.FirstOrDefaultAsync(ag => ag.GroepsId == groepsIdMailAccess.GroepsId);
         if(artiestGroep == null) return NotFound();
-        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Id == groepsIdKlantAccess.KlantId);
+        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == groepsIdMailAccess.KlantMail);
         if(klant == null) return NotFound();
         klant.ArtiestGroep = null;
         klant.ArtiestGroepId = null;

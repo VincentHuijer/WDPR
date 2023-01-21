@@ -27,6 +27,8 @@ import WachtwoordResetten from './Pages/user/WachtwoordResetten';
 import ShowInzien from './Pages/medewerker/ShowInzien';
 import MijnGroep from './Pages/MijnGroep';
 import ShowId from './Pages/medewerker/showInzien/ShowId';
+import Medewerkers from './Pages/admin/Medewerkers';
+import Groepen from './Pages/admin/Groepen';
 
 export default function App() {
 
@@ -58,6 +60,8 @@ export default function App() {
 
                         <Route path='/medewerker' element={<Wrapper><ShowInzien /></Wrapper>} />
                         <Route path='/medewerker/show/:showId' element={<Wrapper><ShowId /> </Wrapper>} />
+                        <Route path='/admin/medewerkers' element={<Wrapper><Medewerkers /> </Wrapper>} />
+                        <Route path='/admin/groepen' element={<Wrapper><Groepen /> </Wrapper>} />
 
                         <Route path='/ticket/:data' element={<Ticket />} />
                         <Route path='*' element={<FourOOOFour />} />

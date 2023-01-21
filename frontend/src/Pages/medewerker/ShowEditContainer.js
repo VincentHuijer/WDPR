@@ -67,7 +67,11 @@ const ShowEditContainer = ({ voorstelingData }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ "AccessToken": AccessToken })
+            body: JSON.stringify(
+                {
+                    "AccessToken": AccessToken
+                }
+            )
         })
     }
 

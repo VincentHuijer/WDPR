@@ -65,7 +65,7 @@ const ShowInzien = () => {
     return (
         <div className='mt-40'>
             <div className='w-11/12 m-auto'>
-                <p className='text-3xl font-bold'>ALLE VOORSTLELINGEN</p>
+                <p className='text-3xl font-bold'>ALLE VOORSTELLINGEN</p>
 
                 <div className='py-4 rounded-md mt-3'>
                     <p className='text-xl font-bold'>Voorstelling Toevoegen</p>

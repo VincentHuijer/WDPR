@@ -112,9 +112,14 @@ export function NavBar() {
                                                 </div>}
                                             </div>
 
-                                            {userData.rolNaam == "Admin" && <Link className='cursor-pointer' to="/admin">Admin Page</Link>}
+                                            {/* MAIN LINKS */}
                                             {userData.rolNaam == "Artiest" && <Link className='cursor-pointer' to="/mijngroep">Mijn Groep</Link>}
-                                            {userData.rolNaam == "Medewerker" && <Link className='cursor-pointer' to="/medewerker">Medewerker Portaal</Link>}
+                                            {(userData.rolNaam == "Medewerker") && <Link className='cursor-pointer' to="/medewerker">Medewerker Portaal</Link>}
+
+                                            {/* ADMIN PAGES */}
+                                            {(userData.rolNaam == "Admin") && <Link className='cursor-pointer' to="/admin/medewerkers">Medewerker Portaal</Link>}
+                                            {(userData.rolNaam == "Admin") && <Link className='cursor-pointer' to="/medewerker">Voorstelling Portaal</Link>}
+                                            {(userData.rolNaam == "Admin") && <Link className='cursor-pointer' to="/admin/groepen">Groepen Portaal</Link>}
 
                                             {["Klant", "Artiest", "Donateur"].includes(userData.rolNaam) &&
                                                 <>

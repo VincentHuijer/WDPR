@@ -12,10 +12,12 @@ import ArtiestProfile from "../Components/ArtiestProfile";
 import { useAccesToken } from "../Authentication/AuthContext";
 import Loading from "../Components/Loading";
 import StoelenLoading from "../Components/StoelenLoading";
+import { useNavigate } from "react-router-dom";
 
 import host from "../Components/apiURL";
 
 export default function Voorstelling() {
+  const navigate = useNavigate();
   const accesToken = useAccesToken();
   const { id } = useParams();
 
@@ -160,7 +162,7 @@ export default function Voorstelling() {
       body: JSON.stringify(bestelBody)
     }).then(response => {
       console.log(response.text);
-      window.location.href = "/winkelmand"
+      navigate("/winkelmand");
     })
     setBestelLoading(true)
   }

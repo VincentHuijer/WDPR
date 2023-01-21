@@ -203,7 +203,7 @@ export default function Voorstelling() {
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
+              <h1 className="text-4xl font-extrabold" name={data.voorstelling.voorstellingTitel+"Titelnaam"}>{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
                 {allowedDates[0]} tot {allowedDates[allowedDates.length - 1]}
               </p>

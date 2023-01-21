@@ -2,22 +2,16 @@ using System.Linq;
 using TechTalk.SpecFlow;
 namespace backendtest.Steps;
 [Binding]
-public sealed class AuthenticatieStep
+public sealed class AuthenticatieStep : CommonStep
 {
     private IGebruikerService _service;
-    private GebruikerContext _context;
     private NieuweKlant _nieuweKlant;
     private EmailWachtwoord _emailWachtwoord;
     private VerificatieToken _token;
     private Klant _klant;
     private string _response;
     private AuthenticatieToken _authToken;
-    public AuthenticatieStep(){
-        var options = new DbContextOptionsBuilder<GebruikerContext>()
-                           .UseInMemoryDatabase("MyInMemoryDb").Options;
-
-        var context = new GebruikerContext(options);
-        _context = context;
+    public AuthenticatieStep() : base(){
         var emailServiceMock = new Mock<IEmailService>();
         emailServiceMock.Setup(e => e.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         var service = new GebruikerService(emailServiceMock.Object);

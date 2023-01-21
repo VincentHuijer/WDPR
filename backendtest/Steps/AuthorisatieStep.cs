@@ -3,23 +3,17 @@ using backend.Controllers;
 using TechTalk.SpecFlow;
 namespace backendtest.Steps;
 [Binding]
-public sealed class AuthorisatieStep
+public sealed class AuthorisatieStep : CommonStep
 {
     private IPermissionService _permissionService;
     private IGebruikerService _gebruikerService;
     private IMedewerkerService _medewerkerService;
     private AccessToken _accessToken;
-    private GebruikerContext _context;
     private Klant? _klant;
     private Medewerker? _medewerker;
     private string _benodigdeRol;
     private bool _result;
-    public AuthorisatieStep(){
-        var options = new DbContextOptionsBuilder<GebruikerContext>()
-                           .UseInMemoryDatabase("MyInMemoryDb").Options;
-
-        var context = new GebruikerContext(options);
-        _context = context;
+    public AuthorisatieStep() : base(){
         var permissionService = new PermissionService();
         _permissionService = permissionService;
         var emailServiceMock = new Mock<IEmailService>();

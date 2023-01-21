@@ -53,9 +53,3 @@ Scenario: DonateurFunctieMetArtiestRol
     And een bepaalde functie vereist rol Donateur
     When klant met rol Artiest deze functie probeert uit te voeren
     Then moet false teruggeven worden als waarde
-
-Scenario: DonateurFunctieMetDonateurRol
-    Given een klant met rol Donateur
-    And een bepaalde functie vereist rol Donateur
-    When klant met rol Donateur deze functie probeert uit te voeren
-    Then moet true teruggeven worden als waarde

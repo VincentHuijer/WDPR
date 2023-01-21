@@ -156,6 +156,7 @@ public class MedewerkerController : ControllerBase
         {
             if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = nieuweMedewerker.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
             Medewerker medewerker = new Medewerker(nieuweMedewerker.Voornaam, nieuweMedewerker.Achternaam, nieuweMedewerker.Email, nieuweMedewerker.Wachtwoord);
+            medewerker.RolNaam = "Medewerker";
             _context.Medewerkers.Add(medewerker);
             if (await _context.SaveChangesAsync() > 0)
             {

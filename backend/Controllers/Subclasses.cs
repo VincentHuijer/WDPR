@@ -165,6 +165,12 @@ public class GroepsIdKlantAccess{
     public int KlantId {set; get;}
     public string AccessToken {set; get;}
 }
+
+public class GroepsIdMailAccess{
+    public int GroepsId {set; get;}
+    public string KlantMail {set; get;}
+    public string AccessToken {set; get;}
+}
 public class BestellingCleaner{
     public static async Task Clean(GebruikerContext _context){
                 //Clean up old inactive and unpaid bestellingen

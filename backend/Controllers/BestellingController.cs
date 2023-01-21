@@ -194,7 +194,7 @@ public class BestellingController : ControllerBase
     //     }
     //     return stoelData;
     // }
-    [HttpPost("verwijderbestelling")]
+    [HttpPost("verwijderbestelling")] //DONE
     public async Task<ActionResult> VerwijderBestelling([FromBody] AccessTokenObject accessToken){
         Klant klant = await _permissionService.GetKlantByAccessToken(accessToken.AccessToken, _context);
         Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive == true).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
@@ -205,18 +205,18 @@ public class BestellingController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("UpdateBestelling")]
-    public async Task<ActionResult> UpdateBestelling([FromBody] Bestelling bestelling)
-    {
-        _context.Bestellingen.Update(bestelling);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
+    // [HttpPost("UpdateBestelling")]
+    // public async Task<ActionResult> UpdateBestelling([FromBody] Bestelling bestelling)
+    // {
+    //     _context.Bestellingen.Update(bestelling);
+    //     if (await _context.SaveChangesAsync() > 0)
+    //     {
+    //         return Ok();
+    //     }
+    //     else
+    //     {
+    //         return BadRequest();
+    //     }
+    // }
 }
 

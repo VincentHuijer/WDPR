@@ -30,6 +30,8 @@ public class ShowController : ControllerBase
     [HttpPost("AddShow")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
     public async Task<ActionResult> AddShow([FromBody] HerhaalbareShow HerhaalShow)
     {
+        AccessTokenObject accessToken = new AccessTokenObject(){AccessToken = HerhaalShow.AccessToken};
+        if(!await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context) && !await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permission!");
         Show show = new Show(HerhaalShow.Zaalnummer, HerhaalShow.StartDatum, HerhaalShow.VoorstellingId, _kalender.KalenderId);
 
         _context.Shows.Add(show);
@@ -49,20 +51,20 @@ public class ShowController : ControllerBase
         }
     }
 
-    [HttpPost("VerwijderShow/{id}")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
-    public async Task<ActionResult> VerwijderShow(int id)
-    {
-        //Authorisatie toevoegen
-        Show show = _context.Shows.Find(id);
-        _context.Shows.Remove(show);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
+    // [HttpPost("VerwijderShow/{id}")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
+    // public async Task<ActionResult> VerwijderShow(int id)
+    // {
+    //     //Authorisatie toevoegen
+    //     Show show = _context.Shows.Find(id);
+    //     _context.Shows.Remove(show);
+    //     if (await _context.SaveChangesAsync() > 0)
+    //     {
+    //         return Ok();
+    //     }
+    //     else
+    //     {
+    //         return BadRequest();
+    //     }
+    // }
 }
 

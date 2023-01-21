@@ -32,6 +32,7 @@ public class HerhaalbareShow{
     public int VoorstellingId { get; set; }
     public string? Interval { get; set; }
     public int? AantalKeer { get; set; }
+    public string AccessToken {set; get;}
 }
 
 public class nieuweMedewerker
@@ -158,6 +159,11 @@ public class Kaartjeshouder{
     public string Achternaam {set; get;}
     public string Email {set; get;}
     public List<StoelData> Stoelen {set; get;}
+}
+public class GroepsIdKlantAccess{
+    public int GroepsId {set; get;}
+    public int KlantId {set; get;}
+    public string AccessToken {set; get;}
 }
 public class BestellingCleaner{
     public static async Task Clean(GebruikerContext _context){

@@ -112,7 +112,7 @@ public class MedewerkerController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("request/passwordreset/{email}")]
+    [HttpPost("request/passwordreset/{email}")] //DONE
     public async Task<ActionResult> InitiatePasswordReset(string email)
     {
         Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(email, _context);
@@ -120,7 +120,7 @@ public class MedewerkerController : ControllerBase
         return HandleResponse(await _service.InitiatePasswordReset(medewerker, _context));
     }
 
-    [HttpPost("complete/passwordreset/{email}")]
+    [HttpPost("complete/passwordreset/{email}")] //DONE
     public async Task<ActionResult> CompletePasswordReset([FromBody] AuthenticatieTokenNieuwWachtwoord authenticatieTokenNieuwWachtwoord, string email)
     {
         Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(email, _context);
@@ -151,7 +151,7 @@ public class MedewerkerController : ControllerBase
 
 
 
-        [HttpPost("AddMedewerker")]
+        [HttpPost("AddMedewerker")] //DONE
         public async Task<ActionResult> AddMedewerker([FromBody] nieuweMedewerker nieuweMedewerker)
         {
             if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = nieuweMedewerker.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
@@ -168,7 +168,7 @@ public class MedewerkerController : ControllerBase
             }
         }
 
-        [HttpPost("VerwijderMedewerker")]
+        [HttpPost("VerwijderMedewerker")] //DONE
         public async Task<ActionResult> VerwijderMedewerker([FromBody] AccessId accessId)
         {
             if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = accessId.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
@@ -185,7 +185,7 @@ public class MedewerkerController : ControllerBase
             }
         }
 
-        [HttpPost("getmedewerkers")]
+        [HttpPost("getmedewerkers")] //DONE
         public async Task<ActionResult<List<MedewerkerInfo>>> GetMedewerkers([FromBody] AccessTokenObject accessToken){
             if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
             List<Medewerker> medewerkers = await _context.Medewerkers.ToListAsync();

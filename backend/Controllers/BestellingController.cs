@@ -194,5 +194,19 @@ public class BestellingController : ControllerBase
     //     }
     //     return stoelData;
     // }
+
+    [HttpPost("UpdateBestelling")]
+    public async Task<ActionResult> UpdateBestelling([FromBody] Bestelling bestelling)
+    {
+        _context.Bestellingen.Update(bestelling);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
 }
 

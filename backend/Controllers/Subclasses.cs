@@ -42,9 +42,14 @@ public class nieuweMedewerker
     public string Wachtwoord { set; get; }
     public string AccessToken {set; get;}
 }
+public class AccessId{
+    public string AccessToken {set; get;}
+    public int Id {set; get;}
+}
 
 public class MedewerkerInfo
 {
+    public int Id {set; get;}
     public bool TwoFactorAuthSetupComplete { set; get; }
     public bool IsBlocked { set; get; }
     public AccessToken AccessToken { set; get; }

@@ -34,6 +34,7 @@ public class MedewerkerController : ControllerBase
 
             MedewerkerInfo medewerkerInfo = new MedewerkerInfo()
             {
+                Id=medewerker.Id,
                 TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
                 IsBlocked = medewerker.IsBlocked,
                 AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
@@ -69,6 +70,7 @@ public class MedewerkerController : ControllerBase
         Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
         MedewerkerInfo medewerkerInfo = new MedewerkerInfo()
         {
+            Id = medewerker.Id,
             TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
             IsBlocked = medewerker.IsBlocked,
             AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
@@ -166,10 +168,10 @@ public class MedewerkerController : ControllerBase
         }
 
         [HttpPost("VerwijderMedewerker/{id}")]
-        public async Task<ActionResult> VerwijderMedewerker([FromBody] AccessTokenObject accessToken, int id)
+        public async Task<ActionResult> VerwijderMedewerker([FromBody] AccessId accessId)
         {
-            if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
-            Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == id);
+            if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = accessId.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");
+            Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == accessId.Id);
             if (medewerker == null) return BadRequest();
             _context.Medewerkers.Remove(medewerker);
             if (await _context.SaveChangesAsync() > 0)
@@ -180,6 +182,28 @@ public class MedewerkerController : ControllerBase
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost("getmedewerkers")]
+        public async Task<ActionResult<List<MedewerkerInfo>>> GetMedewerkers([FromBody] AccessTokenObject accessToken){
+            if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
+            List<Medewerker> medewerkers = await _context.Medewerkers.ToListAsync();
+            List<MedewerkerInfo> toReturn = new List<MedewerkerInfo>();
+            foreach(var medewerker in medewerkers){
+                toReturn.Add(new MedewerkerInfo(){
+                    Id = medewerker.Id,
+                    TwoFactorAuthSetupComplete = medewerker.TwoFactorAuthSetupComplete,
+                    IsBlocked = medewerker.IsBlocked,
+                    AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(medewerker.AccessTokenId, _context),
+                    Voornaam = medewerker.Voornaam,
+                    Achternaam = medewerker.Achternaam,
+                    Email = medewerker.Email,
+                    Afbeelding = medewerker.Afbeelding,
+                    GeboorteDatum = medewerker.GeboorteDatum,
+                    RolNaam = medewerker.RolNaam
+                });
+            }
+            return toReturn;
         }
 
         // [HttpPost("UpdateMedewerkerRole/{id}/{rolNaam}")]

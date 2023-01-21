@@ -16,7 +16,7 @@ public class VoorstellingController : ControllerBase
     }
 
 
-    [HttpGet("getvoorstellingen/leeftijd/{age}")]
+    [HttpGet("getvoorstellingen/leeftijd/{age}")] //DONE
     public async Task<ActionResult<List<Voorstelling>>> GetVoorstellingenByAge(int age, [FromQuery] string? order)
     {
         List<Voorstelling> voorstellingen = await _context.Voorstellingen
@@ -28,7 +28,7 @@ public class VoorstellingController : ControllerBase
         return StatusCode(500);
     }
 
-    [HttpGet("getvoorstellingen/titel/{titel}")]
+    [HttpGet("getvoorstellingen/titel/{titel}")] //DONE
     public async Task<ActionResult<List<Voorstelling>>> GetVoorstellingenByTitel(string titel, [FromQuery] string? order){
         List<Voorstelling> voorstellingen = await _context.Voorstellingen.Where(v => (v.VoorstellingTitel.ToLower()).Contains(titel.ToLower())).ToListAsync();
         if(order == null || (order.ToLower() != "prijs" && order.ToLower() != "leeftijd")) return voorstellingen;
@@ -36,7 +36,7 @@ public class VoorstellingController : ControllerBase
         return StatusCode(500);    
     }
 
-    [HttpGet("getvoorstellingen")]
+    [HttpGet("getvoorstellingen")] //DONE
     public async Task<List<Voorstelling>> GetVoorstellingen([FromQuery] string order){
         List<Voorstelling> voorstellingen = await _context.Voorstellingen.ToListAsync();
         if(order == null || (order.ToLower() != "prijs" && order.ToLower() != "leeftijd")) return voorstellingen;
@@ -45,18 +45,18 @@ public class VoorstellingController : ControllerBase
         return voorstellingen;
     }
 
-    [HttpGet("GetVoorstellingWithId/{id}")]
-    public async Task<ActionResult<Voorstelling>> GetVoorstellingWithId(int id)
-    {
-        Voorstelling v = await _context.Voorstellingen.FirstOrDefaultAsync(v => v.VoorstellingId == id);
-        if(v == null){
-            return NotFound();
-        }
+    // [HttpGet("GetVoorstellingWithId/{id}")]
+    // public async Task<ActionResult<Voorstelling>> GetVoorstellingWithId(int id)
+    // {
+    //     Voorstelling v = await _context.Voorstellingen.FirstOrDefaultAsync(v => v.VoorstellingId == id);
+    //     if(v == null){
+    //         return NotFound();
+    //     }
 
-        return v;
-    }
+    //     return v;
+    // }
 
-    [HttpPost("AddVoorstelling")]
+    [HttpPost("AddVoorstelling")] //DONE
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
     {
         AccessTokenObject accessToken = new AccessTokenObject(){AccessToken = nieuweVoorstelling.AccessToken};
@@ -84,7 +84,7 @@ public class VoorstellingController : ControllerBase
         }
     }
 
-    [HttpPost("VerwijderVoorstelling/{id}")]
+    [HttpPost("VerwijderVoorstelling/{id}")] //DONE
     public async Task<ActionResult> VerwijderVoorstelling(int id, [FromBody] AccessTokenObject accessToken)
     {
         if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context) && !await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");

@@ -15,7 +15,7 @@ public class ShowController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("GetShows/{voorstellingID}")]
+    [HttpGet("GetShows/{voorstellingID}")] //DONE
     public async Task<ActionResult<VoorstellingData>> GetVoorstellingen(int voorstellingID)
     {
         Voorstelling Voorstelling = await _context.Voorstellingen.FirstOrDefaultAsync(v => v.VoorstellingId == voorstellingID);
@@ -27,10 +27,9 @@ public class ShowController : ControllerBase
         return new VoorstellingData() { voorstelling = Voorstelling, shows = shows };
     }
 
-    [HttpPost("AddShow")]
+    [HttpPost("AddShow")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
     public async Task<ActionResult> AddShow([FromBody] HerhaalbareShow HerhaalShow)
     {
-        //Authorisatie toevoegen
         Show show = new Show(HerhaalShow.Zaalnummer, HerhaalShow.StartDatum, HerhaalShow.VoorstellingId, _kalender.KalenderId);
 
         _context.Shows.Add(show);
@@ -50,7 +49,7 @@ public class ShowController : ControllerBase
         }
     }
 
-    [HttpPost("VerwijderShow/{id}")]
+    [HttpPost("VerwijderShow/{id}")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
     public async Task<ActionResult> VerwijderShow(int id)
     {
         //Authorisatie toevoegen

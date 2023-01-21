@@ -50,7 +50,7 @@ export default function WinkelMand() {
     }
 
     async function Betaal() {
-        await fetch(`${host}/api/Betaling/bestelling`, {
+        await fetch(`${host}/api/Bestelling/bestelling`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

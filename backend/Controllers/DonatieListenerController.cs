@@ -35,12 +35,12 @@ public class DonatieListenerController : ControllerBase
         //Controleer of gebruiker al donateur is
     }
 
-    [HttpGet("bestelling/{id}")]
-    public async Task<ActionResult<Bestelling>> GetBestelling(int id){
-        Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == id);
-        if(bestelling == null) return NotFound();
-        return bestelling;
-    }
+    // [HttpGet("bestelling/{id}")]
+    // public async Task<ActionResult<Bestelling>> GetBestelling(int id){
+    //     Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == id);
+    //     if(bestelling == null) return NotFound();
+    //     return bestelling;
+    // }
     public async Task<bool> DonateurStatus(Klant klant){
         List<Donatie> DonatiesDitJaar = await _context.Donaties.Where(d => d.Datum > DateTime.Now.AddYears(-1)).ToListAsync();
         double totaal = 0;

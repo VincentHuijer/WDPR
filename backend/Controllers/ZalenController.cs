@@ -15,16 +15,17 @@ public class ZaalController : ControllerBase
     }
 
 
-    [HttpGet("getZalen")]
-    public async Task<List<Zaal>> getZalen()
-    {
-        List<Zaal> Zalen = await _context.Zalen.ToListAsync();
-        return Zalen;
-    }
+    // [HttpGet("getZalen")]
+    // public async Task<List<Zaal>> getZalen()
+    // {
+    //     List<Zaal> Zalen = await _context.Zalen.ToListAsync();
+    //     return Zalen;
+    // }
 
-    [HttpPost("GetShowStoelen/{id}")]
+    [HttpPost("GetShowStoelen/{id}")] //DONE
     public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen([FromBody] AccessTokenObject accessToken, int id)
     {
+        if(!await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context) && !await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
         await BestellingCleaner.Clean(_context);
         Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
 
@@ -59,7 +60,7 @@ public class ZaalController : ControllerBase
         return matrix;
     }
 
-    [HttpGet("GetShowStoelenVoorstelling/{id}")]
+    [HttpGet("GetShowStoelenVoorstelling/{id}")] //DONE
     public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
     {
         await BestellingCleaner.Clean(_context);
@@ -91,33 +92,33 @@ public class ZaalController : ControllerBase
     }
 
 
-    [HttpPost("AddZaal")]
-    public async Task<ActionResult> AddZaal([FromBody] Zaal zaal)
-    {
+    // [HttpPost("AddZaal")]
+    // public async Task<ActionResult> AddZaal([FromBody] Zaal zaal)
+    // {
 
-        _context.Zalen.Add(zaal);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
+    //     _context.Zalen.Add(zaal);
+    //     if (await _context.SaveChangesAsync() > 0)
+    //     {
+    //         return Ok();
+    //     }
+    //     else
+    //     {
+    //         return BadRequest();
+    //     }
+    // }
 
-    [HttpPost("VerwijderZaal")]
-    public async Task<ActionResult> VerwijderZaal([FromBody] Zaal zaal)
-    {
-        _context.Zalen.Remove(zaal);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
+    // [HttpPost("VerwijderZaal")]
+    // public async Task<ActionResult> VerwijderZaal([FromBody] Zaal zaal)
+    // {
+    //     _context.Zalen.Remove(zaal);
+    //     if (await _context.SaveChangesAsync() > 0)
+    //     {
+    //         return Ok();
+    //     }
+    //     else
+    //     {
+    //         return BadRequest();
+    //     }
+    // }
 }
 

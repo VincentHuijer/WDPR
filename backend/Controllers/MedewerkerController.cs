@@ -18,10 +18,10 @@ public class MedewerkerController : ControllerBase
     }
 
     // ENDPOINTS
-    [HttpPost("login")]
+    [HttpPost("login")] //DONE
     public async Task<ActionResult<MedewerkerInfo>> LoginMedewerker([FromBody] EmailWachtwoord emailWachtwoord)
     {
-        var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord/*Misschien dit wachtwoord gehashed opsturen?*/, _context);
+        var responseString = await _service.Login(emailWachtwoord.Email, emailWachtwoord.Wachtwoord, _context);
         if (responseString == "Success")
         {
             Medewerker medewerker = await _permissionService.GetMedewerkerByEmailAsync(emailWachtwoord.Email, _context);
@@ -49,8 +49,8 @@ public class MedewerkerController : ControllerBase
         return response;
     }
 
-    [HttpPost("setup2fa")]
-    public async Task<ActionResult<List<string>>> Setup2FA([FromBody] AccessTokenObject AccessToken) //Kunnen we hier ook de access token van klant aan meegeven die client side is opgeslagen en op basis daarvan de klant pakken? (Sidd)
+    [HttpPost("setup2fa")] //DONE
+    public async Task<ActionResult<List<string>>> Setup2FA([FromBody] AccessTokenObject AccessToken) 
     {
 
         Medewerker m = await _permissionService.GetMedewerkerByAccessToken(AccessToken.AccessToken, _context);
@@ -63,7 +63,7 @@ public class MedewerkerController : ControllerBase
         return responses;
     }
 
-    [HttpPost("medewerker/by/at")] //Get medewerkerinfo by accesstoken
+    [HttpPost("medewerker/by/at")] //DONE
     public async Task<ActionResult<MedewerkerInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject)
     {
         Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
@@ -82,9 +82,9 @@ public class MedewerkerController : ControllerBase
         return medewerkerInfo;
     }
 
-    [HttpPost("use2fa")]
+    [HttpPost("use2fa")] //DONE
     public async Task<ActionResult> Use2FA([FromBody] AccessTokenKey accessTokenKey)
-    { //Nog fixen dat hij deze 2 params accepteert.
+    { 
         Medewerker m = await _permissionService.GetMedewerkerByAccessToken(accessTokenKey.AccessToken, _context);
         if (m == null) HandleResponse("UserNotFoundError");
         var responseString = await _service.Use2FA(m, accessTokenKey.Key);
@@ -96,7 +96,7 @@ public class MedewerkerController : ControllerBase
         return HandleResponse(responseString);
     }
 
-    [HttpPost("logoutall")]
+    [HttpPost("logoutall")] //DONE
     public async Task<ActionResult> LogoutAll([FromBody] AccessTokenObject accessTokenObject)
     {
         Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
@@ -126,13 +126,13 @@ public class MedewerkerController : ControllerBase
         return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     }
 
-    [HttpPost("rol/by/at")]
-    public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject)
-    {
-        Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
-        string rol = medewerker.RolNaam;
-        return rol;
-    }
+    // [HttpPost("rol/by/at")]
+    // public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject)
+    // {
+    //     Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
+    //     string rol = medewerker.RolNaam;
+    //     return rol;
+    // }
 
     // FUNCTIONS
 

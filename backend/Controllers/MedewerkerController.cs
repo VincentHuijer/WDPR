@@ -167,7 +167,7 @@ public class MedewerkerController : ControllerBase
             }
         }
 
-        [HttpPost("VerwijderMedewerker/{id}")]
+        [HttpPost("VerwijderMedewerker")]
         public async Task<ActionResult> VerwijderMedewerker([FromBody] AccessId accessId)
         {
             if(!await _permissionService.IsAllowed(new AccessTokenObject(){AccessToken = accessId.AccessToken}, "Admin", true, _context)) return StatusCode(403, "No permissions!");

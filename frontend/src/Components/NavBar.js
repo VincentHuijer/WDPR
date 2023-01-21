@@ -54,9 +54,9 @@ export function NavBar() {
         })
     }
 
-    async function resetRequest() {
+    async function resetRequest(type) {
         setResetState(true)
-        await fetchData(`${host}/api/klant/request/passwordreset/${userData.email}`)
+        await fetchData(`${host}/api/${type}/request/passwordreset/${userData.email}`)
     }
 
     async function overalUitloggen() {
@@ -106,7 +106,7 @@ export function NavBar() {
                                             <div >
                                                 <p onClick={() => { setMijnAccountTab(!mijnAccountTab) }} className='cursor-pointer'>Mijn Account</p>
                                                 {mijnAccountTab && <div className='text-sm'>
-                                                    <button onClick={() => resetRequest()} className='cursor-pointer'>{!resetState ? "Wachtwoord Resetten" : "Email Verzonden"}</button>
+                                                    <button onClick={() => resetRequest((userData.rolNaam == "Medewerker" || userData.rolNaam == "Admin") ? "medewerker" : "klant")} className='cursor-pointer'>{!resetState ? "Wachtwoord Resetten" : "Email Verzonden"}</button>
                                                     <br />
                                                     <p onClick={() => { overalUitloggen() }} className='cursor-pointer'>Overal Uitloggen</p>
                                                 </div>}

@@ -49,33 +49,35 @@ export default function Twofa({ at, didSetup }) {
     let codeLength = code.split("").length
 
     if (codeLength == 6) {
-      await fetch(`${host}/api/Klant/use2fa`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "AccessToken": at, "key": code }),
-      }).then(async res => {
-        if (res.status == 200) {
-          window.location.href = "/"
-        }
-      });
-
-      await fetch(`${host}/api/Medewerker/use2fa`, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "AccessToken": at, "key": code }),
-      }).then(async res => {
-        if (res.status == 200) {
-          window.location.href = "/"
-        }
-      });
+      try{
+        await fetch(`${host}/api/Klant/use2fa`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "AccessToken": at, "key": code }),
+        }).then(async res => {
+          if (res.status == 200) {
+            window.location.href = "/"
+          }
+        });
+      }catch{
+        await fetch(`${host}/api/Medewerker/use2fa`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "AccessToken": at, "key": code }),
+        }).then(async res => {
+          if (res.status == 200) {
+            window.location.href = "/"
+          }
+        });
+      }
     }
   }
 

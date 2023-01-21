@@ -6,8 +6,11 @@ import WinkelMandTekstItem from "../Components/WinkelMandTekstItem"
 import { useCookies } from "react-cookie"
 import host from "../Components/apiURL"
 
+import { useNavigate } from "react-router-dom";
+
 
 export default function WinkelMand() {
+    const navigate = useNavigate();
     const [atCookie, setAtCookie] = useCookies(['acces_token', 'remember_me']);
     const [bestelObject, setBestelObject] = useState()
 
@@ -82,6 +85,21 @@ export default function WinkelMand() {
         })
     }
 
+    async function emptyCart() {
+        fetch(`${host}/api/bestelling/verwijderBestelling`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "AccessToken": atCookie.acces_token
+            })
+        }).then(() => {
+            navigate("/");
+        })
+    }
+
 
     return (
         <div id="main-winkelmand">
@@ -125,10 +143,14 @@ export default function WinkelMand() {
                                 </div>
                             </div>
                         </div>
+
+                        <div className="mt-10">
+                            <p onClick={() => { emptyCart() }} className='cursor-pointer w-fit border-2 border-appRed bg-appRed text-white px-3 py-1 text-base rounded-xl font-extrabold mt-3'>WINEKLMAND LEEGMAKEN</p>
+                        </div>
                     </div>
                 </div>
             </div> : <Loading text={"WINKELMAND LADEN"} />
             }
-        </div >
+        </div>
     )
 }

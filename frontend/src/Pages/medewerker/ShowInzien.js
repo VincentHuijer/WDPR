@@ -65,16 +65,16 @@ const ShowInzien = () => {
     return (
         <div className='mt-40'>
             <div className='w-11/12 m-auto'>
-                <p className='text-3xl font-bold'>ALLE VOORSTLELINGEN</p>
+                <p className='text-3xl font-bold'>ALLE VOORSTELLINGEN</p>
 
                 <div className='py-4 rounded-md mt-3'>
                     <p className='text-xl font-bold'>Voorstelling Toevoegen</p>
                     <div className='flex gap-2 mt-2'>
-                        <input value={titel} onChange={(e) => setTitel(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Titel' />
-                        <input value={omschrijving} onChange={(e) => setOmschrijving(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Omschrijving' />
-                        <input value={image} onChange={(e) => setImage(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Poster URL' />
+                        <input value={titel} onChange={(e) => setTitel(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Titel' name="VoorstellingTitel" />
+                        <input value={omschrijving} onChange={(e) => setOmschrijving(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Omschrijving' name="VoorstellingOmschrijving"/>
+                        <input value={image} onChange={(e) => setImage(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Poster URL' name="VoorstellingPlaatje"/>
 
-                        <button onClick={() => { addVoorstelling() }} className='bg-appRed text-white font-bold rounded-md px-2'>VOORSTELLING TOEVOEGEN</button>
+                        <button onClick={() => { addVoorstelling() }} className='bg-appRed text-white font-bold rounded-md px-2' name="VoorstellingToevoegenKnop">VOORSTELLING TOEVOEGEN</button>
                     </div>
                 </div>
 

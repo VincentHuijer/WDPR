@@ -49,43 +49,41 @@ export default function Twofa({ at, didSetup }) {
     let codeLength = code.split("").length
 
     if (codeLength == 6) {
-      try{
-        await fetch(`${host}/api/Klant/use2fa`, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ "AccessToken": at, "key": code }),
-        }).then(async res => {
-          if (res.status == 200) {
-            window.location.href = "/"
-          }
-        });
-      }catch{
-        await fetch(`${host}/api/Medewerker/use2fa`, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ "AccessToken": at, "key": code }),
-        }).then(async res => {
-          if (res.status == 200) {
-            window.location.href = "/"
-          }
-        });
-      }
+      await fetch(`${host}/api/Klant/use2fa`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "AccessToken": at, "key": code }),
+      }).then(async res => {
+        if (res.status == 200) {
+          window.location.href = "/"
+        }
+      });
+      await fetch(`${host}/api/Medewerker/use2fa`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "AccessToken": at, "key": code }),
+      }).then(async res => {
+        if (res.status == 200) {
+          window.location.href = "/"
+        }
+      });
     }
+
   }
 
 
 
   return (
     <>
-      <p className="text-5xl font-extrabold w-full text-center pb-6 mt-16">2FA {didSetup && "SETUP"}</p>
+      <p className="text-5xl font-extrabold w-full text-center pb-6 mt-16">2FA {!didSetup && "SETUP"}</p>
 
       <div className="w-3/12 bg-appSuperLightWhite m-auto rounded-2xl pb-6">
         <div className='w-11/12 m-auto pt-2'>

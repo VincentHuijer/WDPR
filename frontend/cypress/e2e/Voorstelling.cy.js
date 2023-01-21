@@ -1,61 +1,119 @@
 const emailSuccesvol = "vin.cent.huijeren@gmail.com";
 const wachtwoord = "Test123!";
 
-describe("test voorstellingen", () => {
+describe("Medewerker dingen update dit ", () => { //Dit is een test voor de medewerker dingen UPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DIT
   before(() => {
-    cy.visit("http://localhost:3000/voorstellingen/");
+    cy.visit("http://localhost:3000/login/");
   });
-it("Probeert de voorstelling Aladin te zoeken in de zoekbalk", () => { 
-  cy.get(`input[name=voorstellingInputveld]`).type("Aladin");
+
+  // it("logt succesvol in met de juiste email en wachtwoord combinatie VOOR EEN MEDEWERKER", () => {
+  //   cy.get("input[name=email]").type("test@gmail.com");
+  //   cy.get("input[name=wachtwoord]").type("test");
+  //   cy.get("button[type=submit]").click();
+  //   cy.visit("http://localhost:3000/medewerker");
+  // });
+
+  it("Probeer een voorstelling toe te voegen", () => {
+    cy.get("input[name=email]").type("test@gmail.com");
+    cy.get("input[name=wachtwoord]").type("test");
+    cy.get("button[type=submit]").click();
+    cy.wait(2000); //Cypress gaat naar medewerker voordat de login is afgerond
+    cy.visit("http://localhost:3000/medewerker");
+    cy.get("input[name=VoorstellingTitel]").type("2Dummies1car");
+    cy.get("input[name=VoorstellingOmschrijving]").type("Testers");
+    cy.get("input[name=VoorstellingPlaatje]").type("https://media.tenor.com/tMEMZWKRkN0AAAAC/thumbs-up-men.gif");
+    cy.contains("VOORSTELLING TOEVOEGEN").click();
+    // cy.get("button[name=VoorstellingToevoegenKnop]").click();
+  });
+
+
+  it("Probeer een show aan een voorstelling toe te voegen", () => {
+    cy.visit("http://localhost:3000/medewerker");
+    cy.get("input[name=2Dummies1carDatumInput]").type("2023-12-12");
+    cy.get("input[name=2Dummies1carzaalInput]").type(1);
+    cy.get("button[name=2Dummies1cartoevoegButton]").click();
+  });
+
+
+it("Probeert de voorstelling Test Dummy te zoeken in de zoekbalk", () => { 
+  cy.visit("http://localhost:3000/voorstellingen/");
+  cy.get(`input[name=voorstellingInputveld]`).type("2Dummies1car");
   cy.contains("ZOEKEN").click();
   cy.contains("MEER INFO").click();
-  cy.location().should((location) => {
-    expect(location.href).to.eq("http://localhost:3000/voorstelling/1")
-  });
-});
+  cy.wait(2000); //laden van shows duurt een seconde.
+  cy.contains("2DUMMIES1CAR"); //voorstellingnaam is dynamic dus de name zou bij een andere voorstellling anders zijn.
+  cy.contains("12-12-2023"); //voorstellingnaam is dynamic dus de name zou bij een andere voorstellling anders zijn.
+
+
 });
 
 
-// describe("test voorstelling", () => {
-//   before(() => {
-//     cy.visit("http://localhost:3000/voorstelling/1");
-//   });
 
 //   it("Probeer te bestellen zonder ingelogt te zijn (redirect naar loginpage)", () => { 
 //     cy.get(`[aria-label="Rij 1 Stoel 14 type 2e rang"]`).click();
 //     cy.get("button[name=bestelButton]").click();
 //   });
-
-
-
-//   it("Probeer te bestellen, logt in, geselecteerden stoel zit nogsteeds in winkelmand", () => { //bij een heel slome verbinding aan de database heeft de test meer tijd nodig. (ligt aan gratis versie)
-//     cy.get(`[aria-label="Rij 1 Stoel 15 type 2e rang"]`).click();
-//     cy.get("button[name=bestelButton]").click();
-//     cy.get("input[name=email]").type(emailSuccesvol);
-//     cy.get("input[name=wachtwoord]").type(wachtwoord);
-//     cy.get("button[type=submit]").click();
-//     cy.get("button[name=Winkelmand]").click(); //werkt niet door mobile app in cypress.
-//     cy.visit("http://localhost:3000/winkelmand");
-//     cy.get("button[name=afrekenKnop]").click();
-//   });
-
-
-
-
-// it("reserveer een stoel, terwijl ingelogt", () => { //bij een heel slome verbinding aan de database heeft de test meer tijd nodig. (ligt aan gratis versie)
-//     cy.visit("http://localhost:3000/login/");
-
-//   cy.get("input[name=email]").type(emailSuccesvol); 
-//   cy.get("input[name=wachtwoord]").type(wachtwoord);
-//   cy.get("button[type=submit]").click();
-
-//   cy.visit("http://localhost:3000/voorstelling/1");
-//   cy.get(`[aria-label="Rij 1 Stoel 14 type 2e rang"]`).click();
-//   cy.get("button[name=bestelButton]").click();
-//       // cy.get("button[name=Winkelmand]").click(); //werkt niet door mobile app in cypress.
-//   cy.visit("http://localhost:3000/winkelmand");
-//   cy.get("button[name=afrekenKnop]").click();
-// });
 // });
 
+
+  // it("Probeer te bestellen, UITELOGT ", () => { 
+  //   cy.get(`[aria-label="Rij 1 Stoel 15 type 2e rang"]`).click();
+  //   cy.get("button[name=bestelButton]").click();
+  //   cy.get("input[name=email]").type(emailSuccesvol);
+  //   cy.get("input[name=wachtwoord]").type(wachtwoord);
+  //   cy.get("button[type=submit]").click();
+  //   cy.get("button[name=Winkelmand]").click(); 
+  //   cy.visit("http://localhost:3000/winkelmand");
+  //   cy.get("button[name=afrekenKnop]").click();
+  // });
+
+
+
+
+it("reserveer een stoel", () => { 
+  cy.visit("http://localhost:3000/login/");
+  cy.get("input[name=email]").type(emailSuccesvol); 
+  cy.get("input[name=wachtwoord]").type(wachtwoord);
+  cy.get("button[type=submit]").click();
+
+  cy.visit("http://localhost:3000/voorstellingen/");
+  cy.get(`input[name=voorstellingInputveld]`).type("2Dummies1car");
+  cy.contains("ZOEKEN").click();
+  cy.contains("MEER INFO").click();
+
+
+
+
+  cy.get(`[aria-label="Rij 1 Stoel 14 type 2e rang"]`).click();
+  cy.get("button[name=bestelButton]").click();
+  cy.visit("http://localhost:3000/winkelmand");
+  cy.get("button[name=afrekenKnop]").click();
+});
+
+
+
+  // it("Probeer te bestellen, UITELOGT ", () => { 
+  //   cy.get(`[aria-label="Rij 1 Stoel 15 type 2e rang"]`).click();
+  //   cy.get("button[name=bestelButton]").click();
+  //   cy.get("input[name=email]").type(emailSuccesvol);
+  //   cy.get("input[name=wachtwoord]").type(wachtwoord);
+  //   cy.get("button[type=submit]").click();
+  //   cy.get("button[name=Winkelmand]").click(); 
+  //   cy.visit("http://localhost:3000/winkelmand");
+  //   cy.get("button[name=afrekenKnop]").click();
+  // });
+
+it("Probeer een show aan een voorstelling te verwijderen", () => {
+  cy.visit("http://localhost:3000/login/");
+  cy.get("input[name=email]").type("test@gmail.com");
+  cy.get("input[name=wachtwoord]").type("test");
+  cy.get("button[type=submit]").click();
+  cy.wait(2000); //Cypress gaat naar medewerker voordat de login is afgerond
+  cy.visit("http://localhost:3000/medewerker");
+
+  cy.get("input[name=2Dummies1carDatumInput]").type("2023-12-12");
+  cy.get("input[name=2Dummies1carzaalInput]").type(1);
+  cy.get("button[name=2Dummies1carverwijderButton]").click();
+});
+});
 

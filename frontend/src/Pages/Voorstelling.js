@@ -15,6 +15,7 @@ import StoelenLoading from "../Components/StoelenLoading";
 import { useNavigate } from "react-router-dom";
 
 import host from "../Components/apiURL";
+import { user } from "fake-words";
 
 export default function Voorstelling() {
   const navigate = useNavigate();
@@ -54,7 +55,13 @@ export default function Voorstelling() {
     getVoorstellingData()
   }, [])
 
+  useEffect(() => {
+    getUserData()
+  }, [accesToken])
 
+  useEffect(() => {
+    filterDates()
+  }, [userData])
 
   //fetch STOEL DATA
   useEffect(() => {
@@ -93,6 +100,35 @@ export default function Voorstelling() {
       setShowId(showId)
     })
   }, [startDate])
+
+  async function getUserData() {
+
+    if (!accesToken) return;
+    if (accesToken == "none") return;
+
+
+    try {
+      await fetchData(`${host}/api/klant/klant/by/at`)
+    } catch {
+      await fetchData(`${host}/api/medewerker/medewerker/by/at`)
+    }
+  }
+
+  async function fetchData(url) {
+    await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "AccessToken": accesToken
+      }),
+    }).then(response => response.json()).then(data => {
+      setUserData(data)
+    })
+  }
 
   async function setPrice(type, price) {
     return new Promise((resolve, reject) => {
@@ -140,6 +176,30 @@ export default function Voorstelling() {
         setAllowedDate(allowedDates)
         setLoading(false)
       })
+  }
+
+  function filterDates() {
+    if (!allowedDates) return
+    if (!userData) return
+
+    let tempDates = []
+
+    allowedDates.map(date => {
+      var dateParts = date.split("-");
+      var date2 = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+      console.log(date2);
+
+      var diff = new Date(date2.getTime() - new Date());
+
+      if (diff > 30) {
+        if (userData.rolNaam == "Klant" || userData.rolNaam == "Artiest") return
+
+        tempDates.push(date)
+      }
+    })
+
+    setAllowedDate(oldArray => tempDates)
+    console.log(userData.rolNaam);
   }
 
   function Bestel() {
@@ -203,7 +263,7 @@ export default function Voorstelling() {
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
+            <h1 className="text-4xl font-extrabold" name={data.voorstelling.voorstellingTitel+"Titelnaam"}>{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
                 {allowedDates[0]} tot {allowedDates[allowedDates.length - 1]}
               </p>

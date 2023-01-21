@@ -67,7 +67,11 @@ const ShowEditContainer = ({ voorstelingData }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ "AccessToken": AccessToken })
+            body: JSON.stringify(
+                {
+                    "AccessToken": AccessToken
+                }
+            )
         })
     }
 
@@ -77,7 +81,7 @@ const ShowEditContainer = ({ voorstelingData }) => {
 
 
     return (
-        <div className='pt-4'>
+        <div className='pt-4' name={data.voorstellingTitel}>
             <p className='text-2xl font-bold'>{data.voorstellingTitel}</p>
 
             <div className='mt-2'>
@@ -96,17 +100,17 @@ const ShowEditContainer = ({ voorstelingData }) => {
                 <div className='flex flex-col gap-2'>
                     <div>
                         <p>Datum:</p>
-                        <input value={date} onChange={(e) => setdate(e.target.value)} className='border-2 border-black rounded-md' placeholder='Datum' type="date" />
+                        <input value={date} onChange={(e) => setdate(e.target.value)} className='border-2 border-black rounded-md' placeholder='Datum' type="date" name={data.voorstellingTitel + "DatumInput"} />
                     </div>
                     <div>
                         <p>Zaalnummer:</p>
-                        <input value={zaalNummer} onChange={(e) => setZaalNummer(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Zaal' type="Number" />
+                        <input value={zaalNummer} onChange={(e) => setZaalNummer(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Zaal' type="Number" name={data.voorstellingTitel +"zaalInput"} />
                     </div>
                 </div>
 
                 <div className='flex gap-2 mt-4'>
-                    <button onClick={() => { addShow() }} className='bg-appRed text-white font-bold rounded-md px-2 py-1 mt-2'>TOEVOEGEN</button>
-                    <button onClick={() => { verwijderShow() }} className='bg-white border-2 border-black text-black font-bold rounded-md px-2 py-1 mt-2'>VOORSTELLING VERWIJDEREN</button>
+                    <button onClick={() => { addShow() }} className='bg-appRed text-white font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel +"toevoegButton"}>SHOW TOEVOEGEN</button>
+                    <button onClick={() => { verwijderShow() }} className='bg-white border-2 border-black text-black font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel +"verwijderButton"}>VOORSTELLING VERWIJDEREN</button>
                 </div>
             </div>
         </div>

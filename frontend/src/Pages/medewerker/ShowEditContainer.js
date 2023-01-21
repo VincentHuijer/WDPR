@@ -52,7 +52,8 @@ const ShowEditContainer = ({ voorstelingData }) => {
             body: JSON.stringify({
                 Zaalnummer: Number(zaalNummer),
                 StartDatum: date,
-                VoorstellingId: Number(data.voorstellingId)
+                VoorstellingId: Number(data.voorstellingId),
+                "AccessToken": AccessToken
             })
         }).then(() => {
             setTimeout(() => {
@@ -104,13 +105,13 @@ const ShowEditContainer = ({ voorstelingData }) => {
                     </div>
                     <div>
                         <p>Zaalnummer:</p>
-                        <input value={zaalNummer} onChange={(e) => setZaalNummer(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Zaal' type="Number" name={data.voorstellingTitel +"zaalInput"} />
+                        <input value={zaalNummer} onChange={(e) => setZaalNummer(e.target.value)} className='border-2 border-black rounded-md pl-2' placeholder='Zaal' type="Number" name={data.voorstellingTitel + "zaalInput"} />
                     </div>
                 </div>
 
                 <div className='flex gap-2 mt-4'>
-                    <button onClick={() => { addShow() }} className='bg-appRed text-white font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel +"toevoegButton"}>SHOW TOEVOEGEN</button>
-                    <button onClick={() => { verwijderShow() }} className='bg-white border-2 border-black text-black font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel +"verwijderButton"}>VOORSTELLING VERWIJDEREN</button>
+                    <button onClick={() => { addShow() }} className='bg-appRed text-white font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel + "toevoegButton"}>SHOW TOEVOEGEN</button>
+                    <button onClick={() => { verwijderShow() }} className='bg-white border-2 border-black text-black font-bold rounded-md px-2 py-1 mt-2' name={data.voorstellingTitel + "verwijderButton"}>VOORSTELLING VERWIJDEREN</button>
                 </div>
             </div>
         </div>

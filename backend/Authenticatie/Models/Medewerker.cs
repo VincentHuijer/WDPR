@@ -7,7 +7,7 @@ public class Medewerker{
         Achternaam = achternaam;
         Email = email;
         Wachtwoord = wachtwoord;
-        Rol = Rol.MedewerkerRol;
+        //Rol = Rol.MedewerkerRol;
     }
     public int Id {set; get;}
     public string Voornaam {set; get;}

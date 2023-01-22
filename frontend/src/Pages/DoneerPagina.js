@@ -18,7 +18,7 @@ const DoneerPagina = () => {
     async function doDonatie() {
         await fetch("https://ikdoneer.azurewebsites.net/api/donatie", {
             method: "POST",
-            headers: { Authentication: token },
+            headers: { Authentication: `Bearer ${token}` },
             body: JSON.stringify({
                 Doel: 63,
                 Hoeveelheid: parseFloat(hoeveelheid),

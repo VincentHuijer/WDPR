@@ -14,7 +14,6 @@ export function useUpdateAccesToken() {
     return useContext(AccesTokenContext)
 }
 
-
 export function AuthProvider({ children }) {
     const [accesToken, setAccesToken] = useState("none")
     const [atCookie, setAtCookie] = useCookies(['acces_token', 'remember_me']);
@@ -23,20 +22,20 @@ export function AuthProvider({ children }) {
         const date = new Date();
         date.setDate(date.getDate() + 7);
 
-        if(atCookie.remember_me){
-            setAtCookie("acces_token", at, {expires: date})
-        }else{
+        if (atCookie.remember_me) {
+            setAtCookie("acces_token", at, { expires: date })
+        } else {
             setAtCookie("acces_token", at)
         }
         setAccesToken(at)
     }
 
     useEffect(() => {
-        if(!atCookie.acces_token){
+        if (!atCookie.acces_token) {
             updateAccesToken("none")
-            return             
+            return
         }
-        
+
         updateAccesToken(atCookie.acces_token)
     }, [])
 

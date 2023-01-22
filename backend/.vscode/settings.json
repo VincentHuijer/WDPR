@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net6.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/07c19d08-ddb4-4713-92f9-50af715e49f9/AppServices/subscriptions/07c19d08-ddb4-4713-92f9-50af715e49f9/resourceGroups/DefaultResourceGroup-DEWC/providers/Microsoft.Web/sites/theaterlaakgroep2klas5"
+}

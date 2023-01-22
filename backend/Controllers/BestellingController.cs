@@ -8,20 +8,31 @@ namespace backend.Controllers;
 public class BestellingController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     public BestellingController(GebruikerContext context)
     {
         _context = context;
     }
 
 
-    [HttpGet("getBestelling")]
-    public async Task<List<Bestelling>> GetBestellingen()
-    {
-        List<Bestelling> bestellingen = await _context.Bestellingen.ToListAsync();
-        return bestellingen;
+    [HttpPost("getbestelling/by/at")] //DONE
+    public async Task<ActionResult<List<ShowStoelen>>> GetBestellingenByAccessToken([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context); 
+        if(klant == null) return NotFound();
+        List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => b.KlantId == klant.Id).Where(b => b.isBetaald == true).ToListAsync();
+        if(bestellingen.Count() == 0) return NotFound();
+        List<List<ShowStoelen>> showStoelenList = new List<List<ShowStoelen>>(); //Object wat ik return met de benodigde data voor frontend
+        foreach(var bestelling in bestellingen){
+            showStoelenList.Add(await GetShowStoelensAsync(bestelling));
+        }
+        List<ShowStoelen> showStoelen = new List<ShowStoelen>();
+        foreach(var showStoel in showStoelenList){
+            showStoelen.Add(showStoel[0]);
+        }
+        return showStoelen;
     }
 
-    [HttpPost("nieuwebestelling")]
+    [HttpPost("nieuwebestelling")] //DONE
     public async Task<ActionResult<string>> NieuweBestelling([FromBody] BestelInfo bestelInfo){
 
         //Clean up old inactive and unpaid bestellingen
@@ -57,12 +68,28 @@ public class BestellingController : ControllerBase
         return bestelling.BestellingId.ToString();
     }
 
-    [HttpPost("activebestelling")]
+    [HttpPost("activebestelling")] //DONE
     public async Task<ActionResult<List<ShowStoelen>>> GetCurrentActiveBestelling([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == accessTokenObject.AccessToken);
         if(klant == null) return NotFound();
         Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
         if(bestelling == null) return NotFound();
+
+        List<ShowStoelen> showStoelenList = await GetShowStoelensAsync(bestelling);
+
+        return showStoelenList;
+    }
+
+    [HttpPost("bestelling")] //DONE
+    public async Task<ActionResult<Bestelling>> GetBestellingWithAccessToken([FromBody] AccessTokenObject accessTokenObject){
+        Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.AccessTokenId == accessTokenObject.AccessToken);
+        if(klant == null) return NotFound();
+        Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive == true).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
+        if(bestelling == null) return NotFound();
+        return bestelling;
+    }
+
+    public async Task<List<ShowStoelen>> GetShowStoelensAsync(Bestelling bestelling){
         List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.BestellingId == bestelling.BestellingId).ToListAsync(); //Alle bestelde stoelen die bij deze bestelling horen.
         List<Show> shows = new List<Show>(); //Alle shows die in de bestelling zitten
         List<Stoel> stoelen = new List<Stoel>(); //Alle stoelen die in de bestelling zitten
@@ -86,89 +113,16 @@ public class BestellingController : ControllerBase
         return showStoelenList;
     }
 
- 
-
-    // [HttpPost("AddBestelling")]
-    // public async Task<ActionResult> AddBestelling([FromBody] BestellingBody bestellingBody)
-    // {
-    //     DateTime bestelDatum = DateTime.Parse(bestellingBody.BestelDatum);
-    //     Bestelling bestelling = new Bestelling() { BestelDatum = bestelDatum, Totaalbedrag = bestellingBody.Totaalbedrag };
-
-    //     foreach (var item in bestellingBody.Stoelen)
-    //     {
-    //         Stoel stoel = await _context.Stoelen.FirstOrDefaultAsync(v => v.StoelID.ToString() == item);
-    //         BesteldeStoel besteldeStoel = new BesteldeStoel() { Bestelling = bestelling, BestellingId = bestelling.BestellingId, Stoel = stoel, StoelID = stoel.StoelID, Datum = bestelDatum };
-
-    //         _context.BesteldeStoelen.Add(besteldeStoel);
-    //     }
-
-    //     _context.Bestellingen.Add(bestelling);
-
-    //     await _context.SaveChangesAsync();
-
-    //     return Ok();
-    // }
-
-    [HttpPost("VerwijderBestelling")]
-    public async Task<ActionResult> VerwijderBestelling(Bestelling bestelling)
-    {
-        _context.Bestellingen.Remove(bestelling);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
+    [HttpPost("verwijderbestelling")] //DONE
+    public async Task<ActionResult> VerwijderBestelling([FromBody] AccessTokenObject accessToken){
+        Klant klant = await _permissionService.GetKlantByAccessToken(accessToken.AccessToken, _context);
+        Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive == true).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
+        if(bestelling == null) return NotFound();
+        bestelling.IsActive = false;
+        await BestellingCleaner.Clean(_context);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 
 }
 
-public class BestellingBody
-{
-    public int Totaalbedrag { get; set; }
-    public string BestelDatum { get; set; }
-
-    public double Kortingscode { get; set; }
-
-    public List<string> Stoelen { get; set; }
-}
-
-public class BestelInfo{
-    public int ShowId {set; get;}
-    public List<int> StoelIds {set; get;}
-    public string AccessToken {set; get;}
-}
-
-
-public class ShowStoelen{
-    public int ShowId {set; get;}
-    public string ShowNaam {set; get;}
-    public string ShowImage {set; get;}
-    public DateTime Datum {set; get;}
-    public List<Stoel> Stoelen {set; get;}
-}
-public class BestellingCleaner{
-    public static async Task Clean(GebruikerContext _context){
-                //Clean up old inactive and unpaid bestellingen
-        bool anyOldActive = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).AnyAsync(b => b.IsActive);
-        if(anyOldActive){
-            var OldActiveBestellingen = await _context.Bestellingen.Where(b => b.BestelDatum < DateTime.Now.AddMinutes(-10)).Where(b => b.IsActive).ToListAsync();
-            foreach (var b in OldActiveBestellingen){
-                b.IsActive = false;
-            }
-            await _context.SaveChangesAsync();
-        }
-        bool anyUnpaidInactive = await _context.Bestellingen.Where(b => b.IsActive == false).AnyAsync(b => b.isBetaald == false);
-        if(anyUnpaidInactive){
-            var UnpaidInativeBestellingen = await _context.Bestellingen.Where(b => b.IsActive == false).Where(b => b.isBetaald == false).ToListAsync();
-            foreach (var b in UnpaidInativeBestellingen){
-                var SeatsToBeRemoved = await _context.BesteldeStoelen.Where(s => s.BestellingId == b.BestellingId).ToListAsync();
-                _context.RemoveRange(SeatsToBeRemoved);
-                _context.Remove(b);
-            }
-            await _context.SaveChangesAsync();
-        }
-    }
-}

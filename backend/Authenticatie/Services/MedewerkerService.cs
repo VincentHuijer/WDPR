@@ -23,6 +23,20 @@ public class MedewerkerService : IMedewerkerService
         return "InvalidCredentialsError";
     }
 
+    public async Task<string> NieuweMedewerker(string voornaam, string achternaam, string email, string wachtwoord, GebruikerContext context)
+    {
+        Medewerker medewerker = new Medewerker(voornaam, achternaam, email, wachtwoord);
+        if(context.Medewerkers.Any(k => k.Email == email)) return "EmailInUseError"; 
+        if(await context.Rollen.FirstOrDefaultAsync(r => r.Naam == "Medewerker") != null){
+            medewerker.Rol = await context.Rollen.FirstAsync(r => r.Naam == "Medewerker");
+        }else{
+            medewerker.Rol = Rol.MedewerkerRol;
+        }
+        await context.Medewerkers.AddAsync(medewerker);
+        await context.SaveChangesAsync();
+        return "Success";
+    }
+
     public async Task<(string, string)> Setup2FA(Medewerker medewerker, GebruikerContext context)
     {
         if(medewerker.TwoFactorAuthSetupComplete) return ("", "");
@@ -56,13 +70,13 @@ public class MedewerkerService : IMedewerkerService
         }
         medewerker.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(medewerker.Email, medewerker.AuthenticatieTokenId!);
+        await _emailService.Send(medewerker.Email, "https://theater-laak.netlify.app/user/resetwachtwoord?token=" + medewerker.AuthenticatieTokenId! + "&email=" + medewerker.Email, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Medewerker medewerker, string token, string wachtwoord, GebruikerContext context){
         AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
-        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
-        if(medewerker.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; 
+        if(medewerker.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; 
         medewerker.AuthenticatieToken = null;
         medewerker.AuthenticatieTokenId = null;
         medewerker.Wachtwoord = wachtwoord;
@@ -72,7 +86,7 @@ public class MedewerkerService : IMedewerkerService
     public static string GenerateRandomString(int length){
         var random = new byte[length];
         RandomNumberGenerator.Fill(random);
-        string base32String = Convert.ToBase64String(random); //convert to base32string
+        string base32String = Convert.ToBase64String(random); 
         return base32String;
     }
 }

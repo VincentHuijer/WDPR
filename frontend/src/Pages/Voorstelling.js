@@ -12,14 +12,18 @@ import ArtiestProfile from "../Components/ArtiestProfile";
 import { useAccesToken } from "../Authentication/AuthContext";
 import Loading from "../Components/Loading";
 import StoelenLoading from "../Components/StoelenLoading";
+import { useNavigate } from "react-router-dom";
+
+import host from "../Components/apiURL";
 
 export default function Voorstelling() {
+  const navigate = useNavigate();
+  const accesToken = useAccesToken();
   const { id } = useParams();
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const accesToken = useAccesToken();
   const [seats, setSeats] = useState([]);
 
   const [types, setTypes] = useState([])
@@ -41,9 +45,22 @@ export default function Voorstelling() {
 
   const [bestelLoading, setBestelLoading] = useState(false)
 
+
+  const [userData, setUserData] = useState()
+  const [role, setRole] = useState()
+
+
   useEffect(() => {
     getVoorstellingData()
   }, [])
+
+  useEffect(() => {
+    getUserData()
+  }, [accesToken])
+
+  useEffect(() => {
+    filterDates()
+  }, [userData])
 
   //fetch STOEL DATA
   useEffect(() => {
@@ -62,7 +79,7 @@ export default function Voorstelling() {
     setKaartjes(oldArr => [])
     setBestelLoading(false)
 
-    fetch(`https://localhost:7253/api/zaal/GetShowStoelen/${showId}`).then(response => response.json()).then(data => {
+    fetch(`${host}/api/zaal/GetShowStoelenVoorstelling/${showId}`).then(response => response.json()).then(data => {
 
       let seatsList = []
       data.map(row => {
@@ -83,6 +100,35 @@ export default function Voorstelling() {
     })
   }, [startDate])
 
+  async function getUserData() {
+
+    if (!accesToken) return;
+    if (accesToken == "none") return;
+
+
+    try {
+      await fetchData(`${host}/api/klant/klant/by/at`)
+    } catch {
+      await fetchData(`${host}/api/medewerker/medewerker/by/at`)
+    }
+  }
+
+  async function fetchData(url) {
+    await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "AccessToken": accesToken
+      }),
+    }).then(response => response.json()).then(data => {
+      setUserData(data)
+    })
+  }
+
   async function setPrice(type, price) {
     return new Promise((resolve, reject) => {
       if (type) {
@@ -100,7 +146,7 @@ export default function Voorstelling() {
 
 
   async function getVoorstellingData() {
-    await fetch(`https://localhost:7253/api/show/GetShows/${id}`)
+    await fetch(`${host}/api/show/GetShows/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.status == 404) return
@@ -117,9 +163,9 @@ export default function Voorstelling() {
 
         let allowedDates = []
 
-        data.shows.sort(function(a,b){return new Date(a.datum).getTime() - new Date(b.datum).getTime()});
+        data.shows.sort(function (a, b) { return new Date(a.datum).getTime() - new Date(b.datum).getTime() });
         data.shows.map(show => {
-          let newDate =  moment(new Date(show.datum)).format("DD-MM-YYYY")
+          let newDate = moment(new Date(show.datum)).format("DD-MM-YYYY")
           allowedDates.push(newDate.toString())
         })
 
@@ -129,6 +175,32 @@ export default function Voorstelling() {
         setAllowedDate(allowedDates)
         setLoading(false)
       })
+  }
+
+  function filterDates() {
+    if (!allowedDates) return
+    if (!userData) return
+    if(allowedDates.length <=0 ) return
+    if(!userData.rolNaam) return
+
+    let tempDates = []
+
+    allowedDates.map(date => {
+      var dateParts = date.split("-");
+      var date2 = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+      console.log(date2);
+
+      var diff = new Date(date2.getTime() - new Date());
+
+      if (diff > 30) {
+        if (userData.rolNaam == "Klant" || userData.rolNaam == "Artiest") return
+
+        tempDates.push(date)
+      }
+    })
+
+    setAllowedDate(oldArray => tempDates)
+    console.log(userData.rolNaam);
   }
 
   function Bestel() {
@@ -142,7 +214,7 @@ export default function Voorstelling() {
       "AccessToken": accesToken
     }
 
-    fetch("https://localhost:7253/api/Bestelling/nieuwebestelling", {
+    fetch(`${host}/api/Bestelling/nieuwebestelling`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -151,7 +223,7 @@ export default function Voorstelling() {
       body: JSON.stringify(bestelBody)
     }).then(response => {
       console.log(response.text);
-      window.location.href = "/winkelmand"
+      navigate("/winkelmand");
     })
     setBestelLoading(true)
   }
@@ -192,7 +264,7 @@ export default function Voorstelling() {
         <section className="flex justify-between h-1/7">
           <div className="w-full xl:w-2/7 h-fit">
             <div>
-              <h1 className="text-4xl font-extrabold">{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
+            <h1 className="text-4xl font-extrabold" name={data.voorstelling.voorstellingTitel+"Titelnaam"}>{data.voorstelling.voorstellingTitel.toUpperCase()}</h1>
               <p className="font-bold text-appLightBlack">
                 {allowedDates[0]} tot {allowedDates[allowedDates.length - 1]}
               </p>
@@ -243,6 +315,7 @@ export default function Voorstelling() {
                 placeholderText={"DD-MM-YYYY"}
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
+
               />
             </div>
           </div>
@@ -312,12 +385,14 @@ export default function Voorstelling() {
             </div>}
           </div>
 
-          {(!stoelenLoading && kaartjes.length > 0) && <button
+          {(!stoelenLoading && kaartjes.length > 0 && kaartjes.length <= 10) && <button name="bestelButton"
             onClick={() => { if (!bestelLoading) Bestel() }}
             className={"hover:cursor-pointer border-2 w-fit border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold mt-6 " + (bestelLoading && "opacity-50 hover:cursor-wait")}
           >
             TOEVOEGEN AAN WINKELMAND
           </button>}
+
+          {kaartjes.length > 10 && <p className="text-2xl text-appRed">Sorry, U kunt maximaal 10 kaartjes bestellen.</p>}
         </section>
 
         <section className="mt-20 h-fit">

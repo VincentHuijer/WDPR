@@ -14,19 +14,13 @@ public class Klant{
     public string? Achternaam {set; get;}
     public string Email {set; get;}
     public string Wachtwoord {set; get;}
-    public string? Beschrijving {set; get;}
-    public string? Afbeelding {set; get;}
-    public DateTime? GeboorteDatum {set; get;}
     public bool Donateur {set; get;}
     public bool Artiest {set; get;}
-    public ICollection<ActeurVoorstelling>? ActeurVoorstelling { get; set; }
-    public ICollection<Kaartjeshouders>? Kaartjeshouder { get; set; }
     public Rol Rol {set; get;}
     public string RolNaam {set; get;}
     public VerificatieToken? VerificatieToken {set; get;}
     public string? TokenId {set; get;}
-    public int Inlogpoging {get; set;} // Hier misschien iets mooiers op bedenken. Eventueel een inlogpoging class met info over de login poging erbij? Kan nuttig zijn voor logging en monitoring.
-    //Toevoegen dat als inlogpoging > 3 ==> account geblokkeerd = true;
+    public int Inlogpoging {get; set;} 
     [JsonIgnore]
     public AccessToken? AccessToken {set; get;}
     public string? AccessTokenId {set; get;}
@@ -36,8 +30,11 @@ public class Klant{
     [JsonIgnore]
     public AuthenticatieToken? AuthenticatieToken {set; get;}
     public string? AuthenticatieTokenId {set; get;}
+    [JsonIgnore]
     public ArtiestGroep? ArtiestGroep {set; get;}
     public int? ArtiestGroepId {set; get;}
     [JsonIgnore]
     public List<Bestelling> Bestellingen {set; get;}
+    [JsonIgnore]
+    public List<Donatie> Donaties {set; get;}
 }

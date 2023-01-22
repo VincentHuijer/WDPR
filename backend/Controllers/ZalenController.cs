@@ -8,35 +8,36 @@ namespace backend.Controllers;
 public class ZaalController : ControllerBase
 {
     private readonly GebruikerContext _context;
+    private readonly IPermissionService _permissionService = new PermissionService();
     public ZaalController(GebruikerContext context)
     {
         _context = context;
     }
 
 
-    [HttpGet("getZalen")]
-    public async Task<List<Zaal>> getZalen()
-    {
-        List<Zaal> Zalen = await _context.Zalen.ToListAsync();
-        return Zalen;
-    }
 
-    [HttpGet("GetShowStoelen/{id}")]
-    public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
+    [HttpPost("GetShowStoelen/{id}")] //DONE
+    public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen([FromBody] AccessTokenObject accessToken, int id)
     {
+        if(!await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context) && !await _permissionService.IsAllowed(accessToken, "Admin", true, _context)) return StatusCode(403, "No permissions!");
         await BestellingCleaner.Clean(_context);
-        Show s = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
+        Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
 
-        List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == s.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN
+        List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN
 
         List<StoelData> stoelDataList = new List<StoelData>();
 
         foreach (var Stoel in stoelen)
         {
-            var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == s.Datum);
+            var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == show.Datum);
             bool isGereserveerd = (besteldeStoel != null);
-
-            StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID };
+            KlantInfoShort klantInfo = null;
+            if(isGereserveerd){
+                Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == besteldeStoel.BestellingId);
+                Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Id == bestelling.KlantId);
+                klantInfo = new KlantInfoShort(){Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email};
+            }
+            StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID, KlantInfo = klantInfo};
             stoelDataList.Add(stoelData);
         }
 
@@ -53,44 +54,36 @@ public class ZaalController : ControllerBase
         return matrix;
     }
 
-
-
-    [HttpPost("AddZaal")]
-    public async Task<ActionResult> AddZaal([FromBody] Zaal zaal)
+    [HttpGet("GetShowStoelenVoorstelling/{id}")] //DONE
+    public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen(int id)
     {
+        await BestellingCleaner.Clean(_context);
+        Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
 
-        _context.Zalen.Add(zaal);
-        if (await _context.SaveChangesAsync() > 0)
+        List<Stoel> stoelen = await _context.Stoelen.Where(s => s.Zaalnummer == show.Zaalnummer).ToListAsync(); //LIJST VAN ALLE STOELEN
+
+        List<StoelData> stoelDataList = new List<StoelData>();
+
+        foreach (var Stoel in stoelen)
         {
-            return Ok();
+            var besteldeStoel = _context.BesteldeStoelen.Where(stoel => stoel.StoelID == Stoel.StoelID).FirstOrDefault(otherShow => otherShow.Datum == show.Datum);
+            bool isGereserveerd = (besteldeStoel != null);
+            StoelData stoelData = new StoelData() { X = Stoel.X, Y = Stoel.Y, IsGereserveerd = isGereserveerd, Prijs = Stoel.Prijs, Rang = (isGereserveerd ? 7 : Stoel.Rang), StoelID = Stoel.StoelID};
+            stoelDataList.Add(stoelData);
         }
-        else
+
+        List<List<StoelData>> matrix = new List<List<StoelData>>();
+
+        List<int> Rows = stoelDataList.DistinctBy(stoel => stoel.Y).OrderBy(s => s.Y).Select(s => s.Y).ToList();
+
+        foreach (int row in Rows)
         {
-            return BadRequest();
+            List<StoelData> rowData = stoelDataList.Where(stoel => stoel.Y == row).OrderBy(stoel => stoel.X).ToList();
+            matrix.Add(rowData);
         }
+
+        return matrix;
     }
 
-    [HttpPost("VerwijderZaal")]
-    public async Task<ActionResult> VerwijderZaal([FromBody] Zaal zaal)
-    {
-        _context.Zalen.Remove(zaal);
-        if (await _context.SaveChangesAsync() > 0)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
 }
 
-public class StoelData
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-    public double Prijs { get; set; }
-    public int Rang { get; set; }
-    public bool IsGereserveerd { get; set; }
-    public int StoelID { get; set; }
-}

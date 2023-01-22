@@ -6,6 +6,9 @@ import CheckGegevens from "../scripts/CheckGegevens";
 import useSound from 'use-sound'
 import mySound from '../mario.mp3'
 
+import host from "../Components/apiURL";
+
+
 export default function Register() {
     const [playSound] = useSound(mySound)
 
@@ -16,31 +19,33 @@ export default function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
+    var [showMore, setShowMore] = useState(false);
 
     const [complete, setComplete] = useState(false)
 
+    var checkResponse = CheckGegevens(firstName, lastName, password, passwordAgain)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let checkResponse = CheckGegevens(firstName, lastName)
-
-        if(checkResponse.split("").length > 0){
+        if (checkResponse !== true ) {
             console.log("Check response: " + checkResponse);
-            return
-        } 
+            return;
+        }
 
         if (!email || !password || !passwordAgain || !firstName || !lastName) return;
 
 
+        let hashedPassword = await sha256(password)
+
         let loginBody = {
             "Email": email.toLowerCase(),
-            "Wachtwoord": password,
+            "Wachtwoord": hashedPassword,
             "Voornaam": firstName,
             "Achternaam": lastName,
-        }
+        } 
 
-        await fetch("https://localhost:7253/api/klant/registreer", {
+        await fetch(`${host}/api/klant/registreer`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -58,6 +63,21 @@ export default function Register() {
             setErrorMessage(errorMessage)
         });
 
+    }
+
+    async function sha256(message) {
+        // encode as UTF-8
+        const msgBuffer = new TextEncoder().encode(message);                    
+    
+        // hash the message
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    
+        // convert ArrayBuffer to Array
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+    
+        // convert bytes to hex string                  
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
     }
 
     return (
@@ -123,9 +143,14 @@ export default function Register() {
                             {errorMessage !== "" && <div className="w-10/12 m-auto mt-4">
                                 <p className="font-bold text-appRed">{errorMessage}</p>
                             </div>}
-
+                            
+                                     <div className="w-10/12 m-auto mt-6 hover:cursor-default"> 
+                                     <p> {"probleem met inloggen: " + checkResponse}</p>
+                                        </div>
                             <div className="w-10/12 m-auto mt-6 hover:cursor-default">
-                                <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">REGISTREREN</button>
+                                <button type="submit" className="hover:cursor-pointer w-full border-2 text-xl border-appRed bg-appRed text-white px-3 py-1 rounded-xl font-extrabold">Registreer</button>
+                                
+
                             </div>
                         </div>
                     </form>

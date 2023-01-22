@@ -12,7 +12,7 @@ public class GebruikerService : IGebruikerService{
         _emailService = emailService;
     }
     public async Task<string> Registreer(string voornaam, string achternaam, string email, string wachtwoord, VerificatieToken verificatieToken, GebruikerContext context){
-        Klant klant = new Klant(voornaam, achternaam, email, wachtwoord){VerificatieToken = verificatieToken};
+        Klant klant = new Klant(voornaam, achternaam, email, wachtwoord){VerificatieToken = verificatieToken, TokenId = verificatieToken.Token};
         if(await CheckDomainIsDisposable(email)) return "DisposableMailError"; 
         else if(context.Klanten.Any(k => k.Email == email)) return "EmailInUseError"; 
         if(await context.Rollen.FirstOrDefaultAsync(r => r.Naam == "Klant") != null){
@@ -22,7 +22,7 @@ public class GebruikerService : IGebruikerService{
         }
         await context.Klanten.AddAsync(klant);
         await context.SaveChangesAsync();
-        await _emailService.Send(email, klant.VerificatieToken.Token); //Hier nog juiste content toevoegen
+        await _emailService.Send(email, "https://theater-laak.netlify.app/verify?token=" + klant.VerificatieToken.Token + "&email="+ email, "Email Verification"); //Hier nog juiste content toevoegen
         return "Success";
     }
     public async Task<string> Login(string email, string wachtwoord, GebruikerContext context){
@@ -34,11 +34,16 @@ public class GebruikerService : IGebruikerService{
         } 
         else if(klant.Wachtwoord == wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging = 0;
+                await context.SaveChangesAsync();
                 return "Success";
         }
         else if(klant.Wachtwoord != wachtwoord && klant.VerificatieToken == null){
                 klant.Inlogpoging++;
-                if(klant.Inlogpoging >= 3) klant.IsBlocked = true;
+                await context.SaveChangesAsync();
+                if(klant.Inlogpoging >= 3){
+                    klant.IsBlocked = true;
+                    await context.SaveChangesAsync();
+                } 
         }
         return "InvalidCredentialsError";
     }
@@ -52,12 +57,11 @@ public class GebruikerService : IGebruikerService{
         if(VerificatieToken.Token == token && VerificatieToken.VerloopDatum > DateTime.Now){
             klant.VerificatieToken = null;
             klant.TokenId = null;
-            //VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
             context.VerificatieTokens.Remove(VerificatieToken);
             await context.SaveChangesAsync();
             return "Success";
         }
-        return "ExpiredTokenError"; // Error message misschien veranderen? Token kan ook een niet bestaande zijn namelijk.
+        return "ExpiredTokenError"; 
     }
 
     public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){
@@ -76,6 +80,7 @@ public class GebruikerService : IGebruikerService{
         return tuple;
     }
     public async Task<string> InitiatePasswordReset(Klant klant, GebruikerContext context){
+        if(klant == null) return "Error";
         if(klant.AuthenticatieTokenId != null){
             AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.First(a => a.Token == klant.AuthenticatieTokenId);
             context.AuthenticatieTokens.Remove(authenticatieToken);
@@ -83,13 +88,13 @@ public class GebruikerService : IGebruikerService{
         }
         klant.AuthenticatieToken = new AuthenticatieToken(){Token = Guid.NewGuid().ToString(), VerloopDatum = DateTime.Now.AddDays(1)};
         await context.SaveChangesAsync();
-        await _emailService.Send(klant.Email, klant.AuthenticatieTokenId!);
+        await _emailService.Send(klant.Email, "https://theater-laak.netlify.app/user/resetwachtwoord?token=" + klant.AuthenticatieTokenId! + "&email=" + klant.Email, "Password Reset");
         return "Success";
     }
     public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){
         AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
-        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
-        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "ExpiredTokenError"; 
+        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "InvalidTokenError"; 
         klant.AuthenticatieToken = null;
         klant.AuthenticatieTokenId = null;
         klant.Wachtwoord = wachtwoord;
@@ -100,7 +105,7 @@ public class GebruikerService : IGebruikerService{
     public static string GenerateRandomString(int length){
         var random = new byte[length];
         RandomNumberGenerator.Fill(random);
-        string base32String = Convert.ToBase64String(random); //convert to base32string
+        string base32String = Convert.ToBase64String(random); 
         return base32String;
     }
     public async Task<string> Use2FA(Klant klant, string key){

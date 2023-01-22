@@ -22,21 +22,6 @@ namespace backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ActeurVoorstelling", b =>
-                {
-                    b.Property<int>("ActeurId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ShowId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ActeurId", "ShowId");
-
-                    b.HasIndex("ShowId");
-
-                    b.ToTable("ActeurVoorstellingen");
-                });
-
             modelBuilder.Entity("ArtiestGroep", b =>
                 {
                     b.Property<int>("GroepsId")
@@ -109,19 +94,36 @@ namespace backend.Migrations
                     b.ToTable("Bestellingen");
                 });
 
-            modelBuilder.Entity("Kaartjeshouders", b =>
+            modelBuilder.Entity("Donatie", b =>
                 {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Hoeveelheid")
+                        .HasColumnType("double precision");
+
                     b.Property<int>("KlantId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ShowId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Naam")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.HasKey("KlantId", "ShowId");
+                    b.HasKey("id");
 
-                    b.HasIndex("ShowId");
+                    b.HasIndex("KlantId");
 
-                    b.ToTable("Kaartjeshouders");
+                    b.ToTable("Donaties");
                 });
 
             modelBuilder.Entity("Kalender", b =>
@@ -287,9 +289,6 @@ namespace backend.Migrations
                     b.Property<string>("Achternaam")
                         .HasColumnType("text");
 
-                    b.Property<string>("Afbeelding")
-                        .HasColumnType("text");
-
                     b.Property<bool>("Artiest")
                         .HasColumnType("boolean");
 
@@ -299,18 +298,12 @@ namespace backend.Migrations
                     b.Property<string>("AuthenticatieTokenId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Beschrijving")
-                        .HasColumnType("text");
-
                     b.Property<bool>("Donateur")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime?>("GeboorteDatum")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Inlogpoging")
                         .HasColumnType("integer");
@@ -372,17 +365,11 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Afbeelding")
-                        .HasColumnType("text");
-
                     b.Property<string>("AuthenticatieTokenId")
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Functie")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("GeboorteDatum")
@@ -448,25 +435,6 @@ namespace backend.Migrations
                     b.ToTable("VerificatieTokens");
                 });
 
-            modelBuilder.Entity("ActeurVoorstelling", b =>
-                {
-                    b.HasOne("backend.Authenticatie.Klant", "Acteur")
-                        .WithMany("ActeurVoorstelling")
-                        .HasForeignKey("ActeurId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("Show", "Show")
-                        .WithMany("Acteur")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.Navigation("Acteur");
-
-                    b.Navigation("Show");
-                });
-
             modelBuilder.Entity("BesteldeStoel", b =>
                 {
                     b.HasOne("Bestelling", "Bestelling")
@@ -497,23 +465,15 @@ namespace backend.Migrations
                     b.Navigation("Klant");
                 });
 
-            modelBuilder.Entity("Kaartjeshouders", b =>
+            modelBuilder.Entity("Donatie", b =>
                 {
                     b.HasOne("backend.Authenticatie.Klant", "Klant")
-                        .WithMany("Kaartjeshouder")
+                        .WithMany("Donaties")
                         .HasForeignKey("KlantId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Show", "Show")
-                        .WithMany("Kaartjeshouder")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
                     b.Navigation("Klant");
-
-                    b.Navigation("Show");
                 });
 
             modelBuilder.Entity("Show", b =>
@@ -642,13 +602,6 @@ namespace backend.Migrations
                     b.Navigation("Shows");
                 });
 
-            modelBuilder.Entity("Show", b =>
-                {
-                    b.Navigation("Acteur");
-
-                    b.Navigation("Kaartjeshouder");
-                });
-
             modelBuilder.Entity("Stoel", b =>
                 {
                     b.Navigation("BesteldeStoelen");
@@ -686,11 +639,9 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Authenticatie.Klant", b =>
                 {
-                    b.Navigation("ActeurVoorstelling");
-
                     b.Navigation("Bestellingen");
 
-                    b.Navigation("Kaartjeshouder");
+                    b.Navigation("Donaties");
                 });
 
             modelBuilder.Entity("backend.Authenticatie.Rol", b =>

@@ -7,16 +7,14 @@ public class Medewerker{
         Achternaam = achternaam;
         Email = email;
         Wachtwoord = wachtwoord;
-        Rol = Rol.MedewerkerRol;
+        //Rol = Rol.MedewerkerRol;
     }
     public int Id {set; get;}
     public string Voornaam {set; get;}
     public string Achternaam {set; get;}
     public string Email {set; get;}
     public string Wachtwoord {set; get;}
-    public string? Functie {set; get;}
     public DateTime GeboorteDatum {set; get;}
-    public string? Afbeelding {set; get;}
     public Rol Rol {set; get;}
     public string RolNaam {set; get;}
     [JsonIgnore]

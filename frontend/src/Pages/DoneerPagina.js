@@ -20,7 +20,7 @@ const DoneerPagina = () => {
             method: "POST",
             headers: { Authentication: token },
             body: JSON.stringify({
-                Doel: 1234,
+                Doel: 63,
                 Hoeveelheid: parseFloat(hoeveelheid),
                 Tekst: message
             })

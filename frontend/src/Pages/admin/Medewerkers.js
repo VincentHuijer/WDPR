@@ -15,6 +15,7 @@ const Medewerkers = () => {
 
   const [reload, setReload] = useState(0)
 
+  
 
   useEffect(() => {
     getData()
@@ -37,6 +38,7 @@ const Medewerkers = () => {
       })
     }).then(response => response.json())
       .then(data => {
+
         setloading(false)
         setData(data)
       })

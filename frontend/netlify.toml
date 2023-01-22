@@ -1,4 +1,64 @@
 [[redirects]]
-from = "/*"
+from = "/"
+to = "/index.html"
+status = 200
+
+from = "/overons"
+to = "/index.html"
+status = 200
+
+from = "/voorstelling/*"
+to = "/index.html"
+status = 200
+
+from = "/winkelmand"
+to = "/index.html"
+status = 200
+
+from = "/voorstellingen"
+to = "/index.html"
+status = 200
+
+from = "/login"
+to = "/index.html"
+status = 200
+
+from = "/register"
+to = "/index.html"
+status = 200
+
+from = "/verify"
+to = "/index.html"
+status = 200
+
+from = "/betalen"
+to = "/index.html"
+status = 200
+
+from = "/bedankt"
+to = "/index.html"
+status = 200
+
+from = "/donatie"
+to = "/index.html"
+status = 200
+
+from = "/provider/betalen"
+to = "/index.html"
+status = 200
+
+from = "/mijngroep"
+to = "/index.html"
+status = 200
+
+from = "/user/resetwachtwoord"
+to = "/index.html"
+status = 200
+
+from = "/user/bestellingen"
+to = "/index.html"
+status = 200
+
+from = "/ticket/*"
 to = "/index.html"
 status = 200

@@ -181,6 +181,8 @@ export default function Voorstelling() {
   function filterDates() {
     if (!allowedDates) return
     if (!userData) return
+    if(allowedDates.length <=0 ) return
+    if(!userData.rolNaam) return
 
     let tempDates = []
 

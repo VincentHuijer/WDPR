@@ -9,6 +9,5 @@ public class VerificatieToken{
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public string Token {set; get;}
     public DateTime VerloopDatum {set; get;}
-    //public int? KlantId {set; get;} //Id van welke klant deze token is
-    public Klant Klant {set; get;} //Klant die bij deze token hoort.
+    public Klant Klant {set; get;} 
 }

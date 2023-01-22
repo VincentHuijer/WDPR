@@ -12,29 +12,4 @@ public class Rol
     public string Naam { set; get; }
     public List<Klant> Klanten { set; get; }
     public List<Medewerker> Medewerkers { set; get; }
-
-    public Rol CheckRol(string Naam)
-    {
-        if (Naam == "Klant")
-        {
-            return KlantRol;
-        }
-        else if (Naam == "Artiest")
-        {
-            return ArtiestRol;
-        }
-        else if (Naam == "Donateur")
-        {
-            return DonateurRol;
-        }
-        else if (Naam == "Medewerker")
-        {
-            return MedewerkerRol;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
 }

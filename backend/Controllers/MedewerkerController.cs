@@ -77,7 +77,6 @@ public class MedewerkerController : ControllerBase
             Voornaam = medewerker.Voornaam,
             Achternaam = medewerker.Achternaam,
             Email = medewerker.Email,
-            Afbeelding = medewerker.Afbeelding,
             GeboorteDatum = medewerker.GeboorteDatum,
             RolNaam = medewerker.RolNaam
         };
@@ -127,16 +126,6 @@ public class MedewerkerController : ControllerBase
         if (medewerker == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(medewerker, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     }
-
-    // [HttpPost("rol/by/at")]
-    // public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject)
-    // {
-    //     Medewerker medewerker = await _permissionService.GetMedewerkerByAccessToken(accessTokenObject.AccessToken, _context);
-    //     string rol = medewerker.RolNaam;
-    //     return rol;
-    // }
-
-    // FUNCTIONS
 
 
     public ActionResult HandleResponse(string response)
@@ -199,7 +188,6 @@ public class MedewerkerController : ControllerBase
                     Voornaam = medewerker.Voornaam,
                     Achternaam = medewerker.Achternaam,
                     Email = medewerker.Email,
-                    Afbeelding = medewerker.Afbeelding,
                     GeboorteDatum = medewerker.GeboorteDatum,
                     RolNaam = medewerker.RolNaam
                 });
@@ -207,23 +195,5 @@ public class MedewerkerController : ControllerBase
             return toReturn;
         }
 
-        // [HttpPost("UpdateMedewerkerRole/{id}/{rolNaam}")]
-        // public async Task<ActionResult> UpdateMedewerkerRol(int id, string rolNaam)
-        // {
-        //     Medewerker medewerker = _context.Medewerkers.FirstOrDefault(m => m.Id == id);
-        //     if (medewerker == null) return BadRequest();
-        //     Rol rol = new Rol();
-        //     medewerker.Rol = rol.CheckRol(rolNaam);
-        //     medewerker.RolNaam = rolNaam;
-        //     if (medewerker.Rol.ToString() != rolNaam) return BadRequest();
-        //     if (await _context.SaveChangesAsync() > 0)
-        //     {
-        //         return Ok();
-        //     }
-        //     else
-        //     {
-        //         return BadRequest();
-        //     }
-        // }
-    }
+}
 

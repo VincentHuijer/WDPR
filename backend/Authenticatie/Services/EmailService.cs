@@ -7,11 +7,11 @@ public class EmailService : IEmailService{
     public async Task Send(string email, string content, string subject){
         string jsonString = File.ReadAllText("emailconfig.json");
         EmailConfiguration configuration = JsonConvert.DeserializeObject<EmailConfiguration>(jsonString);
-        string smtpServer = "smtp.gmail.com"; // SMTP server nog aanmaken
-        string username = configuration.Email; // username vanuit aparte file halen
-        string password = configuration.Wachtwoord; // password vanuit aparte file halen
+        string smtpServer = "smtp.gmail.com"; 
+        string username = configuration.Email; 
+        string password = configuration.Wachtwoord; 
 
-        string from = configuration.Email; // Email nog aanmaken
+        string from = configuration.Email; 
         string _subject = subject;
 
         MailMessage message = new MailMessage(from, email, _subject, content);

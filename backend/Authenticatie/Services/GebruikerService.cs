@@ -57,12 +57,11 @@ public class GebruikerService : IGebruikerService{
         if(VerificatieToken.Token == token && VerificatieToken.VerloopDatum > DateTime.Now){
             klant.VerificatieToken = null;
             klant.TokenId = null;
-            //VerificatieToken vtoken = await context.VerificatieTokens.FirstAsync(vt => vt.Token == token);
             context.VerificatieTokens.Remove(VerificatieToken);
             await context.SaveChangesAsync();
             return "Success";
         }
-        return "ExpiredTokenError"; // Error message misschien veranderen? Token kan ook een niet bestaande zijn namelijk.
+        return "ExpiredTokenError"; 
     }
 
     public async Task<(string, string)> Setup2FA(Klant klant, GebruikerContext context){
@@ -94,8 +93,8 @@ public class GebruikerService : IGebruikerService{
     }
     public async Task<string> ResetPassword(Klant klant, string token, string wachtwoord, GebruikerContext context){
         AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
-        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "ExpiredTokenError"; //Goede error message
-        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "InvalidTokenError"; //Goede error message
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "ExpiredTokenError"; 
+        if(klant.AuthenticatieTokenId != authenticatieToken.Token) return "InvalidTokenError"; 
         klant.AuthenticatieToken = null;
         klant.AuthenticatieTokenId = null;
         klant.Wachtwoord = wachtwoord;
@@ -106,7 +105,7 @@ public class GebruikerService : IGebruikerService{
     public static string GenerateRandomString(int length){
         var random = new byte[length];
         RandomNumberGenerator.Fill(random);
-        string base32String = Convert.ToBase64String(random); //convert to base32string
+        string base32String = Convert.ToBase64String(random); 
         return base32String;
     }
     public async Task<string> Use2FA(Klant klant, string key){

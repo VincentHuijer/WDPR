@@ -45,16 +45,6 @@ public class VoorstellingController : ControllerBase
         return voorstellingen;
     }
 
-    // [HttpGet("GetVoorstellingWithId/{id}")]
-    // public async Task<ActionResult<Voorstelling>> GetVoorstellingWithId(int id)
-    // {
-    //     Voorstelling v = await _context.Voorstellingen.FirstOrDefaultAsync(v => v.VoorstellingId == id);
-    //     if(v == null){
-    //         return NotFound();
-    //     }
-
-    //     return v;
-    // }
 
     [HttpPost("AddVoorstelling")] //DONE
     public async Task<ActionResult> AddVoorstelling([FromBody] NieuweVoorstelling nieuweVoorstelling)
@@ -62,18 +52,8 @@ public class VoorstellingController : ControllerBase
         AccessTokenObject accessToken = new AccessTokenObject(){AccessToken = nieuweVoorstelling.AccessToken};
         if(!await _permissionService.IsAllowed(accessToken, "Admin", true, _context) && !await _permissionService.IsAllowed(accessToken, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
         _kalender = _context.Kalenders.Find(0);
-        Console.WriteLine("parameters:" + nieuweVoorstelling.Titel + nieuweVoorstelling.Omschrijving);
         Voorstelling voorstelling = new Voorstelling(nieuweVoorstelling.Titel, nieuweVoorstelling.Omschrijving, nieuweVoorstelling.Image);
-        //interval = "once", "weekly","monthly","yearly"
-        //aantalKeer = aantal keer dat de afspraak herhaalt wordt
-        //interval is weekly en aantalKeer is 5, dan wordt de afspraak elke week herhaalt voor 5 weken
-
-        // List<Voorstelling> voorlijst = new List<Voorstelling>();
-        // voorlijst = _kalender.HerhaalOptie(nieuweVoorstelling.Interval, nieuweVoorstelling.AantalKeer, voorstelling);
-        // for (int i = 0; i < voorlijst.Count; i++)
-        // {
         _context.Voorstellingen.Add(voorstelling);
-        // }
         if (await _context.SaveChangesAsync() > 0)
         {
             return Ok();

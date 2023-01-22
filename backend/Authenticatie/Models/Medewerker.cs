@@ -14,9 +14,7 @@ public class Medewerker{
     public string Achternaam {set; get;}
     public string Email {set; get;}
     public string Wachtwoord {set; get;}
-    public string? Functie {set; get;}
     public DateTime GeboorteDatum {set; get;}
-    public string? Afbeelding {set; get;}
     public Rol Rol {set; get;}
     public string RolNaam {set; get;}
     [JsonIgnore]

@@ -16,12 +16,9 @@ public class BetalingController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost] //DONE
     public async Task<ActionResult> Betaling([FromForm] Betaling betaling)
     {
-        // string clientIp = HttpContext.Connection.RemoteIpAddress.ToString();
-        // return clientIp;
-        // //Authorisatie toevoegen, alleen ip van betaling mag deze request
         if(!betaling.succes) return Redirect("https://theater-laak.netlify.app/winkelmand");
         Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == betaling.reference);
         if (bestelling == null) return NotFound();
@@ -32,14 +29,6 @@ public class BetalingController : ControllerBase
     }
 
 
-    // [HttpGet("bestelling/{id}")]
-    // public async Task<ActionResult<Bestelling>> GetBestelling(int id)
-    // {
-    //     //Authorisatie toevoegen
-    //     Bestelling bestelling = await _context.Bestellingen.FirstOrDefaultAsync(b => b.BestellingId == id);
-    //     if (bestelling == null) return NotFound();
-    //     return bestelling;
-    // }
 
 
 

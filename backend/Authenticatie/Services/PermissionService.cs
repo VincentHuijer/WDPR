@@ -21,7 +21,7 @@ public class PermissionService : IPermissionService{
         AccessToken accessToken = await _context.AccessTokens.FirstOrDefaultAsync(a => a.Token == AccessToken);
         if (accessToken == null) return null;
         Medewerker m = await _context.Medewerkers.FirstOrDefaultAsync(m => m.AccessToken == accessToken);
-        if (m == null) return null; // error message weghalen, is voor debugging.
+        if (m == null) return null; 
         else if (accessToken.VerloopDatum < DateTime.Now) return null;
         return m;
     }

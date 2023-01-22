@@ -15,14 +15,6 @@ public class BestellingController : ControllerBase
     }
 
 
-    // [HttpGet("getBestelling")]
-    // public async Task<List<Bestelling>> GetBestellingen()
-    // {
-    //     //Authorisatie toevoegen
-    //     List<Bestelling> bestellingen = await _context.Bestellingen.ToListAsync();
-    //     return bestellingen;
-    // }
-
     [HttpPost("getbestelling/by/at")] //DONE
     public async Task<ActionResult<List<ShowStoelen>>> GetBestellingenByAccessToken([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context); 
@@ -82,72 +74,11 @@ public class BestellingController : ControllerBase
         if(klant == null) return NotFound();
         Bestelling bestelling = await _context.Bestellingen.Where(b => b.IsActive).FirstOrDefaultAsync(b => b.KlantId == klant.Id);
         if(bestelling == null) return NotFound();
-        //begin
+
         List<ShowStoelen> showStoelenList = await GetShowStoelensAsync(bestelling);
-        //eind
+
         return showStoelenList;
     }
-
-    // [HttpPost("kaartjeshouders/{show_id}")]
-    // public async Task<ActionResult<List<Kaartjeshouder>>> GetKaartjesHouders([FromBody] AccessTokenObject accessTokenObject, int show_id){
-    //     //Authorisatie
-    //     if(!await _permissionService.IsAllowed(accessTokenObject, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
-    //     Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == show_id);
-    //     if(show == null) return NotFound();
-    //     List<BesteldeStoel> besteldeStoelen = await _context.BesteldeStoelen.Where(b => b.Datum == show.Datum).ToListAsync();
-    //     List<int> bestelling_ids = besteldeStoelen.Select(b => b.BestellingId).Distinct().ToList();
-    //     List<Bestelling> bestellingen = await _context.Bestellingen.Where(b => bestelling_ids.Contains(b.BestellingId)).ToListAsync();
-    //     List<Klant> klanten = await _context.Klanten.Where(k => bestellingen.Select(b => b.KlantId).Contains(k.Id)).ToListAsync();
-    //     List<Kaartjeshouder> kaartjeshouders = new List<Kaartjeshouder>();
-    //     foreach (var klant in klanten){
-    //         kaartjeshouders.Add(new Kaartjeshouder(){Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Stoelen = await GetStoelDataByEmailAndShow(show_id, klant.Email)});
-    //     }
-    //     return kaartjeshouders;
-    // }
-
-    // [HttpPost("besteldestoelen/{show_id}/{email}")]
-    // public async Task<ActionResult<List<StoelData>>> GetBesteldeStoelen([FromBody] AccessTokenObject accessTokenObject, int show_id, string email){
-    //     //Authorisatie
-    //     if(!await _permissionService.IsAllowed(accessTokenObject, "Medewerker", true, _context)) return StatusCode(403, "No permissions!");
-    //     List<StoelData> stoelData = await GetStoelDataByEmailAndShow(show_id, email);
-    //     if(stoelData == null) return NotFound();
-    //     return stoelData;
-    // }
-
-    // [HttpPost("AddBestelling")]
-    // public async Task<ActionResult> AddBestelling([FromBody] BestellingBody bestellingBody)
-    // {
-    //     DateTime bestelDatum = DateTime.Parse(bestellingBody.BestelDatum);
-    //     Bestelling bestelling = new Bestelling() { BestelDatum = bestelDatum, Totaalbedrag = bestellingBody.Totaalbedrag };
-
-    //     foreach (var item in bestellingBody.Stoelen)
-    //     {
-    //         Stoel stoel = await _context.Stoelen.FirstOrDefaultAsync(v => v.StoelID.ToString() == item);
-    //         BesteldeStoel besteldeStoel = new BesteldeStoel() { Bestelling = bestelling, BestellingId = bestelling.BestellingId, Stoel = stoel, StoelID = stoel.StoelID, Datum = bestelDatum };
-
-    //         _context.BesteldeStoelen.Add(besteldeStoel);
-    //     }
-
-    //     _context.Bestellingen.Add(bestelling);
-
-    //     await _context.SaveChangesAsync();
-
-    //     return Ok();
-    // }
-
-    // [HttpPost("VerwijderBestelling")]
-    // public async Task<ActionResult> VerwijderBestelling(Bestelling bestelling)
-    // {
-    //     _context.Bestellingen.Remove(bestelling);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
 
     [HttpPost("bestelling")] //DONE
     public async Task<ActionResult<Bestelling>> GetBestellingWithAccessToken([FromBody] AccessTokenObject accessTokenObject){
@@ -181,19 +112,7 @@ public class BestellingController : ControllerBase
         }
         return showStoelenList;
     }
-    // public async Task<List<StoelData>> GetStoelDataByEmailAndShow(int show_id, string email){
-    //     Show show = await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == show_id);
-    //     if(show == null) return null;
-    //     Klant klant = await _context.Klanten.FirstOrDefaultAsync(k => k.Email == email);
-    //     if(klant == null) return null;
-    //     List<int> besteldeStoelen_ids = await _context.BesteldeStoelen.Where(b => b.Datum == show.Datum).Select(b => b.StoelID).ToListAsync();
-    //     List<Stoel> stoelen = await _context.Stoelen.Where(s => besteldeStoelen_ids.Contains(s.StoelID)).ToListAsync();
-    //     List<StoelData> stoelData = new List<StoelData>();
-    //     foreach(var stoel in stoelen){
-    //         stoelData.Add(new StoelData(){X = stoel.X, Y = stoel.Y, Prijs = stoel.Prijs, Rang = stoel.Rang, StoelID = stoel.StoelID, IsGereserveerd = true}); 
-    //     }
-    //     return stoelData;
-    // }
+
     [HttpPost("verwijderbestelling")] //DONE
     public async Task<ActionResult> VerwijderBestelling([FromBody] AccessTokenObject accessToken){
         Klant klant = await _permissionService.GetKlantByAccessToken(accessToken.AccessToken, _context);
@@ -205,18 +124,5 @@ public class BestellingController : ControllerBase
         return Ok();
     }
 
-    // [HttpPost("UpdateBestelling")]
-    // public async Task<ActionResult> UpdateBestelling([FromBody] Bestelling bestelling)
-    // {
-    //     _context.Bestellingen.Update(bestelling);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
 }
 

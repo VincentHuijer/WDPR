@@ -36,7 +36,7 @@ public class KlantController : ControllerBase
                 await _context.SaveChangesAsync();
             }
             KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(klant.AccessTokenId, _context),
-            Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
+            Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
             return klantInfo;
         }
         var response = HandleResponse(responseString);
@@ -78,17 +78,12 @@ public class KlantController : ControllerBase
         return response;
     }
 
-    // [HttpGet("klanten")]
-    // public async Task<List<Klant>> GetKlantenAsync(){
-    //     List<Klant> klanten = await _context.Klanten.ToListAsync();
-    //     return klanten;
-    // }
 
     [HttpPost("klant/by/at")] //DONE
     public async Task<ActionResult<KlantInfo>> GetKlantInfoByAT([FromBody] AccessTokenObject accessTokenObject){
         Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context);
         KlantInfo klantInfo = new KlantInfo(){TwoFactorAuthSetupComplete = klant.TwoFactorAuthSetupComplete, IsVerified = klant.TokenId == null? true : false, IsBlocked = klant.IsBlocked, AccessToken = await _permissionService.GetAccessTokenByTokenIdAsync(klant.AccessTokenId, _context),
-        Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, Beschrijving = klant.Beschrijving, Afbeelding = klant.Afbeelding, GeboorteDatum = klant.GeboorteDatum, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
+        Voornaam = klant.Voornaam, Achternaam = klant.Achternaam, Email = klant.Email, IsDonateur = klant.Donateur, IsArtiest = klant.Artiest, RolNaam = klant.RolNaam};
         return klantInfo;
     }
 
@@ -118,13 +113,6 @@ public class KlantController : ControllerBase
         if(klant == null) return BadRequest();
         return HandleResponse(await _service.ResetPassword(klant, authenticatieTokenNieuwWachtwoord.AuthenticatieToken, authenticatieTokenNieuwWachtwoord.NieuwWachtwoord, _context));
     }
-
-    // [HttpPost("rol/by/at")]
-    // public async Task<ActionResult<string>> GetRolByAT([FromBody] AccessTokenObject accessTokenObject){
-    //     Klant klant = await _permissionService.GetKlantByAccessToken(accessTokenObject.AccessToken, _context);
-    //     string rol = klant.RolNaam;
-    //     return rol;
-    // }
 
     public ActionResult HandleResponse(string response){ 
         var responses = ResponseList.Responses;

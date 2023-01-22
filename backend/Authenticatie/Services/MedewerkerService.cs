@@ -75,8 +75,8 @@ public class MedewerkerService : IMedewerkerService
     }
     public async Task<string> ResetPassword(Medewerker medewerker, string token, string wachtwoord, GebruikerContext context){
         AuthenticatieToken authenticatieToken = context.AuthenticatieTokens.FirstOrDefault(a => a.Token == token);
-        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; //Goede error message
-        if(medewerker.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; //Goede error message
+        if(authenticatieToken == null || authenticatieToken.VerloopDatum < DateTime.Now) return "Error"; 
+        if(medewerker.AuthenticatieTokenId != authenticatieToken.Token) return "Token matcht niet error"; 
         medewerker.AuthenticatieToken = null;
         medewerker.AuthenticatieTokenId = null;
         medewerker.Wachtwoord = wachtwoord;
@@ -86,7 +86,7 @@ public class MedewerkerService : IMedewerkerService
     public static string GenerateRandomString(int length){
         var random = new byte[length];
         RandomNumberGenerator.Fill(random);
-        string base32String = Convert.ToBase64String(random); //convert to base32string
+        string base32String = Convert.ToBase64String(random); 
         return base32String;
     }
 }

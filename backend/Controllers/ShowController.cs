@@ -27,7 +27,7 @@ public class ShowController : ControllerBase
         return new VoorstellingData() { voorstelling = Voorstelling, shows = shows };
     }
 
-    [HttpPost("AddShow")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
+    [HttpPost("AddShow")] //DONE
     public async Task<ActionResult> AddShow([FromBody] HerhaalbareShow HerhaalShow)
     {
         AccessTokenObject accessToken = new AccessTokenObject(){AccessToken = HerhaalShow.AccessToken};
@@ -50,21 +50,5 @@ public class ShowController : ControllerBase
             return BadRequest();
         }
     }
-
-    // [HttpPost("VerwijderShow/{id}")] //ACCESSTOKEN IN BODY, VOEG AUTHORISATIE TOE
-    // public async Task<ActionResult> VerwijderShow(int id)
-    // {
-    //     //Authorisatie toevoegen
-    //     Show show = _context.Shows.Find(id);
-    //     _context.Shows.Remove(show);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
 }
 

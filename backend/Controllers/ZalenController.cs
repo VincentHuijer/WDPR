@@ -15,12 +15,6 @@ public class ZaalController : ControllerBase
     }
 
 
-    // [HttpGet("getZalen")]
-    // public async Task<List<Zaal>> getZalen()
-    // {
-    //     List<Zaal> Zalen = await _context.Zalen.ToListAsync();
-    //     return Zalen;
-    // }
 
     [HttpPost("GetShowStoelen/{id}")] //DONE
     public async Task<ActionResult<List<List<StoelData>>>> GetShowStoelen([FromBody] AccessTokenObject accessToken, int id)
@@ -91,34 +85,5 @@ public class ZaalController : ControllerBase
         return matrix;
     }
 
-
-    // [HttpPost("AddZaal")]
-    // public async Task<ActionResult> AddZaal([FromBody] Zaal zaal)
-    // {
-
-    //     _context.Zalen.Add(zaal);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
-
-    // [HttpPost("VerwijderZaal")]
-    // public async Task<ActionResult> VerwijderZaal([FromBody] Zaal zaal)
-    // {
-    //     _context.Zalen.Remove(zaal);
-    //     if (await _context.SaveChangesAsync() > 0)
-    //     {
-    //         return Ok();
-    //     }
-    //     else
-    //     {
-    //         return BadRequest();
-    //     }
-    // }
 }
 

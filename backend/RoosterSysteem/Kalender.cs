@@ -11,14 +11,6 @@ public class Kalender
     [Key]
     public int KalenderId { get; set; }
     public List<Show> Shows { get; set; }
-    public string filterRooster()
-    {
-        return "geen logica toegevoegd";
-    }
-    public List<Show> overzicht()
-    {
-        return Shows;
-    }
 
     public List<Show> HerhaalOptie(string? interval, int? aantalKeer, Show show)
     {

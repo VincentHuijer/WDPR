@@ -21,10 +21,6 @@ public class Stoel
     public List<BesteldeStoel>? BesteldeStoelen { get; set; }
 
 
-    public string stoelReserveren()
-    {
-        return "geen logica toegevoegd";
-    }
 
 
 }

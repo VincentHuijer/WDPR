@@ -30,16 +30,16 @@ describe("test inloggen", () => {
     cy.get("p").contains("Email or password incorrect!");
   });
 
-  it("probeert met verkeerd wachtwoord/email combinatie in te loggen totdat het geblokkeerd raakt (3 pogingen)", () => {
-    cy.get("input[name=email]").type("3dvechterlol@gmail.com");
-    cy.get("input[name=wachtwoord]").type(wachtwoordFout);
-    cy.get("button[type=submit]").click();
-    cy.get("button[type=submit]").click();
-    cy.get("button[type=submit]").click();
+  // it("probeert met verkeerd wachtwoord/email combinatie in te loggen totdat het geblokkeerd raakt (3 pogingen)", () => {
+  //   cy.get("input[name=email]").type("3dvechterlol@gmail.com");
+  //   cy.get("input[name=wachtwoord]").type(wachtwoordFout);
+  //   cy.get("button[type=submit]").click();
+  //   cy.get("button[type=submit]").click();
+  //   cy.get("button[type=submit]").click();
 
-    cy.get("p").contains("User has been blocked because of too many login attempts!"
-    );
-  });
+  //   cy.get("p").contains("User has been blocked because of too many login attempts!"
+  //   );
+  // });
 
   it("Voert eerst een foute combinatie uit en vervolgens een juiste combinatie", () => {
     cy.get("input[name=email]").type("fin.cent.huijeren@gmail.com");

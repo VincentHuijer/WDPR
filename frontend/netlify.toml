@@ -3,62 +3,77 @@ from = "/"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/overons"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/voorstelling/*"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/winkelmand"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/voorstellingen"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/login"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/register"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/verify"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/betalen"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/bedankt"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/donatie"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/provider/betalen"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/mijngroep"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/user/resetwachtwoord"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/user/bestellingen"
 to = "/index.html"
 status = 200
 
+[[redirects]]
 from = "/ticket/*"
 to = "/index.html"
 status = 200

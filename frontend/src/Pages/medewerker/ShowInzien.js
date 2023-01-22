@@ -1,8 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useAccesToken } from '../../Authentication/AuthContext'
-import Loading from '../../Components/Loading'
-import VoorstellingenContainer from '../../Components/VoorstellingenContainer'
 import ShowEditContainer from './ShowEditContainer'
 
 import host from '../../Components/apiURL'

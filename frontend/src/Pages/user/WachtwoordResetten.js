@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router";
 import PasswordChecklist from "react-password-checklist"
 import { useSearchParams } from 'react-router-dom';
 

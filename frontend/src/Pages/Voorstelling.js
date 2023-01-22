@@ -15,7 +15,6 @@ import StoelenLoading from "../Components/StoelenLoading";
 import { useNavigate } from "react-router-dom";
 
 import host from "../Components/apiURL";
-import { user } from "fake-words";
 
 export default function Voorstelling() {
   const navigate = useNavigate();

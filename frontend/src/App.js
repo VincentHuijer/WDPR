@@ -34,7 +34,6 @@ export default function App() {
 
     return (
         <AuthProvider>
-            {/* add rotating to this class */}
             <div className='flex flex-col '>
 
                 <Router>

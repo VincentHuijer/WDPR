@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useAccesToken } from '../../Authentication/AuthContext'
 import WinkelMandItem from '../../Components/WinkelMandItem'
 

@@ -101,7 +101,7 @@ const Groepen = () => {
             },
             body: JSON.stringify({
                 GroepsId: groepId.toString(),
-                KlantMail : persoonId.toString(),
+                KlantMail: persoonId.toString(),
                 AccessToken: accesToken
             })
         }).then(() => {

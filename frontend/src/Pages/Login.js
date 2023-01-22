@@ -30,14 +30,6 @@ export default function Login() {
         }
     }
 
-    /**
-     * LOGIN
-     * NOT VERIFIED = SHOW MESSAGE
-     * VERIFIED = OPEN 2FA
-     * 2faSETUP(false) = OPEN 2fa SETUP
-     * 2faSETUP(true) = OPEN 2fa CODE INPUT
-     */
-
     function saveAuthCookie(at, remember) {
         setCookie("remember_me", remember, 7)
         setCookie("acces_token", at)

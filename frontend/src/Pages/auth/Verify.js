@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useSearchParams } from "react-router-dom";
 
 import host from "../../Components/apiURL";

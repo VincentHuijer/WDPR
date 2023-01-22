@@ -17,7 +17,6 @@ const Ticket = () => {
   }, [prinButton])
 
 
-
   return (
     <div className="w-screen px-10 h-screen z-50 bg-white m-auto">
       <h1 className='text-3xl font-bold mt-4'>{data.showNaam.toUpperCase()} TICKET{data.stoelen.length > 1 ? "S" : ""}</h1>

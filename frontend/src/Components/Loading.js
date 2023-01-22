@@ -2,8 +2,6 @@ import React from 'react'
 
 const Loading = ({text}) => {
 
-
-
     return (
         <div className="w-full z-20 bg-white absolute top-0 min-h-screen flex flex-col items-center justify-center">
             <div>

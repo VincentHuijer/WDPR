@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useAccesToken } from "../Authentication/AuthContext"
 import Loading from "../Components/Loading"
 import WinkelMandItem from "../Components/WinkelMandItem"
 import WinkelMandTekstItem from "../Components/WinkelMandTekstItem"

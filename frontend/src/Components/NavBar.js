@@ -3,9 +3,6 @@ import {
     Link
 } from 'react-router-dom';
 import { useAccesToken, useUpdateAccesToken } from '../Authentication/AuthContext';
-import Hero from './Hero';
-
-
 import host from './apiURL';
 
 export function NavBar() {
@@ -135,8 +132,6 @@ export function NavBar() {
                                 </div>
 
                             </div>}
-                    {/* <p onClick={() => { logout("none"); window.location.href = "/" }} className='border-2 border-black bg-white px-3 py-1 rounded-xl font-extrabold cursor-pointer'>UITLOGGEN</p>} */}
-
                 </nav>
 
                 <nav className='block lg:hidden'>

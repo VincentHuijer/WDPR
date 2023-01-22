@@ -15,7 +15,7 @@ const Medewerkers = () => {
 
   const [reload, setReload] = useState(0)
 
-  
+
 
   useEffect(() => {
     getData()

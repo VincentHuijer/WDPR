@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals';
 import {Helmet} from "react-helmet";
 
 import App from './App';
-// import AuthHandler from './Authentication/AuthHandler';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

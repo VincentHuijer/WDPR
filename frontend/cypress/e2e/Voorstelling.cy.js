@@ -1,5 +1,4 @@
 const emailSuccesvol = "vin.centhuijeren@gmail.com";
-
 const wachtwoord = "Test123!";
 
 describe("Medewerker voorstelling tests ", () => { //Dit is een test voor de medewerker dingen UPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DITUPDATE DIT
@@ -7,12 +6,7 @@ describe("Medewerker voorstelling tests ", () => { //Dit is een test voor de med
     cy.visit("http://localhost:3000/login/");
   });
 
-  // it("logt succesvol in met de juiste email en wachtwoord combinatie VOOR EEN MEDEWERKER", () => {
-  //   cy.get("input[name=email]").type("test@gmail.com");
-  //   cy.get("input[name=wachtwoord]").type("test");
-  //   cy.get("button[type=submit]").click();
-  //   cy.visit("http://localhost:3000/medewerker");
-  // });
+
 
   it("Probeer een voorstelling toe te voegen", () => {
     cy.get("input[name=email]").type("test@gmail.com");
@@ -37,9 +31,6 @@ describe("Medewerker voorstelling tests ", () => { //Dit is een test voor de med
     cy.get("button[type=submit]").click();
     cy.wait(2000); //Cypress gaat naar medewerker voordat de login is afgerond
     cy.visit("http://localhost:3000/medewerker");
-    var min = 1;
-    var max = 12;
-    // const randomMaand = `newuser+${Math.floor(Math.random() * 10000)}@example.com`;
     var randomDag = Math.floor(Math.random() * 9) + 1//We testen of het op verschillende dagen
     var randomMaand = Math.floor(Math.random() * 9) + 1 //We testen of het op verschillende maanden
     var randomJaar = Math.floor(Math.random() * (9 - 3 +1) + 3) //We testen of het op verschillende jaren
@@ -65,23 +56,6 @@ it("Probeert de voorstelling Test Dummy te zoeken in de zoekbalk", () => {
 
 
 
-//   it("Probeer te bestellen zonder ingelogt te zijn (redirect naar loginpage)", () => { 
-//     cy.get(`[aria-label="Rij 1 Stoel 14 type 2e rang"]`).click();
-//     cy.get("button[name=bestelButton]").click();
-//   });
-// });
-
-
-  // it("Probeer te bestellen, UITELOGT ", () => { 
-  //   cy.get(`[aria-label="Rij 1 Stoel 15 type 2e rang"]`).click();
-  //   cy.get("button[name=bestelButton]").click();
-  //   cy.get("input[name=email]").type(emailSuccesvol);
-  //   cy.get("input[name=wachtwoord]").type(wachtwoord);
-  //   cy.get("button[type=submit]").click();
-  //   cy.get("button[name=Winkelmand]").click(); 
-  //   cy.visit("http://localhost:3000/winkelmand");
-  //   cy.get("button[name=afrekenKnop]").click();
-  // });
 
 });
 
@@ -106,18 +80,6 @@ it("reserveer een stoel", () => {
   cy.get("button[name=afrekenKnop]").click();
 });
 });
-
-
-  // it("Probeer te bestellen, UITELOGT ", () => { 
-  //   cy.get(`[aria-label="Rij 1 Stoel 15 type 2e rang"]`).click();
-  //   cy.get("button[name=bestelButton]").click();
-  //   cy.get("input[name=email]").type(emailSuccesvol);
-  //   cy.get("input[name=wachtwoord]").type(wachtwoord);
-  //   cy.get("button[type=submit]").click();
-  //   cy.get("button[name=Winkelmand]").click(); 
-  //   cy.visit("http://localhost:3000/winkelmand");
-  //   cy.get("button[name=afrekenKnop]").click();
-  // });
 
   describe("Medewerker verwijdert voorstelling ", () => { //Dit is een test voor de klant dingen
 

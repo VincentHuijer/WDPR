@@ -1,7 +1,10 @@
 # WDPR
 
-UML
-https://lucid.app/documents/embedded/b928ddfa-a590-4af4-a99a-3d836da6ec6e?invitationId=inv_ce915a95-068a-48f8-9323-6f876ad309c8#
+Klassendiagram
+https://drive.google.com/file/d/1zh9KmKLNrjMbRcH_iNUcoOe_EpVNpDnN/view
+
+Documentatie
+https://docs.google.com/document/d/1_QMUEAfGuR8DkJpQHI5jKcoEsGf1mvtMbBSZ9Fz_K2o/edit?usp=sharing
 
 TRELLO
 https://trello.com/b/c3ab46Dy/wdpr-board 

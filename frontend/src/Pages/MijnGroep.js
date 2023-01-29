@@ -7,6 +7,7 @@ const MijnGroep = () => {
   const AccessToken = useAccesToken()
   const [leden, setLeden] = useState([]);
   const [loading, setLoading] = useState(true)
+  
   useEffect(() => {
     if (AccessToken == "none") return
     laadLeden()
